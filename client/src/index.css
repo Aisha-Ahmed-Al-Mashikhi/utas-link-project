@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+/* ✅ يخلي الصفحة كلها تملأ الشاشة وتتحكم بالفوتر */
+html,
+body {
+  height: 100%;
+}
+
+/* ✅ الحاوية الرئيسية للتطبيق */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* تضمن إن الصفحة دوم بطول النافذة */
+}
+
+/* ✅ منطقة المحتوى — الفوتر ينزل تحتها تلقائي */
+.main-content {
+  flex: 1; /* تدفع الفوتر للأسفل لو المحتوى قليل */
+}

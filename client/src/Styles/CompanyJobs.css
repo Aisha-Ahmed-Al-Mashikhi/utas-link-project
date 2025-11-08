@@ -1,0 +1,151 @@
+.companyjobs-page {
+  background: #f4faf8;
+  min-height: 85vh;
+  padding: 40px 80px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.companyjobs-title {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 25px;
+}
+
+.accent {
+  color: #009688;
+}
+
+.job-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.org-name {
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.desc {
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.skills {
+  color: #666;
+  font-size: 14px;
+}
+
+.job-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-edit {
+  background: #ffc107;
+  color: #000;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-save {
+  background: #009688;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #ccc;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.edit-input {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.edit-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 28px;
+  margin-top: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.edit-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.edit-section input,
+.edit-section select,
+.edit-section textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-save {
+  background-color: #009688;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background-color: #ccc;
+  color: #333;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}

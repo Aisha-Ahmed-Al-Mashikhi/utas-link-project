@@ -1,0 +1,194 @@
+.findjob-page {
+  background: #f9fcfb;
+  min-height: 90vh;
+  padding: 40px 70px;
+  font-family: "Quicksand", sans-serif;
+}
+
+.findjob-title {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.accent {
+  color: #009688;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 35px;
+  gap: 8px;
+}
+
+.search-box {
+  width: 65%;
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid #d3d3d3;
+  font-size: 15px;
+}
+
+.search-btn {
+  background-color: #009688;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.search-btn:hover {
+  background-color: #007d73;
+}
+
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.job-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: 0.2s;
+}
+.job-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+.rate {
+  color: #009688;
+  font-weight: 700;
+}
+
+.org-name {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tag {
+  background-color: #e8f6f4;
+  color: #009688;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.desc {
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.skills {
+  color: #555;
+  font-size: 13.5px;
+  margin-bottom: 12px;
+}
+
+.job-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-apply {
+  background-color: #009688;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 22px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-apply:hover {
+  background-color: #007a6a;
+}
+/* 🔍 Modern search bar */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 35px;
+  width: 70%;
+  position: relative;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-wrapper::before {
+  content: "🔍";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.5;
+}
+
+.search-box {
+  width: 100%;
+  border-radius: 12px;
+  padding: 12px 16px 12px 40px; /* space for icon */
+  border: 1px solid #d3d3d3;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.search-box:focus {
+  outline: none;
+  border-color: #009688;
+  box-shadow: 0 3px 12px rgba(0, 150, 136, 0.15);
+}
+
+.search-btn {
+  background-color: #009688;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: 0.2s;
+}
+.search-btn:hover {
+  background-color: #007d73;
+}

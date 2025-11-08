@@ -1,0 +1,78 @@
+.dashboard-page {
+  max-width: 900px;
+  margin: 40px auto;
+  background-color: #f8fcfa;
+  padding: 20px;
+}
+
+.dash-title {
+  text-align: center;
+  color: #009688;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.dash-job-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.dash-subtitle {
+  color: #444;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.dash-applicant {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f6fdfb;
+  border: 1px solid #e0f2f1;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+
+.status {
+  font-weight: 600;
+  color: #555;
+}
+.status.accepted {
+  color: #009688;
+}
+.status.rejected {
+  color: #e74c3c;
+}
+.status.pending {
+  color: #ff9800;
+}
+
+.dash-actions button {
+  margin-left: 6px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.view-btn {
+  background-color: #e0f7fa;
+}
+.chat-btn {
+  background-color: #f1f8e9;
+}
+.accept-btn {
+  background-color: #b2dfdb;
+}
+.reject-btn {
+  background-color: #ffebee;
+}
+
+.no-apps {
+  color: #777;
+  font-style: italic;
+}

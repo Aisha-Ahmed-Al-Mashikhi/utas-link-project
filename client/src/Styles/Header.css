@@ -1,0 +1,43 @@
+/* Main header container */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+/* Circle Logo */
+.logo-circle {
+  width: 42px;
+  height: 42px;
+  background: #009688;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* UTASLink text next to logo */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-text {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.brand-main {
+  color: #111;
+}
+
+.brand-accent {
+  color: #009688;
+}

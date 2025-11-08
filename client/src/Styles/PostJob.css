@@ -1,0 +1,141 @@
+/* 🌿 الخلفية العامة */
+.postjob-page {
+  background-color: #f5faf8;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* 🧾 الكارد الكامل */
+.postjob-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 45px 50px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* 🏷️ العنوان */
+.page-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.accent {
+  color: #009688;
+}
+
+.page-sub {
+  color: #666;
+  margin-bottom: 28px;
+  font-size: 15px;
+}
+
+/* 🧩 توزيع الحقول */
+.row-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.col-half {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🧠 الحقول */
+.postjob-card label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.postjob-card input,
+.postjob-card select,
+.postjob-card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+  font-size: 15px;
+  transition: border 0.2s ease;
+}
+
+.postjob-card input:focus,
+.postjob-card select:focus,
+.postjob-card textarea:focus {
+  border-color: #009688;
+  outline: none;
+}
+
+/* ✍️ الوصف */
+.postjob-card textarea {
+  resize: none;
+  height: 85px;
+}
+
+/* 🔘 الأزرار */
+.actions {
+  display: flex;
+  gap: 18px;
+  margin-top: 25px;
+  justify-content: center;
+}
+
+.btn-primary {
+  background-color: #009688;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 32px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #00796b;
+}
+
+.btn-ghost {
+  background: #fff;
+  color: #333;
+  border: 1.5px solid #ccc;
+  border-radius: 30px;
+  padding: 12px 32px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-ghost:hover {
+  background: #f8f8f8;
+}
+
+/* 📱 تجاوب */
+@media (max-width: 768px) {
+  .postjob-card {
+    padding: 28px;
+  }
+
+  .page-title {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .page-sub {
+    text-align: center;
+  }
+}

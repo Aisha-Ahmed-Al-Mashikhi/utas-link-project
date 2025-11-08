@@ -1,0 +1,49 @@
+.home {
+  background: #f5faf8; /* نفس الخلفية الخفيفة في الصورة */
+  text-align: center;
+  padding: 90px 20px;
+}
+.home-section {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+/* Main Heading */
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+  line-height: 1.15;
+}
+.hero {
+  padding: 60px 0 90px;
+}
+.accent {
+  color: #009688; /* اللون الرئيسي */
+}
+
+/* Description under the heading */
+.hero-text {
+  max-width: 600px;
+  margin: 16px auto 32px;
+  color: #575757;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* Main CTA Button */
+.hero-btn {
+  background: #009688;
+  color: white;
+  padding: 14px 32px;
+  border: none;
+  font-size: 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.15s;
+  font-weight: 600;
+}
+
+.hero-btn:hover {
+  background: #007d73;
+}
