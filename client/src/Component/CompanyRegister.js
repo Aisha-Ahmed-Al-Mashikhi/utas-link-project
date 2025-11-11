@@ -1,9 +1,12 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerCompany } from "../Features/CompanySlice";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { companySchemaValidation } from "../Validations/CompanyValidation";
-import { Link, useNavigate } from "react-router-dom";
 import "../Styles/CompanyRegister.css";
-import companyImg from "../Images/company-man.png"; // ضع هنا صورة الرجل اللي يستخدم اللابتوب
+import companyImg from "../Images/company-man.png";
 
 const INDUSTRIES = [
   "",
@@ -19,32 +22,58 @@ const INDUSTRIES = [
 const LOCATIONS = ["", "Salalah", "Taqah", "Mirbat", "Mughsail", "Other"];
 
 const CompanyRegister = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isLoading, isError, isSuccess } = useSelector(
+    (state) => state.companies
+  );
 
+  // Local state for controlled fields
+  const [companyName, setCompanyName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [location, setLocation] = useState("");
+  const [foundedDate, setFoundedDate] = useState("");
+
+  // React Hook Form setup
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(companySchemaValidation),
+    mode: "onChange",
   });
 
+  // Handle form submission
   const onSubmit = (data) => {
-    localStorage.setItem("companyData", JSON.stringify(data));
-    alert("Company Registered ✅");
-    navigate("/company-profile");
+    dispatch(registerCompany(data));
   };
 
+  // Redirects after success or failure
+  useEffect(() => {
+    if (isSuccess) {
+      alert("Company registered successfully!");
+      reset();
+      navigate("/companyprofile");
+    } else if (isError) {
+      alert("Registration failed. Please try again.");
+    }
+  }, [isSuccess, isError, navigate, reset]);
+
   return (
-    <div className="company-container">
-      <div className="company-box">
-        {/* LEFT SIDE (Form) */}
-        <div className="company-card">
-          <h1 className="company-title">
+    <div className="register-page">
+      <div className="register-container">
+        {/* Left side (Form) */}
+        <div className="register-form">
+          <h1 className="reg-title">
             Create your <span className="accent">account</span>
           </h1>
-          <p className="company-sub">Please fill in your company details</p>
+          <p className="reg-sub">Please fill in your company details</p>
 
+          {/* Role Switch */}
           <div className="role-switch">
             <Link to="/user-register" className="role-btn">
               Student
@@ -55,42 +84,54 @@ const CompanyRegister = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Company Name */}
             <label>Company Name</label>
             <input
               type="text"
-              placeholder="Dhofar Advertising Co."
-              {...register("companyName")}
+              placeholder="Your company name"
+              value={companyName}
+              {...register("companyName", {
+                onChange: (e) => setCompanyName(e.target.value),
+              })}
             />
             <p className="error">{errors.companyName?.message}</p>
 
-            <div className="row-flex">
-              <div className="col-half">
-                <label>Email</label>
-                <input
-                  type="email"
-                  placeholder="hr@company.com"
-                  {...register("email")}
-                />
-                <p className="error">{errors.email?.message}</p>
-              </div>
+            {/* Email */}
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="hr@company.com"
+              value={email}
+              {...register("email", {
+                onChange: (e) => setEmail(e.target.value),
+              })}
+            />
+            <p className="error">{errors.email?.message}</p>
 
-              <div className="col-half">
-                <label>Password</label>
-                <input
-                  type="password"
-                  placeholder="********"
-                  {...register("password")}
-                />
-                <p className="error">{errors.password?.message}</p>
-              </div>
-            </div>
+            {/* Password */}
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="********"
+              value={password}
+              {...register("password", {
+                onChange: (e) => setPassword(e.target.value),
+              })}
+            />
+            <p className="error">{errors.password?.message}</p>
 
+            {/* Industry and Location */}
             <div className="row-flex">
               <div className="col-half">
                 <label>Industry Type</label>
-                <select {...register("industry")}>
-                  {INDUSTRIES.map((i, idx) => (
-                    <option key={idx} value={i}>
+                <select
+                  value={industry}
+                  {...register("industry", {
+                    onChange: (e) => setIndustry(e.target.value),
+                  })}
+                >
+                  {INDUSTRIES.map((i, index) => (
+                    <option key={index} value={i}>
                       {i === "" ? "Select your industry" : i}
                     </option>
                   ))}
@@ -100,9 +141,14 @@ const CompanyRegister = () => {
 
               <div className="col-half">
                 <label>Location</label>
-                <select {...register("location")}>
-                  {LOCATIONS.map((l, idx) => (
-                    <option key={idx} value={l}>
+                <select
+                  value={location}
+                  {...register("location", {
+                    onChange: (e) => setLocation(e.target.value),
+                  })}
+                >
+                  {LOCATIONS.map((l, index) => (
+                    <option key={index} value={l}>
                       {l === "" ? "Select your location" : l}
                     </option>
                   ))}
@@ -111,12 +157,20 @@ const CompanyRegister = () => {
               </div>
             </div>
 
+            {/* Founded Date */}
             <label>Founded Date</label>
-            <input type="date" {...register("foundedDate")} />
+            <input
+              type="date"
+              value={foundedDate}
+              {...register("foundedDate", {
+                onChange: (e) => setFoundedDate(e.target.value),
+              })}
+            />
             <p className="error">{errors.foundedDate?.message}</p>
 
-            <button type="submit" className="company-btn">
-              Sign up
+            {/* Submit */}
+            <button type="submit" className="reg-btn" disabled={isLoading}>
+              {isLoading ? "Registering..." : "Sign up"}
             </button>
 
             <p className="login-text">
@@ -128,9 +182,9 @@ const CompanyRegister = () => {
           </form>
         </div>
 
-        {/* RIGHT SIDE (Image) */}
-        <div className="company-image">
-          <img src={companyImg} alt="Omani businessman using laptop" />
+        {/* Right side (Image) */}
+        <div className="register-image">
+          <img src={companyImg} alt="Company registration" />
         </div>
       </div>
     </div>

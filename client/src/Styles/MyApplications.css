@@ -104,3 +104,50 @@
 .status-btn:hover {
   background: #007c6c;
 }
+.status-badge {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status-badge.pending {
+  background-color: #fff8e1;
+  color: #8d6e63;
+}
+
+.status-badge.accepted {
+  background-color: #c8f7c5;
+  color: #0b9444;
+}
+
+.status-badge.rejected {
+  background-color: #ffd3d3;
+  color: #b71c1c;
+}
+
+.withdraw-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.withdraw-btn:hover {
+  background-color: #d32f2f;
+}
+
+.accepted-label {
+  color: #009688;
+  font-weight: 700;
+}
+
+.rejected-label {
+  color: #e53935;
+  font-weight: 700;
+}

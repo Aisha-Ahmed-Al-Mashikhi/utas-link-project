@@ -1,13 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
 .home {
-  background: #f5faf8; /* نفس الخلفية الخفيفة في الصورة */
+  background: #f5faf8;
   text-align: center;
   padding: 90px 20px;
 }
+
 .home-section {
   margin-bottom: 0;
   padding-bottom: 0;
 }
-/* Main Heading */
+
+.hero {
+  padding: 60px 0 90px;
+}
+
 .hero-title {
   font-size: 48px;
   font-weight: 800;
@@ -15,14 +26,11 @@
   margin: 0;
   line-height: 1.15;
 }
-.hero {
-  padding: 60px 0 90px;
-}
+
 .accent {
-  color: #009688; /* اللون الرئيسي */
+  color: #009688;
 }
 
-/* Description under the heading */
 .hero-text {
   max-width: 600px;
   margin: 16px auto 32px;
@@ -31,10 +39,9 @@
   line-height: 1.5;
 }
 
-/* Main CTA Button */
 .hero-btn {
   background: #009688;
-  color: white;
+  color: #fff;
   padding: 14px 32px;
   border: none;
   font-size: 18px;

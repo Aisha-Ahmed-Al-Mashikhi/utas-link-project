@@ -1,23 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchApplications,
+  cancelApplication,
+} from "../Features/ApplicationSlice";
 import "../Styles/MyApplications.css";
+import { useNavigate } from "react-router-dom";
 
 const MyApplications = () => {
-  const [applications, setApplications] = useState([
-    {
-      id: 1,
-      title: "Poster Designer – Dhofar Events",
-      company: "Dhofar Events",
-      type: "Part-time",
-      rate: "8 OMR",
-      task: "Task • 2 days",
-      status: "Pending Review",
-    },
-  ]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleWithdraw = (id) => {
-    setApplications(applications.filter((app) => app.id !== id));
-    alert("Application withdrawn successfully ❌");
+  const { user } = useSelector((state) => state.users);
+  const { applications, isLoading } = useSelector(
+    (state) => state.applications
+  );
+
+  // Protect route: redirect to login if no user is logged in
+  useEffect(() => {
+    if (!user || !user.email) {
+      navigate("/login");
+      return;
+    }
+    dispatch(fetchApplications(user.email));
+  }, [dispatch, user, navigate]);
+
+  // Handle canceling an application
+  const handleCancel = (id) => {
+    dispatch(cancelApplication(id))
+      .unwrap()
+      .then(() => alert("Application canceled successfully."))
+      .catch(() => alert("Error canceling application."));
   };
+
+  if (isLoading) return <p>Loading applications...</p>;
 
   return (
     <div className="applications-page">
@@ -29,30 +45,41 @@ const MyApplications = () => {
       </p>
 
       <div className="applications-list">
-        {applications.map((app) => (
-          <div className="application-card" key={app.id}>
-            <div className="app-info">
-              <div className="app-icon">🏢</div>
-              <div>
-                <h3 className="job-title">{app.title}</h3>
-                <p className="company">Company: {app.company}</p>
-                <p className="details">
-                  Type: {app.type} • {app.rate} / {app.task}
-                </p>
+        {applications.length === 0 ? (
+          <p>No applications yet.</p>
+        ) : (
+          applications.map((app) => (
+            <div className="application-card" key={app._id}>
+              <div className="app-info">
+                <div className="app-icon">🏢</div>
+                <div>
+                  <h3 className="job-title">{app.jobTitle}</h3>
+                  <p className="company">Company: {app.organization}</p>
+                  <p className="details">Email: {app.applicantEmail}</p>
+                  <p className={`status-badge ${app.status?.toLowerCase()}`}>
+                    {app.status || "Pending Review"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Action buttons change depending on application status */}
+              <div className="app-actions">
+                {app.status === "Pending Review" ? (
+                  <button
+                    className="withdraw-btn"
+                    onClick={() => handleCancel(app._id)}
+                  >
+                    Cancel
+                  </button>
+                ) : app.status === "Accepted" ? (
+                  <span className="accepted-label">Accepted</span>
+                ) : app.status === "Rejected" ? (
+                  <span className="rejected-label">Rejected</span>
+                ) : null}
               </div>
             </div>
-
-            <div className="app-actions">
-              <button
-                className="withdraw-btn"
-                onClick={() => handleWithdraw(app.id)}
-              >
-                Withdraw Application
-              </button>
-              <button className="status-btn">{app.status}</button>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

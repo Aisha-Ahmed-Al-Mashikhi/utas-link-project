@@ -21,7 +21,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 35px;
-  gap: 8px;
+  gap: 60px;
 }
 
 .search-box {
@@ -136,7 +136,7 @@
 .btn-apply:hover {
   background-color: #007a6a;
 }
-/* 🔍 Modern search bar */
+/* Modern search bar */
 .search-container {
   display: flex;
   justify-content: center;

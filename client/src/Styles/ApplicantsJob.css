@@ -1,78 +1,108 @@
-.dashboard-page {
-  max-width: 900px;
-  margin: 40px auto;
+.applicants-dashboard {
+  padding: 40px 60px;
   background-color: #f8fcfa;
-  padding: 20px;
+  min-height: 90vh;
 }
 
-.dash-title {
+.page-title {
   text-align: center;
-  color: #009688;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 20px;
+  color: #222;
+  margin-bottom: 30px;
 }
 
-.dash-job-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  margin-bottom: 25px;
-}
-
-.dash-subtitle {
-  color: #444;
-  margin-top: 10px;
-  font-size: 16px;
-}
-
-.dash-applicant {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f6fdfb;
-  border: 1px solid #e0f2f1;
-  border-radius: 10px;
-  padding: 10px 15px;
-  margin-top: 10px;
-}
-
-.status {
-  font-weight: 600;
-  color: #555;
-}
-.status.accepted {
+.page-title .highlight {
   color: #009688;
 }
-.status.rejected {
-  color: #e74c3c;
-}
-.status.pending {
-  color: #ff9800;
+
+.applicants-table-container {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
 }
 
-.dash-actions button {
-  margin-left: 6px;
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.96rem;
+}
+
+.styled-table thead {
+  background: linear-gradient(90deg, #009688, #00796b);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.styled-table tr:hover {
+  background-color: #f1fdfb;
+  transition: background 0.3s ease;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 0.9rem;
+}
+
+.status-badge.accepted {
+  background: #c8f7c5;
+  color: #0b9444;
+}
+
+.status-badge.rejected {
+  background: #ffd3d3;
+  color: #c30d0d;
+}
+
+.status-badge.pending {
+  background: #fff3cd;
+  color: #946200;
+}
+
+.btn-accept,
+.btn-reject {
+  padding: 6px 12px;
   border: none;
   border-radius: 6px;
-  padding: 6px 10px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.view-btn {
-  background-color: #e0f7fa;
+.btn-accept {
+  background-color: #009688;
+  color: #fff;
 }
-.chat-btn {
-  background-color: #f1f8e9;
+
+.btn-accept:hover {
+  background-color: #00796b;
 }
-.accept-btn {
-  background-color: #b2dfdb;
+
+.btn-reject {
+  background-color: #f44336;
+  color: white;
 }
-.reject-btn {
-  background-color: #ffebee;
+
+.btn-reject:hover {
+  background-color: #d32f2f;
 }
 
 .no-apps {
-  color: #777;
+  text-align: center;
+  color: #888;
+  font-size: 1.1rem;
   font-style: italic;
 }

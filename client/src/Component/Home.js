@@ -1,7 +1,6 @@
-import React from "react";
-import "../Styles/Home.css"; // make sure this file exists
+import "../Styles/Home.css";
+import Login from "./Login";
 import { Link } from "react-router-dom";
-
 const Home = () => {
   return (
     <div className="home">
@@ -20,7 +19,7 @@ const Home = () => {
           flexible, part-time work. Training options are available for
           newcomers.
         </p>
-        <Link to="/user-register">
+        <Link to="/login">
           <button className="hero-btn">Get Start</button>
         </Link>
       </section>

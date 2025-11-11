@@ -12,4 +12,4 @@ export const loginSchemaValidation = yup.object().shape(
       .required("Password is required"),
   },
   { abortEarly: false }
-); // 👈 يعرض كل الأخطاء دفعة واحدة
+);

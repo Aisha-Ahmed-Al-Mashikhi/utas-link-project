@@ -1,334 +1,147 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 
 const UserProfile = () => {
-  const [user, setUser] = useState(null);
-  const [cvFile, setCvFile] = useState(null);
+  const navigate = useNavigate();
+  const [user, setUser] = useState({});
+  const [preview, setPreview] = useState(null);
 
-  const [showEditInfo, setShowEditInfo] = useState(false);
-  const [showEditPayment, setShowEditPayment] = useState(false);
-
-  const [payment, setPayment] = useState(null); // start empty
-  const [jobHistory, setJobHistory] = useState([]);
-
-  // ✅ Load data from localStorage
+  // Load user profile from backend
   useEffect(() => {
-    const storedUser = localStorage.getItem("userData");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    if (!savedUser?.email) {
+      alert("Please log in again.");
+      navigate("/login");
+      return;
+    }
 
-    const storedJobs = localStorage.getItem("appliedJobs");
-    if (storedJobs) setJobHistory(JSON.parse(storedJobs));
+    axios
+      .get(`http://localhost:3001/user/${savedUser.email}`)
+      .then((res) => setUser(res.data))
+      .catch((err) => console.error("Error fetching profile:", err));
+  }, [navigate]);
 
-    const storedPayment = localStorage.getItem("paymentInfo");
-    if (storedPayment) setPayment(JSON.parse(storedPayment));
-
-    const storedCV = localStorage.getItem("userCV");
-    if (storedCV) setCvFile({ name: storedCV });
-  }, []);
-
-  // ✅ Upload CV
-  const handleUploadCV = (e) => {
+  // Display profile image preview locally
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setCvFile(file);
-      localStorage.setItem("userCV", file.name);
+    if (file) setPreview(URL.createObjectURL(file));
+  };
+
+  // Upload CV (PDF) to backend
+  const handleCvUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("cv", file);
+    formData.append("email", user.email);
+
+    try {
+      const res = await axios.post("http://localhost:3001/uploadCV", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.data.cvLink) {
+        setUser((prev) => ({ ...prev, cvLink: res.data.cvLink }));
+        alert("CV uploaded successfully!");
+      }
+    } catch (err) {
+      console.error("Error uploading CV:", err);
+      alert("Failed to upload CV. Please try again.");
     }
   };
 
-  // ✅ Save updated info
-  const handleSaveInfo = (e) => {
-    e.preventDefault();
-    localStorage.setItem("userData", JSON.stringify(user));
-    setShowEditInfo(false);
-    alert("Profile updated ✅");
-  };
-
-  // ✅ Save payment info (add or edit)
-  const handleSavePayment = (e) => {
-    e.preventDefault();
-    localStorage.setItem("paymentInfo", JSON.stringify(payment));
-    setShowEditPayment(false);
-    alert("Payment details saved ✅");
-  };
-
-  // ✅ Delete payment info
-  const handleDeletePayment = () => {
-    localStorage.removeItem("paymentInfo");
-    setPayment(null);
-    alert("Payment deleted 🗑️");
-  };
-
-  if (!user) return <p style={{ textAlign: "center" }}>Loading user data...</p>;
+  if (!user?.email) return <p>Loading profile...</p>;
 
   return (
     <div className="profile-page">
-      {/* ----- Profile Header ----- */}
+      {/* ===== Profile Card ===== */}
       <div className="profile-card">
         <div className="profile-left">
-          <div className="profile-icon">👤</div>
+          {/* Profile Image */}
+          <div className="profile-img-container">
+            <img
+              src={
+                preview ||
+                user.profileImage ||
+                "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+              }
+              alt="profile"
+              className="profile-img"
+            />
+            <label htmlFor="imageUpload" className="upload-btn">
+              Upload
+            </label>
+            <input
+              type="file"
+              id="imageUpload"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
+
           <div>
-            <h2 className="profile-name">{user.fullName}</h2>
+            <h2 className="profile-name">{user.name}</h2>
             <p className="profile-email">{user.email}</p>
             <p className="profile-detail">
-              {user.major} • Age: {user.age} • {user.role}
+              {user.major || "Student"} {user.age ? `• Age ${user.age}` : ""}
             </p>
-            <div className="cv-section">
-              <span className="cv-label">CV:</span>
-              <label className="upload-btn">
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={handleUploadCV}
-                  style={{ display: "none" }}
-                />
-                ⬆ Upload
-              </label>
-              {cvFile && <span className="cv-file">📄 {cvFile.name}</span>}
-            </div>
           </div>
         </div>
-        <button className="update-btn" onClick={() => setShowEditInfo(true)}>
-          Update Info
-        </button>
       </div>
 
-      {/* ----- Applications Section ----- */}
-      <div className="history-box">
-        <h3>My Applications</h3>
-        {jobHistory.length > 0 ? (
-          jobHistory.map((job, index) => (
-            <div key={index} className="job-item">
-              <div>
-                <h4>{job.title}</h4>
-                <p>{job.company}</p>
-              </div>
-              <p
-                className={`status ${job.status
-                  ?.toLowerCase()
-                  .replace(" ", "-")}`}
-              >
-                {job.status}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No applications yet.</p>
-        )}
-      </div>
-
-      {/* ----- Payment Section ----- */}
+      {/* ===== Academic Information ===== */}
       <div className="payment-box">
-        <h3>Payment Details</h3>
+        <h3>Academic Information</h3>
+        <div className="payment-info">
+          <p>
+            <strong>Major:</strong> {user.major || "—"}
+          </p>
+          <p>
+            <strong>Age:</strong> {user.age || "—"}
+          </p>
+          <p>
+            <strong>Role:</strong> {user.role || "Student"}
+          </p>
+          <p>
+            <strong>Status:</strong>{" "}
+            <span className="status active">Active</span>
+          </p>
+        </div>
+      </div>
 
-        {/* No Payment Yet */}
-        {!payment && (
-          <div>
-            <p>
-              No payment info yet. Add your payment details to receive payouts.
-            </p>
-            <button
-              className="add-btn"
-              onClick={() => setShowEditPayment(true)}
+      {/* ===== CV Section ===== */}
+      <div className="payment-box" style={{ marginTop: "25px" }}>
+        <h3>Curriculum Vitae (CV)</h3>
+        {user.cvLink ? (
+          <div className="cv-section">
+            <p>CV Uploaded Successfully</p>
+            <a
+              href={user.cvLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cv-link"
             >
-              ➕ Add your Payment
-            </button>
+              View CV
+            </a>
           </div>
-        )}
-
-        {/* Show Added Payment */}
-        {payment && (
-          <div className="payment-info">
-            <p>👤 Account Holder: {payment.accountHolder}</p>
-            <p>🏦 Bank Name: {payment.bankName}</p>
-            <p>💳 Account Number: {payment.accountNumber}</p>
-            <p>🔢 IBAN: {payment.iban}</p>
-            <p>🏢 Branch: {payment.branch}</p>
-            <p>🌐 SWIFT/BIC: {payment.swift}</p>
-
-            <div className="payment-actions">
-              <button
-                className="update-btn small"
-                onClick={() => setShowEditPayment(true)}
-              >
-                ✏️ Edit Payment
-              </button>
-              <button
-                className="delete-btn small"
-                onClick={handleDeletePayment}
-              >
-                🗑️ Delete
-              </button>
-            </div>
+        ) : (
+          <div>
+            <input
+              type="file"
+              id="cvUpload"
+              accept=".pdf"
+              style={{ display: "none" }}
+              onChange={handleCvUpload}
+            />
+            <label htmlFor="cvUpload" className="upload-cv-btn">
+              Upload CV (PDF)
+            </label>
           </div>
         )}
       </div>
-
-      {/* ----- Modal: Edit Info ----- */}
-      {showEditInfo && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Edit Profile Info</h3>
-            <form onSubmit={handleSaveInfo}>
-              <label>Full Name</label>
-              <input
-                type="text"
-                value={user.fullName}
-                onChange={(e) => setUser({ ...user, fullName: e.target.value })}
-              />
-              <label>Email</label>
-              <input
-                type="email"
-                value={user.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
-              />
-              <label>Major</label>
-              <input
-                type="text"
-                value={user.major}
-                onChange={(e) => setUser({ ...user, major: e.target.value })}
-              />
-              <label>Age</label>
-              <input
-                type="number"
-                value={user.age}
-                onChange={(e) => setUser({ ...user, age: e.target.value })}
-              />
-              <div className="modal-btns">
-                <button type="submit" className="save-btn">
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="cancel-btn"
-                  onClick={() => setShowEditInfo(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ----- Modal: Add/Edit Payment ----- */}
-      {showEditPayment && (
-        <div className="modal-overlay">
-          <div className="modal-content small">
-            <h3>💳 {payment ? "Edit Payment Info" : "Add Your Payment"}</h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSavePayment(e);
-              }}
-            >
-              <label>Account Holder Name</label>
-              <input
-                type="text"
-                placeholder="e.g. Aisha Ahmed Al-Mashani"
-                value={payment ? payment.accountHolder || "" : ""}
-                onChange={(e) =>
-                  setPayment({
-                    ...payment,
-                    accountHolder: e.target.value,
-                  })
-                }
-                required
-              />
-
-              <label>Bank Name</label>
-              <select
-                value={payment ? payment.bankName || "" : ""}
-                onChange={(e) =>
-                  setPayment({
-                    ...payment,
-                    bankName: e.target.value,
-                  })
-                }
-                required
-              >
-                <option value="">Select your bank</option>
-                <option value="Bank Muscat">Bank Muscat</option>
-                <option value="Bank Dhofar">Bank Dhofar</option>
-                <option value="National Bank of Oman">
-                  National Bank of Oman
-                </option>
-                <option value="Oman Arab Bank">Oman Arab Bank</option>
-                <option value="Sohar International">Sohar International</option>
-              </select>
-
-              <label>IBAN</label>
-              <input
-                type="text"
-                placeholder="e.g. OM84 0000 0000 1234 5678 9012"
-                value={payment ? payment.iban || "" : ""}
-                onChange={(e) =>
-                  setPayment({
-                    ...payment,
-                    iban: e.target.value,
-                  })
-                }
-              />
-
-              <label>Account Number</label>
-              <input
-                type="text"
-                placeholder="e.g. 123456789012"
-                value={payment ? payment.accountNumber || "" : ""}
-                onChange={(e) =>
-                  setPayment({
-                    ...payment,
-                    accountNumber: e.target.value,
-                  })
-                }
-              />
-
-              <label>Branch (optional)</label>
-              <input
-                type="text"
-                placeholder="e.g. Salalah Branch"
-                value={payment ? payment.branch || "" : ""}
-                onChange={(e) =>
-                  setPayment({
-                    ...payment,
-                    branch: e.target.value,
-                  })
-                }
-              />
-
-              <label>SWIFT / BIC (optional)</label>
-              <input
-                type="text"
-                placeholder="e.g. BMUSOMRXXXX"
-                value={payment ? payment.swift || "" : ""}
-                onChange={(e) =>
-                  setPayment({
-                    ...payment,
-                    swift: e.target.value,
-                  })
-                }
-              />
-
-              <p className="note-text">
-                ⚠️ Make sure your IBAN and account number match your registered
-                bank details.
-              </p>
-
-              <div className="modal-btns">
-                <button type="submit" className="save-btn">
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="cancel-btn"
-                  onClick={() => setShowEditPayment(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

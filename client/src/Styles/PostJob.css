@@ -1,4 +1,3 @@
-/* 🌿 الخلفية العامة */
 .postjob-page {
   background-color: #f5faf8;
   min-height: 100vh;
@@ -8,7 +7,6 @@
   padding: 40px 20px;
 }
 
-/* 🧾 الكارد الكامل */
 .postjob-card {
   background: #ffffff;
   border-radius: 20px;
@@ -19,7 +17,6 @@
   max-width: 1100px;
 }
 
-/* 🏷️ العنوان */
 .page-title {
   font-size: 32px;
   font-weight: 800;
@@ -37,11 +34,10 @@
   font-size: 15px;
 }
 
-/* 🧩 توزيع الحقول */
 .row-flex {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 18px;
   justify-content: space-between;
 }
 
@@ -51,8 +47,11 @@
   display: flex;
   flex-direction: column;
 }
+/* Fix spacing between input columns */
+.row-flex .col-half:first-child {
+  margin-right: 15px;
+}
 
-/* 🧠 الحقول */
 .postjob-card label {
   font-weight: 600;
   font-size: 14px;
@@ -78,13 +77,11 @@
   outline: none;
 }
 
-/* ✍️ الوصف */
 .postjob-card textarea {
   resize: none;
   height: 85px;
 }
 
-/* 🔘 الأزرار */
 .actions {
   display: flex;
   gap: 18px;
@@ -124,7 +121,6 @@
   background: #f8f8f8;
 }
 
-/* 📱 تجاوب */
 @media (max-width: 768px) {
   .postjob-card {
     padding: 28px;

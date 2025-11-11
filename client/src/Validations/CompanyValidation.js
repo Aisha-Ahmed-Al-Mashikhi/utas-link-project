@@ -1,26 +1,36 @@
 import * as yup from "yup";
 
-export const companySchemaValidation = yup.object().shape({
+const today = new Date().toISOString().split("T")[0];
+
+export const companySchemaValidation = yup.object({
   companyName: yup
     .string()
+    .trim()
     .min(3, "Company name must be at least 3 characters")
-    .required("Company name is required"),
+    .required("Company Name is required"),
+
   email: yup
     .string()
-    .email("Enter a valid email address")
+    .trim()
+    .email("Please enter a valid email address")
     .required("Email is required"),
-  industry: yup
-    .string()
-    .min(2, "Please enter a valid industry type")
-    .required("Industry type is required"),
-  location: yup
-    .string()
-    .min(2, "Please enter a valid location")
-    .required("Location is required"),
+
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters")
-    .matches(/[A-Z]/, "Password must include one uppercase letter")
-    .matches(/[0-9]/, "Password must include one number")
+    .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
+
+  industry: yup.string().required("Please select your industry type"),
+
+  location: yup.string().required("Please select your location"),
+
+  foundedDate: yup
+    .string()
+    .required("Founded date is required")
+    .matches(/^\d{4}-\d{2}-\d{2}$/, "Please select a valid date")
+    .test(
+      "not-in-future",
+      "Founded date cannot be in the future",
+      (value) => !value || value <= today
+    ),
 });
