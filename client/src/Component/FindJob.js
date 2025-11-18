@@ -8,33 +8,36 @@ import "../Styles/FindJob.css";
 const FindJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { jobs, isLoading } = useSelector((state) => state.jobs);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [userCvLink, setUserCvLink] = useState(null);
+  const [userBank, setUserBank] = useState(null);
 
-  // Protect route: redirect if not logged in
   useEffect(() => {
     const role = localStorage.getItem("role");
     if (!role) navigate("/login");
   }, [navigate]);
 
-  // Fetch all jobs
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch]);
 
-  // Fetch logged-in user to check if CV is uploaded
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+
     if (loggedUser?.email) {
       axios
         .get(`http://localhost:3001/user/${loggedUser.email}`)
-        .then((res) => setUserCvLink(res.data.cvLink || null))
-        .catch((err) => console.error("Error fetching user CV:", err));
+        .then((res) => {
+          setUserCvLink(res.data.cvLink || null);
+          setUserBank(res.data.bankCard || null);
+        })
+        .catch((err) => console.error("Error fetching user profile:", err));
     }
   }, []);
 
-  // Filter jobs based on search input
   const filteredJobs = jobs.filter(
     (job) =>
       job.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,23 +45,28 @@ const FindJob = () => {
       job.skills.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Apply for job (requires uploaded CV)
   const handleApply = async (job) => {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+
+    if (!loggedUser) {
+      alert("Please log in first!");
+      navigate("/login");
+      return;
+    }
+
+    if (!userCvLink) {
+      alert("Please upload your CV before applying.");
+      navigate("/userprofile");
+      return;
+    }
+
+    if (!userBank) {
+      alert("Please add your bank/benefit number before applying.");
+      navigate("/userprofile");
+      return;
+    }
+
     try {
-      const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-      if (!loggedUser) {
-        alert("Please log in first!");
-        navigate("/login");
-        return;
-      }
-
-      // Check if the user uploaded a CV
-      if (!userCvLink) {
-        alert("Please upload your CV before applying for any job.");
-        navigate("/userprofile");
-        return;
-      }
-
       const applicationData = {
         jobId: job._id,
         jobTitle: job.jobTitle,
@@ -71,7 +79,7 @@ const FindJob = () => {
       await axios.post("http://localhost:3001/apply", applicationData);
       alert("Job applied successfully!");
     } catch (err) {
-      alert("Error occurred or you have already applied.");
+      alert("You have already applied or an error occurred.");
     }
   };
 

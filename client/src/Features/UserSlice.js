@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import * as ENV from "../config";
 
 const initialState = {
   users: [],
@@ -9,14 +10,12 @@ const initialState = {
   isError: false,
 };
 
-// Register new user
+// Register
 export const registerUser = createAsyncThunk(
   "users/registerUser",
   async (data, thunkAPI) => {
     try {
-      const res = await axios.post("http://localhost:3001/registerUser", data);
-      if (!res.data || !res.data.user)
-        return thunkAPI.rejectWithValue(res.data?.error || "User not returned");
+      const res = await axios.post(`${ENV.SERVER_URL}/registerUser`, data);
       return res.data.user;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || "Error");
@@ -24,84 +23,47 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-// Login user
+// Login
 export const login = createAsyncThunk("users/login", async (data, thunkAPI) => {
   try {
-    const res = await axios.post("http://localhost:3001/login", data);
+    const res = await axios.post(`${ENV.SERVER_URL}/login`, data);
     return res.data;
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response?.data || "Login failed");
   }
 });
 
-// Fetch user by email
+// Fetch single user
 export const fetchUser = createAsyncThunk("users/fetchUser", async (email) => {
-  const res = await axios.get(`http://localhost:3001/user/${email}`);
+  const res = await axios.get(`${ENV.SERVER_URL}/user/${email}`);
   return res.data;
 });
 
-// Logout (client-side only)
+// Logout
 export const logout = createAsyncThunk("users/logout", async () => true);
 
 const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    deleteUser: (s, a) => {
-      s.users = s.users.filter((u) => u.email !== a.payload);
+    deleteUser: (state, action) => {
+      state.users = state.users.filter((u) => u.email !== action.payload);
     },
   },
-  extraReducers: (b) => {
-    b
-      // Register
-      .addCase(registerUser.pending, (s) => {
-        s.isLoading = true;
-      })
+  extraReducers: (builder) => {
+    builder
       .addCase(registerUser.fulfilled, (s, a) => {
-        s.isLoading = false;
-        s.isSuccess = true;
         s.user = a.payload;
       })
-      .addCase(registerUser.rejected, (s) => {
-        s.isLoading = false;
-        s.isError = true;
-      })
-
-      // Login
-      .addCase(login.pending, (s) => {
-        s.isLoading = true;
-      })
       .addCase(login.fulfilled, (s, a) => {
-        s.isLoading = false;
-        s.isSuccess = true;
         s.user = a.payload.user;
         s.user.role = a.payload.role;
       })
-      .addCase(login.rejected, (s) => {
-        s.isLoading = false;
-        s.isError = true;
-      })
-
-      // Fetch user
-      .addCase(fetchUser.pending, (s) => {
-        s.isLoading = true;
-      })
       .addCase(fetchUser.fulfilled, (s, a) => {
-        s.isLoading = false;
-        s.isError = false;
-        const prev = s.user || {};
-        const incoming = a.payload || {};
-        s.user = { ...prev, ...incoming, role: incoming.role ?? prev.role };
+        s.user = { ...s.user, ...a.payload };
       })
-      .addCase(fetchUser.rejected, (s) => {
-        s.isLoading = false;
-        s.isError = true;
-      })
-
-      // Logout
       .addCase(logout.fulfilled, (s) => {
         s.user = {};
-        s.isSuccess = false;
       });
   },
 });

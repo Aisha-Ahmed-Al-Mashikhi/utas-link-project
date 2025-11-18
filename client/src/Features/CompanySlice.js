@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import * as ENV from "../config";
 
 const initialState = {
   company: {},
@@ -14,7 +15,7 @@ export const registerCompany = createAsyncThunk(
   async (companyData, thunkAPI) => {
     try {
       const res = await axios.post(
-        "http://localhost:3001/registerCompany",
+        `${ENV.SERVER_URL}/registerCompany`,
         companyData
       );
       return res.data.company;
@@ -24,12 +25,12 @@ export const registerCompany = createAsyncThunk(
   }
 );
 
-// Fetch company by email
+// Fetch company
 export const fetchCompany = createAsyncThunk(
   "companies/fetchCompany",
   async (email, thunkAPI) => {
     try {
-      const res = await axios.get(`http://localhost:3001/company/${email}`);
+      const res = await axios.get(`${ENV.SERVER_URL}/company/${email}`);
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || "Fetch error");
@@ -43,7 +44,7 @@ export const updateBankInfo = createAsyncThunk(
   async ({ email, bankData }, thunkAPI) => {
     try {
       const res = await axios.post(
-        `http://localhost:3001/company/${email}/bank`,
+        `${ENV.SERVER_URL}/company/${email}/bank`,
         bankData
       );
       return res.data.company;
@@ -61,35 +62,14 @@ const companySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(registerCompany.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(registerCompany.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
         state.company = action.payload;
-      })
-      .addCase(registerCompany.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
       })
       .addCase(fetchCompany.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
         state.company = action.payload;
-      })
-      .addCase(fetchCompany.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
       })
       .addCase(updateBankInfo.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
         state.company = action.payload;
-      })
-      .addCase(updateBankInfo.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
       });
   },
 });

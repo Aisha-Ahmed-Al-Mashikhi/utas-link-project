@@ -1,22 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import * as ENV from "../config";
 
-// Fetch all jobs
+// Fetch jobs
 export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async () => {
-  const res = await axios.get("http://localhost:3001/jobs");
+  const res = await axios.get(`${ENV.SERVER_URL}/jobs`);
   return res.data;
 });
 
-// Add new job
+// Add job
 export const addJob = createAsyncThunk(
   "jobs/addJob",
   async (jobData, thunkAPI) => {
     try {
-      const res = await axios.post("http://localhost:3001/addJob", jobData);
-      console.log("Response from backend:", res.data);
+      const res = await axios.post(`${ENV.SERVER_URL}/addJob`, jobData);
       return res.data.job || res.data;
     } catch (error) {
-      console.error("Error adding job:", error.response?.data || error.message);
       return thunkAPI.rejectWithValue(error.response?.data || "Add job failed");
     }
   }
@@ -31,38 +30,14 @@ const jobSlice = createSlice({
     isSuccess: false,
   },
   reducers: {},
-
   extraReducers: (builder) => {
     builder
-      // Fetch jobs
-      .addCase(fetchJobs.pending, (state) => {
-        state.isLoading = true;
+      .addCase(fetchJobs.fulfilled, (s, a) => {
+        s.jobs = a.payload;
       })
-      .addCase(fetchJobs.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.jobs = action.payload;
-      })
-      .addCase(fetchJobs.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-      })
-
-      // Add job
-      .addCase(addJob.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-      })
-      .addCase(addJob.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-        if (action.payload) state.jobs.push(action.payload);
-      })
-      .addCase(addJob.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
+      .addCase(addJob.fulfilled, (s, a) => {
+        s.jobs.push(a.payload);
+        s.isSuccess = true;
       });
   },
 });

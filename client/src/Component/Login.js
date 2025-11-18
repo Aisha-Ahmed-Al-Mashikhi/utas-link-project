@@ -4,6 +4,7 @@ import { login } from "../Features/UserSlice";
 import { useNavigate, Link } from "react-router-dom";
 import "../Styles/Login.css";
 import loginImg from "../Images/user-register.png";
+import { IoIosArrowBack } from "react-icons/io";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -62,6 +63,9 @@ const Login = () => {
 
   return (
     <div className="login-page">
+      <Link to="/" className="back-arrow">
+        <IoIosArrowBack size={28} />
+      </Link>
       <div className="login-container">
         {/* Left side: Login form */}
         <div className="login-form">

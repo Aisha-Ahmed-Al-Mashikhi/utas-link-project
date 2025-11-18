@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
   background-color: #f5faf8;
-  min-height: 100vh;
+  min-height: 10vh;
   padding: 40px;
 }
 
@@ -105,4 +105,16 @@ input {
   color: #009688;
   text-decoration: none;
   font-weight: 600;
+}
+.back-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.back-arrow:hover {
+  opacity: 0.7;
 }

@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema({
   role: { type: String, default: "Student" }, // User role type
   createdAt: { type: Date, default: Date.now }, // Account creation date
   cvLink: String,
+  // BANK CARD FIELDS
+  cardNumber: String,
+  cardName: String,
+  expiry: String,
+  cvv: String,
+  bankName: String,
 });
 
 // Create the model

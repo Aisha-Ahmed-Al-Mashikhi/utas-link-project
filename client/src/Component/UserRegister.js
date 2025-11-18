@@ -75,85 +75,73 @@ const UserRegister = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Full Name */}
-            <label>Full Name</label>
-            <input
-              type="text"
-              placeholder="Your name"
-              value={name}
-              {...register("name", {
-                onChange: (e) => setName(e.target.value),
-              })}
-            />
-            <p className="error">{errors.name?.message}</p>
-
-            {/* Email */}
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              {...register("email", {
-                onChange: (e) => setEmail(e.target.value),
-              })}
-            />
-            <p className="error">{errors.email?.message}</p>
-
-            {/* Password */}
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="********"
-              value={password}
-              {...register("password", {
-                onChange: (e) => setPassword(e.target.value),
-              })}
-            />
-            <p className="error">{errors.password?.message}</p>
-
-            {/* Major & Age */}
+            {/* NAME + AGE */}
             <div className="row-flex">
-              <div className="col-half">
-                <label>Major</label>
-                <select
-                  value={major}
-                  {...register("major", {
-                    onChange: (e) => setMajor(e.target.value),
-                  })}
-                >
-                  {MAJORS.map((m, i) => (
-                    <option key={i} value={m}>
-                      {m === "" ? "Select your major" : m}
-                    </option>
-                  ))}
-                </select>
-                <p className="error">{errors.major?.message}</p>
+              <div className="col-half form-group">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  {...register("name")}
+                />
+                <p className="error">{errors.name?.message}</p>
               </div>
 
-              <div className="col-half">
+              <div className="col-half form-group">
                 <label>Age</label>
                 <input
                   type="number"
-                  min="17"
-                  max="45"
-                  value={age}
-                  {...register("age", {
-                    onChange: (e) => setAge(e.target.value),
-                  })}
+                  placeholder="Your age"
+                  {...register("age")}
                 />
                 <p className="error">{errors.age?.message}</p>
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* EMAIL + PASSWORD */}
+            <div className="row-flex">
+              <div className="col-half form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  {...register("email")}
+                />
+                <p className="error">{errors.email?.message}</p>
+              </div>
+
+              <div className="col-half form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  placeholder="********"
+                  {...register("password")}
+                />
+                <p className="error">{errors.password?.message}</p>
+              </div>
+            </div>
+
+            {/* MAJOR */}
+            <div className="form-group">
+              <label>Major</label>
+              <select {...register("major")}>
+                {MAJORS.map((m, i) => (
+                  <option key={i} value={m}>
+                    {m === "" ? "Select your major" : m}
+                  </option>
+                ))}
+              </select>
+              <p className="error">{errors.major?.message}</p>
+            </div>
+
             <button type="submit" className="reg-btn" disabled={isLoading}>
               {isLoading ? "Registering..." : "Sign up"}
             </button>
 
-            {/* Redirect to Login */}
             <p className="login-text">
-              Already have an account?{" "}
+              Already have an account?
               <Link to="/login" className="login-link">
+                {" "}
                 Log in now!
               </Link>
             </p>

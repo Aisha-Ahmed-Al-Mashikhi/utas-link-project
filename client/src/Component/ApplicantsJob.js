@@ -7,34 +7,34 @@ const ApplicantsJob = () => {
   const [applications, setApplications] = useState([]);
   const navigate = useNavigate();
 
-  // ✅ Protect route: only company users
+  //  Protect route: only company users
   useEffect(() => {
     const role = localStorage.getItem("role");
     if (role !== "company") navigate("/login");
   }, [navigate]);
 
-  // ✅ Fetch applications for this company
+  //  Fetch applications for this company
   useEffect(() => {
     const loggedCompany = JSON.parse(localStorage.getItem("loggedUser"));
     const organization = loggedCompany?.companyName;
 
     if (!organization) {
-      console.warn("⚠️ No company info found. Please login again.");
+      console.warn(" No company info found. Please login again.");
       return;
     }
 
     axios
       .get(`http://localhost:3001/applications/company/${organization}`)
       .then((res) => {
-        console.log("📦 Company applications:", res.data);
+        console.log(" Company applications:", res.data);
         setApplications(res.data);
       })
       .catch((err) =>
-        console.error("❌ Error fetching company applications:", err)
+        console.error(" Error fetching company applications:", err)
       );
   }, []);
 
-  // ✅ Update application status (Accept / Reject)
+  //  Update application status (Accept / Reject)
   const updateStatus = async (id, status) => {
     try {
       await axios.put(`http://localhost:3001/applications/${id}/status`, {
@@ -45,7 +45,7 @@ const ApplicantsJob = () => {
         prev.map((a) => (a._id === id ? { ...a, status } : a))
       );
     } catch {
-      alert("❌ Error updating status");
+      alert(" Error updating status");
     }
   };
 
@@ -90,7 +90,7 @@ const ApplicantsJob = () => {
                     </span>
                   </td>
 
-                  {/* ✅ CV Link */}
+                  {/*  CV Link */}
                   <td>
                     {app.cvLink ? (
                       <a
