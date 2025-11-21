@@ -1,28 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { addJob } from "../Features/JobSlice";
+import axios from "axios";
+import "../Styles/PostJob.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
-import "../Styles/PostJob.css";
 
 const PostJob = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const companyState = useSelector((state) => state.companies || {});
-  const company = companyState.company || {};
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: yupResolver(postJobSchema),
-  });
-
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
   const [sector, setSector] = useState("");
@@ -32,59 +15,64 @@ const PostJob = () => {
   const [description, setDescription] = useState("");
   const [payout, setPayout] = useState("");
 
-  // Handle form submission
-  const onSubmit = async (data) => {
-    console.log("Submitting job data:", data);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(postJobSchema),
+    mode: "onChange",
+  });
 
+  const CATEGORIES = [
+    "Design / Marketing",
+    "Technology / IT",
+    "Business / Finance",
+    "Education / Training",
+    "Logistics / Operations",
+  ];
+
+  const SECTORS = ["Private Company", "Government"];
+
+  const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
+
+  const onSubmit = async () => {
     try {
-      let currentCompany = company;
-      if (!currentCompany?.companyName) {
-        const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
-        if (savedUser) currentCompany = savedUser;
-      }
-
-      if (!currentCompany?.companyName) {
-        alert("Please log in as a company before posting a job.");
+      const company = JSON.parse(localStorage.getItem("loggedUser"));
+      if (!company) {
+        alert("Please log in first.");
         return;
       }
 
-      const jobData = {
-        ...data,
-        organization: currentCompany.companyName,
-        postedAt: new Date().toISOString(),
-      };
-
-      console.log("Sending job data to backend:", jobData);
-
-      const response = await dispatch(addJob(jobData)).unwrap();
-      console.log("Backend response:", response);
+      await axios.post("http://localhost:3001/addJob", {
+        jobTitle,
+        category,
+        sector,
+        rate,
+        rateType,
+        skills,
+        description,
+        payout,
+        organization: company.companyName,
+        postedBy: company.email,
+      });
 
       alert("Job posted successfully!");
-      handleClear();
-      navigate("/companyjobs");
-    } catch (error) {
-      console.error("Error posting job:", error);
-      alert(`Failed to post job: ${error?.message || "Unknown error"}`);
+
+      reset();
+      setJobTitle("");
+      setCategory("");
+      setSector("");
+      setRate("");
+      setRateType("");
+      setSkills("");
+      setDescription("");
+      setPayout("");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to post job.");
     }
-  };
-
-  // Handle validation errors
-  const handleError = (errors) => {
-    console.error("Validation Errors:", errors);
-    alert("Please fill in all required fields correctly.");
-  };
-
-  // Clear all input fields
-  const handleClear = () => {
-    setJobTitle("");
-    setCategory("");
-    setSector("");
-    setRate("");
-    setRateType("");
-    setSkills("");
-    setDescription("");
-    setPayout("");
-    reset();
   };
 
   return (
@@ -93,14 +81,15 @@ const PostJob = () => {
         <h1 className="page-title">
           Post a <span className="accent">Job</span>
         </h1>
+
         <p className="page-sub">Add a new job listing for students</p>
 
-        <form onSubmit={handleSubmit(onSubmit, handleError)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <label>Job Title</label>
           <input
             type="text"
-            placeholder="Graphic Designer"
             value={jobTitle}
+            placeholder="Graphic Designer"
             {...register("jobTitle", {
               onChange: (e) => setJobTitle(e.target.value),
             })}
@@ -110,27 +99,42 @@ const PostJob = () => {
           <div className="row-flex">
             <div className="col-half">
               <label>Category</label>
-              <input
-                type="text"
-                placeholder="Design / Marketing"
+              <select
                 value={category}
                 {...register("category", {
                   onChange: (e) => setCategory(e.target.value),
                 })}
-              />
+              >
+                <option value="">Select category</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
               <p className="error">{errors.category?.message}</p>
             </div>
 
+            {/* Sector — UPDATED */}
             <div className="col-half">
               <label>Sector</label>
-              <input
-                type="text"
-                placeholder="Private / Government"
-                value={sector}
-                {...register("sector", {
-                  onChange: (e) => setSector(e.target.value),
-                })}
-              />
+
+              <div className="sector-inline">
+                {SECTORS.map((s) => (
+                  <label key={s} className="sector-box-inline">
+                    <input
+                      type="radio"
+                      value={s}
+                      checked={sector === s}
+                      {...register("sector", {
+                        onChange: (e) => setSector(e.target.value),
+                      })}
+                    />
+                    <span>{s}</span>
+                  </label>
+                ))}
+              </div>
+
               <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
@@ -140,8 +144,8 @@ const PostJob = () => {
               <label>Rate (OMR)</label>
               <input
                 type="number"
-                placeholder="10"
                 value={rate}
+                placeholder="10"
                 {...register("rate", {
                   onChange: (e) => setRate(e.target.value),
                 })}
@@ -158,9 +162,11 @@ const PostJob = () => {
                 })}
               >
                 <option value="">Select type</option>
-                <option value="Hour">Hour</option>
-                <option value="Task">Task</option>
-                <option value="Project">Project</option>
+                {RATE_TYPES.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
               </select>
               <p className="error">{errors.rateType?.message}</p>
             </div>
@@ -169,8 +175,8 @@ const PostJob = () => {
           <label>Skills Required</label>
           <input
             type="text"
-            placeholder="Photoshop, Canva, Social Media"
             value={skills}
+            placeholder="Photoshop, Canva, Social Media"
             {...register("skills", {
               onChange: (e) => setSkills(e.target.value),
             })}
@@ -179,9 +185,8 @@ const PostJob = () => {
 
           <label>Description</label>
           <textarea
-            placeholder="Explain job responsibilities and requirements"
-            rows="4"
             value={description}
+            placeholder="Explain job responsibilities and requirements"
             {...register("description", {
               onChange: (e) => setDescription(e.target.value),
             })}
@@ -191,18 +196,34 @@ const PostJob = () => {
           <label>Payout (optional)</label>
           <input
             type="text"
-            placeholder="e.g. After project completion"
             value={payout}
+            placeholder="e.g. After project completion"
             {...register("payout", {
               onChange: (e) => setPayout(e.target.value),
             })}
           />
+          <p className="error">{errors.payout?.message}</p>
 
           <div className="actions">
             <button type="submit" className="btn-primary">
               Post Job
             </button>
-            <button type="button" className="btn-ghost" onClick={handleClear}>
+
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={() => {
+                reset();
+                setJobTitle("");
+                setCategory("");
+                setSector("");
+                setRate("");
+                setRateType("");
+                setSkills("");
+                setDescription("");
+                setPayout("");
+              }}
+            >
               Clear
             </button>
           </div>

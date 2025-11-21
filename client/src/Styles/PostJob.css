@@ -22,6 +22,7 @@
   font-weight: 800;
   color: #111;
   margin-bottom: 6px;
+  text-align: center;
 }
 
 .accent {
@@ -32,6 +33,7 @@
   color: #666;
   margin-bottom: 28px;
   font-size: 15px;
+  text-align: center;
 }
 
 .row-flex {
@@ -47,7 +49,7 @@
   display: flex;
   flex-direction: column;
 }
-/* Fix spacing between input columns */
+
 .row-flex .col-half:first-child {
   margin-right: 15px;
 }
@@ -128,10 +130,47 @@
 
   .page-title {
     font-size: 26px;
-    text-align: center;
   }
+}
 
-  .page-sub {
-    text-align: center;
-  }
+/* -------- Corrected Radio Buttons Layout (Sector) -------- */
+
+/* Sector inline radio buttons */
+.sector-inline {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  height: 48px; /* same as select height */
+  margin-top: 2px;
+}
+
+.sector-box-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1.5px solid #ccc;
+  height: 48px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sector-box-inline:hover {
+  border-color: #009688;
+  background: #f0fdfb;
+}
+
+.sector-box-inline input[type="radio"] {
+  accent-color: #009688;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.sector-box-inline span {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
 }

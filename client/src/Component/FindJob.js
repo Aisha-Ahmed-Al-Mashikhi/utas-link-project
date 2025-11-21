@@ -15,15 +15,18 @@ const FindJob = () => {
   const [userCvLink, setUserCvLink] = useState(null);
   const [userBank, setUserBank] = useState(null);
 
+  // Protect student route
   useEffect(() => {
     const role = localStorage.getItem("role");
     if (!role) navigate("/login");
   }, [navigate]);
 
+  // Load all jobs
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch]);
 
+  // Load CV + Bank info
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
@@ -32,12 +35,13 @@ const FindJob = () => {
         .get(`http://localhost:3001/user/${loggedUser.email}`)
         .then((res) => {
           setUserCvLink(res.data.cvLink || null);
-          setUserBank(res.data.bankCard || null);
+          setUserBank(res.data.bankName || null);
         })
         .catch((err) => console.error("Error fetching user profile:", err));
     }
   }, []);
 
+  // search filter
   const filteredJobs = jobs.filter(
     (job) =>
       job.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -45,6 +49,7 @@ const FindJob = () => {
       job.skills.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Apply handler
   const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
@@ -54,14 +59,16 @@ const FindJob = () => {
       return;
     }
 
+    // CV Required
     if (!userCvLink) {
       alert("Please upload your CV before applying.");
       navigate("/userprofile");
       return;
     }
 
+    // Bank Required
     if (!userBank) {
-      alert("Please add your bank/benefit number before applying.");
+      alert("Please add your bank/benefit card before applying.");
       navigate("/userprofile");
       return;
     }
@@ -91,6 +98,7 @@ const FindJob = () => {
         Find <span className="accent">Job</span>
       </h1>
 
+      {/* Search bar */}
       <div className="search-container">
         <div className="search-wrapper">
           <input
@@ -104,6 +112,7 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
+      {/* Job Cards */}
       <div className="job-list">
         {filteredJobs.length === 0 ? (
           <p className="no-jobs">No jobs found.</p>
@@ -118,6 +127,7 @@ const FindJob = () => {
               </div>
 
               <p className="org-name">{job.organization}</p>
+
               <div className="tags">
                 <span className="tag">{job.sector}</span>
                 <span className="tag">{job.category}</span>

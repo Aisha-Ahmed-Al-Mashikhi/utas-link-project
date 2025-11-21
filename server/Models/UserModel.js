@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   age: { type: Number }, // Student age
   role: { type: String, default: "Student" }, // User role type
   createdAt: { type: Date, default: Date.now }, // Account creation date
-  cvLink: String,
+  cvLink: String, // CV file link
   // BANK CARD FIELDS
   cardNumber: String,
   cardName: String,

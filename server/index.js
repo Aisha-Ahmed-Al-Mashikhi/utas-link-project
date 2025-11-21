@@ -1,48 +1,56 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+// ------------------- IMPORTS -------------------
+import express from "express"; // Express framework for backend server
+import mongoose from "mongoose"; // MongoDB object modeling
+import cors from "cors"; // Middleware for Cross-Origin requests
+import bcrypt from "bcryptjs"; // Password hashing
+import dotenv from "dotenv"; // Load env variables
+import multer from "multer"; // Handle file uploads
+import path from "path"; // File path utilities
+import fs from "fs"; // File system operations
 
-import UserModel from "./Models/UserModel.js";
-import CompanyModel from "./Models/CompanyModel.js";
-import JobModel from "./Models/JobModel.js";
-import ApplicationModel from "./Models/ApplicationModel.js";
-import * as ENV from "./config.js";
+// Import Models
+import UserModel from "./Models/UserModel.js"; // Student schema
+import CompanyModel from "./Models/CompanyModel.js"; // Company schema
+import JobModel from "./Models/JobModel.js"; // Job schema
+import ApplicationModel from "./Models/ApplicationModel.js"; // Applications schema
+import * as ENV from "./config.js"; // Environment variables
 
-dotenv.config();
-const app = express();
+dotenv.config(); // Load .env variables
 
-app.use(express.json());
+const app = express(); // Initialize Express app
+
+// ------------------- MIDDLEWARE -------------------
+app.use(express.json()); // Parse JSON body requests
 const allowedOrigin = process.env.CLIENT_URL || "http://localhost:5173";
+
 app.use(
   cors({
-    origin: allowedOrigin,
-    credentials: true,
+    origin: allowedOrigin, // Allow frontend origin
+    credentials: true, // Include cookies
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 
-const connectString = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=UtasLinkCluster`;
+// ------------------- DATABASE -------------------
+const connectString = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
 mongoose
-  .connect(connectString, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(connectString)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("Mongo Error:", err));
 
-// register user
+// ------------------- AUTH ROUTES -------------------
+
+// REGISTER STUDENT
 app.post("/registerUser", async (req, res) => {
   try {
     const { name, email, password, major, age } = req.body;
-    if (!name || !email || !password)
-      return res.status(400).json({ error: "Missing fields" });
 
     const exist = await UserModel.findOne({ email });
     if (exist) return res.status(400).json({ error: "Email exists" });
 
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 10); // Hash password
+
     const user = new UserModel({
       name,
       email,
@@ -51,44 +59,50 @@ app.post("/registerUser", async (req, res) => {
       age,
       role: "Student",
     });
+
     await user.save();
-    res.status(201).json({ user });
+    res.json({ user });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// register company
+// REGISTER COMPANY
 app.post("/registerCompany", async (req, res) => {
   try {
-    const { companyName, email, password, industry, location, foundedDate } =
-      req.body;
-    if (!companyName || !email || !password)
-      return res.status(400).json({ error: "Missing fields" });
+    const { companyName, email, password, industry, location } = req.body;
 
     const exist = await CompanyModel.findOne({ email });
     if (exist) return res.status(400).json({ error: "Email exists" });
 
     const hash = await bcrypt.hash(password, 10);
+
     const company = new CompanyModel({
       companyName,
       email,
       password: hash,
       industry,
       location,
-      foundedDate,
+      bankInfo: {
+        bankName: "",
+        accountNumber: "",
+        accountHolder: "",
+        iban: "",
+      },
     });
+
     await company.save();
-    res.status(201).json({ company });
+    res.json({ company });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// login
+// LOGIN (STUDENT OR COMPANY)
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+
     let user = await UserModel.findOne({ email });
     let role = "student";
 
@@ -96,182 +110,38 @@ app.post("/login", async (req, res) => {
       user = await CompanyModel.findOne({ email });
       role = "company";
     }
+
     if (!user) return res.status(404).json({ error: "User not found" });
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: "Incorrect password" });
 
-    res.status(200).json({ message: "Login success", user, role });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json({ user, role });
+  } catch {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// get user
+// ------------------- FETCH PROFILES -------------------
 app.get("/user/:email", async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.params.email });
-    if (!user) return res.status(404).json({ error: "Not found" });
-    res.status(200).json(user);
+    res.json(user);
   } catch {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Fetch failed" });
   }
 });
 
-// get company
 app.get("/company/:email", async (req, res) => {
   try {
     const company = await CompanyModel.findOne({ email: req.params.email });
-    if (!company) return res.status(404).json({ error: "Not found" });
-    res.status(200).json(company);
-  } catch {
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// update bank info
-app.post("/company/:email/bank", async (req, res) => {
-  try {
-    const { email } = req.params;
-    const { accountHolder, bankName, accountNumber, iban } = req.body;
-    const updated = await CompanyModel.findOneAndUpdate(
-      { email },
-      { $set: { bankInfo: { accountHolder, bankName, accountNumber, iban } } },
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ error: "Not found" });
-    res.status(200).json({ message: "Bank info saved", company: updated });
-  } catch {
-    res.status(500).json({ error: "Save failed" });
-  }
-});
-
-// add job
-app.post("/addJob", async (req, res) => {
-  try {
-    const job = new JobModel(req.body);
-    await job.save();
-    res.status(200).json({ job });
-  } catch {
-    res.status(500).json({ error: "Add failed" });
-  }
-});
-
-// get all jobs
-app.get("/jobs", async (req, res) => {
-  try {
-    const jobs = await JobModel.find();
-    res.status(200).json(jobs);
+    res.json(company);
   } catch {
     res.status(500).json({ error: "Fetch failed" });
   }
 });
 
-// update job
-app.put("/jobs/:id", async (req, res) => {
-  try {
-    const job = await JobModel.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!job) return res.status(404).json({ error: "Not found" });
-    res.status(200).json({ job });
-  } catch {
-    res.status(500).json({ error: "Update failed" });
-  }
-});
-
-// delete job
-app.delete("/jobs/:id", async (req, res) => {
-  try {
-    const job = await JobModel.findByIdAndDelete(req.params.id);
-    if (!job) return res.status(404).json({ error: "Not found" });
-    res.status(200).json({ message: "Deleted" });
-  } catch {
-    res.status(500).json({ error: "Delete failed" });
-  }
-});
-
-// apply (includes CV from user profile)
-app.post("/apply", async (req, res) => {
-  try {
-    const { jobId, jobTitle, organization, applicantEmail, applicantName } =
-      req.body;
-
-    const exist = await ApplicationModel.findOne({ jobId, applicantEmail });
-    if (exist) return res.status(400).json({ error: "Already applied" });
-
-    const user = await UserModel.findOne({ email: applicantEmail });
-    const cvLink = user?.cvLink || "";
-
-    const appData = new ApplicationModel({
-      jobId,
-      jobTitle,
-      organization,
-      applicantEmail,
-      applicantName,
-      cvLink,
-      status: "Pending Review",
-    });
-
-    await appData.save();
-    res.status(200).json({ message: "Applied", appData });
-  } catch {
-    res.status(500).json({ error: "Apply failed" });
-  }
-});
-
-// student applications
-app.get("/applications/:email", async (req, res) => {
-  try {
-    const apps = await ApplicationModel.find({
-      applicantEmail: req.params.email,
-    });
-    res.status(200).json(apps);
-  } catch {
-    res.status(500).json({ error: "Fetch failed" });
-  }
-});
-
-// company applications
-app.get("/applications/company/:organization", async (req, res) => {
-  try {
-    const apps = await ApplicationModel.find({
-      organization: req.params.organization,
-    });
-    res.status(200).json(apps);
-  } catch {
-    res.status(500).json({ error: "Fetch failed" });
-  }
-});
-
-// delete application
-app.delete("/applications/:id", async (req, res) => {
-  try {
-    const del = await ApplicationModel.findByIdAndDelete(req.params.id);
-    if (!del) return res.status(404).json({ error: "Not found" });
-    res.status(200).json({ message: "Deleted" });
-  } catch {
-    res.status(500).json({ error: "Delete failed" });
-  }
-});
-
-// update application status
-app.put("/applications/:id/status", async (req, res) => {
-  try {
-    const { status } = req.body;
-    const updated = await ApplicationModel.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ error: "Not found" });
-    res.status(200).json({ message: "Updated", updated });
-  } catch {
-    res.status(500).json({ error: "Update failed" });
-  }
-});
-
-/* file uploads */
+// ------------------- FILE UPLOADS -------------------
 const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
@@ -280,66 +150,129 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, "_")),
 });
-const upload = multer({ storage });
 
+const upload = multer({ storage });
 app.use("/uploads", express.static(uploadDir));
 
+// UPLOAD STUDENT CV
 app.post("/uploadCV", upload.single("cv"), async (req, res) => {
   try {
     const { email } = req.body;
     if (!req.file) return res.status(400).json({ error: "No file" });
+
     const fileUrl = `http://localhost:3001/uploads/${req.file.filename}`;
-    const updatedUser = await UserModel.findOneAndUpdate(
-      { email },
-      { cvLink: fileUrl },
-      { new: true }
-    );
-    if (!updatedUser) return res.status(404).json({ error: "User not found" });
-    res.status(200).json({ message: "CV uploaded", cvLink: fileUrl });
+    await UserModel.findOneAndUpdate({ email }, { cvLink: fileUrl });
+
+    res.json({ cvLink: fileUrl });
   } catch {
     res.status(500).json({ error: "Upload failed" });
   }
 });
 
+// UPLOAD COMPANY LICENSE OR PROFILE IMAGE
 app.post("/uploadCompanyFile", upload.single("file"), async (req, res) => {
   try {
     const { email, type } = req.body;
     if (!req.file) return res.status(400).json({ error: "No file" });
+
     const fileUrl = `http://localhost:3001/uploads/${req.file.filename}`;
-    const field =
+
+    const updateField =
       type === "license" ? { licenseFile: fileUrl } : { profileImage: fileUrl };
-    const updated = await CompanyModel.findOneAndUpdate({ email }, field, {
-      new: true,
-    });
-    if (!updated) return res.status(404).json({ error: "Company not found" });
-    res.status(200).json({ message: "File uploaded", fileUrl });
+
+    await CompanyModel.findOneAndUpdate({ email }, updateField);
+
+    res.json({ fileUrl });
   } catch {
-    res.status(500).json({ error: "Upload failed" });
+    res.status(500).json({ error: "Upload company failed" });
   }
 });
 
+// ------------------- BANK UPDATES -------------------
+// STUDENT BANK
 app.put("/updateBankCard", async (req, res) => {
   try {
-    const { email, cardNumber, cardName, expiry, cvv, bankName } = req.body;
+    const { email, bankName, cardNumber, cardName, expiry, cvv } = req.body;
 
-    const user = await UserModel.findOneAndUpdate(
+    const updated = await UserModel.findOneAndUpdate(
       { email },
-      { cardNumber, cardName, expiry, cvv, bankName },
+      { bankName, cardNumber, cardName, expiry, cvv },
       { new: true }
     );
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    res.json({ message: "Card saved", user });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Failed to save card" });
+    res.json({ user: updated });
+  } catch {
+    res.status(500).json({ error: "Bank update failed" });
   }
 });
 
-const port = ENV.PORT || 3001;
-app.listen(port, () => {
-  console.log(`You are connected at port: ${port}`);
+// COMPANY BANK
+app.put("/company/updateBank", async (req, res) => {
+  try {
+    const { email, selectedBank, accountNumber, accountHolder, iban } =
+      req.body;
+
+    const updated = await CompanyModel.findOneAndUpdate(
+      { email },
+      {
+        bankInfo: {
+          bankName: selectedBank,
+          accountNumber,
+          accountHolder,
+          iban,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: "Company not found" });
+
+    res.json({ message: "Bank updated", company: updated });
+  } catch (err) {
+    res.status(500).json({ error: "Company bank update failed" });
+  }
 });
+
+// DELETE COMPANY BANK
+app.put("/company/deleteBankCard", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const updated = await CompanyModel.findOneAndUpdate(
+      { email },
+      {
+        bankInfo: {
+          bankName: "",
+          accountNumber: "",
+          accountHolder: "",
+          iban: "",
+        },
+      },
+      { new: true }
+    );
+
+    res.json({ message: "Company bank deleted", company: updated });
+  } catch {
+    res.status(500).json({ error: "Delete failed" });
+  }
+});
+
+// ------------------- JOB ROUTES -------------------
+app.post("/addJob", async (req, res) => {
+  try {
+    const job = new JobModel(req.body);
+    await job.save();
+    res.json({ job });
+  } catch {
+    res.status(500).json({ error: "Add failed" });
+  }
+});
+
+app.get("/jobs", async (req, res) => {
+  const jobs = await JobModel.find();
+  res.json(jobs);
+});
+
+// ------------------- SERVER START -------------------
+const port = ENV.PORT || 3001;
+app.listen(port, () => console.log("Server running on port", port));

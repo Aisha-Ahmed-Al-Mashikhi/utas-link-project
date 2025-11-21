@@ -4,10 +4,11 @@ import { registerCompany } from "../Features/CompanySlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { companySchemaValidation } from "../Validations/CompanyValidation";
+import { CompanyRegisterSchema } from "../Validations/CompanyRegisterValidation";
 import "../Styles/CompanyRegister.css";
 import companyImg from "../Images/company-man.png";
 
+// Predefined industries and locations
 const INDUSTRIES = [
   "",
   "Technology",
@@ -18,17 +19,20 @@ const INDUSTRIES = [
   "Government",
   "Other",
 ];
-
 const LOCATIONS = ["", "Salalah", "Taqah", "Mirbat", "Mughsail", "Other"];
 
 const CompanyRegister = () => {
+  // Used to trigger Redux actions (ex: registerUser, login, logout)
   const dispatch = useDispatch();
+  // Used to navigate programmatically to another page after an action (ex: redirect after registration)
   const navigate = useNavigate();
+
+  // Read registration status from Redux
   const { isLoading, isError, isSuccess } = useSelector(
     (state) => state.companies
   );
 
-  // Local state for controlled fields
+  // Local states for controlled components
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,21 +47,25 @@ const CompanyRegister = () => {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(companySchemaValidation),
+    resolver: yupResolver(CompanyRegisterSchema),
     mode: "onChange",
   });
 
-  // Handle form submission
+  // Submit handler
   const onSubmit = (data) => {
-    dispatch(registerCompany(data));
+    const finalData = {
+      ...data,
+      role: "company", // Assign company role for backend
+    };
+    dispatch(registerCompany(finalData));
   };
 
-  // Redirects after success or failure
+  // Handle registration response
   useEffect(() => {
     if (isSuccess) {
       alert("Company registered successfully!");
       reset();
-      navigate("/companyprofile");
+      navigate("/company-profile"); // Redirect to company profile
     } else if (isError) {
       alert("Registration failed. Please try again.");
     }
@@ -66,16 +74,16 @@ const CompanyRegister = () => {
   return (
     <div className="register-page">
       <div className="register-container">
-        {/* Left side (Form) */}
+        {/* Left Side - Registration Form */}
         <div className="register-form">
           <h1 className="reg-title">
             Create your <span className="accent">account</span>
           </h1>
           <p className="reg-sub">Please fill in your company details</p>
 
-          {/* Role Switch */}
+          {/* Role Switch Buttons */}
           <div className="role-switch">
-            <Link to="/user-register" className="role-btn">
+            <Link to="/student-register" className="role-btn">
               Student
             </Link>
             <Link to="/company-register" className="role-btn active">
@@ -84,7 +92,7 @@ const CompanyRegister = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Company Name */}
+            {/* COMPANY NAME */}
             <label>Company Name</label>
             <input
               type="text"
@@ -96,7 +104,7 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.companyName?.message}</p>
 
-            {/* Email */}
+            {/* EMAIL */}
             <label>Email</label>
             <input
               type="email"
@@ -108,7 +116,7 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.email?.message}</p>
 
-            {/* Password */}
+            {/* PASSWORD */}
             <label>Password</label>
             <input
               type="password"
@@ -120,7 +128,7 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.password?.message}</p>
 
-            {/* Industry and Location */}
+            {/* INDUSTRY & LOCATION */}
             <div className="row-flex">
               <div className="col-half">
                 <label>Industry Type</label>
@@ -157,7 +165,7 @@ const CompanyRegister = () => {
               </div>
             </div>
 
-            {/* Founded Date */}
+            {/* FOUNDED DATE */}
             <label>Founded Date</label>
             <input
               type="date"
@@ -168,21 +176,22 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.foundedDate?.message}</p>
 
-            {/* Submit */}
+            {/* SUBMIT BUTTON */}
             <button type="submit" className="reg-btn" disabled={isLoading}>
               {isLoading ? "Registering..." : "Sign up"}
             </button>
 
+            {/* LOGIN LINK */}
             <p className="login-text">
               Already have an account?{" "}
               <Link to="/login" className="login-link">
-                Log in now!
+                Log in now.
               </Link>
             </p>
           </form>
         </div>
 
-        {/* Right side (Image) */}
+        {/* Right Side - Illustration */}
         <div className="register-image">
           <img src={companyImg} alt="Company registration" />
         </div>

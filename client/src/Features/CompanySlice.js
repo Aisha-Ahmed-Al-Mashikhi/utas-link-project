@@ -7,9 +7,12 @@ const initialState = {
   isLoading: false,
   isSuccess: false,
   isError: false,
+  message: "",
 };
 
-// Register company
+/* =============================
+    REGISTER COMPANY
+============================= */
 export const registerCompany = createAsyncThunk(
   "companies/registerCompany",
   async (companyData, thunkAPI) => {
@@ -25,7 +28,9 @@ export const registerCompany = createAsyncThunk(
   }
 );
 
-// Fetch company
+/* =============================
+    FETCH COMPANY
+============================= */
 export const fetchCompany = createAsyncThunk(
   "companies/fetchCompany",
   async (email, thunkAPI) => {
@@ -38,15 +43,17 @@ export const fetchCompany = createAsyncThunk(
   }
 );
 
-// Update bank info
+/* =============================
+    UPDATE BANK INFO
+============================= */
 export const updateBankInfo = createAsyncThunk(
   "companies/updateBankInfo",
   async ({ email, bankData }, thunkAPI) => {
     try {
-      const res = await axios.post(
-        `${ENV.SERVER_URL}/company/${email}/bank`,
-        bankData
-      );
+      const res = await axios.put(`${ENV.SERVER_URL}/company/updateBank`, {
+        email,
+        ...bankData,
+      });
       return res.data.company;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -56,22 +63,167 @@ export const updateBankInfo = createAsyncThunk(
   }
 );
 
+/* =============================
+    DELETE BANK CARD
+============================= */
+export const deleteBankCard = createAsyncThunk(
+  "companies/deleteBankCard",
+  async (email, thunkAPI) => {
+    try {
+      const res = await axios.put(`${ENV.SERVER_URL}/company/deleteBankCard`, {
+        email,
+      });
+      return res.data.company;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Failed to delete bank"
+      );
+    }
+  }
+);
+
+/* =============================
+    UPLOAD PROFILE PICTURE
+============================= */
+export const uploadProfile = createAsyncThunk(
+  "companies/uploadProfile",
+  async ({ email, file }, thunkAPI) => {
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("email", email);
+      form.append("type", "profile");
+
+      const res = await axios.post(
+        `${ENV.SERVER_URL}/uploadCompanyFile`,
+        form,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      return res.data.company;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Profile upload failed"
+      );
+    }
+  }
+);
+
+/* =============================
+    UPLOAD LICENSE PDF
+============================= */
+export const uploadLicense = createAsyncThunk(
+  "companies/uploadLicense",
+  async ({ email, file }, thunkAPI) => {
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("email", email);
+      form.append("type", "license");
+
+      const res = await axios.post(
+        `${ENV.SERVER_URL}/uploadCompanyFile`,
+        form,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      return res.data.company;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "License upload failed"
+      );
+    }
+  }
+);
+
+/* =============================
+    DELETE LICENSE
+============================= */
+export const deleteLicense = createAsyncThunk(
+  "companies/deleteLicense",
+  async (email, thunkAPI) => {
+    try {
+      const res = await axios.put(`${ENV.SERVER_URL}/company/deleteLicense`, {
+        email,
+      });
+
+      return res.data.company;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Failed to delete license"
+      );
+    }
+  }
+);
+
+/* =============================
+        SLICE
+============================= */
 const companySlice = createSlice({
   name: "companies",
   initialState,
-  reducers: {},
+  reducers: {
+    resetState: (state) => {
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.isError = false;
+      state.message = "";
+    },
+  },
+
   extraReducers: (builder) => {
     builder
-      .addCase(registerCompany.fulfilled, (state, action) => {
-        state.company = action.payload;
+
+      /* REGISTER */
+      .addCase(registerCompany.pending, (state) => {
+        state.isLoading = true;
       })
+      .addCase(registerCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.company = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(registerCompany.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      /* FETCH COMPANY */
       .addCase(fetchCompany.fulfilled, (state, action) => {
         state.company = action.payload;
       })
+
+      /* UPDATE BANK INFO */
       .addCase(updateBankInfo.fulfilled, (state, action) => {
+        state.company = action.payload;
+      })
+
+      /* DELETE BANK */
+      .addCase(deleteBankCard.fulfilled, (state, action) => {
+        state.company = action.payload;
+      })
+
+      /* UPLOAD PROFILE */
+      .addCase(uploadProfile.fulfilled, (state, action) => {
+        state.company = action.payload;
+      })
+
+      /* UPLOAD LICENSE */
+      .addCase(uploadLicense.fulfilled, (state, action) => {
+        state.company = action.payload;
+      })
+
+      /* DELETE LICENSE */
+      .addCase(deleteLicense.fulfilled, (state, action) => {
         state.company = action.payload;
       });
   },
 });
 
+export const { resetState } = companySlice.actions;
 export default companySlice.reducer;

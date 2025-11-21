@@ -2,9 +2,10 @@
   background-color: #f8fcfa;
   min-height: 90vh;
   padding: 40px 60px;
+  font-family: "Quicksand", sans-serif;
 }
 
-/* CARD */
+/* PROFILE CARD */
 .profile-card {
   background: #fff;
   border-radius: 16px;
@@ -16,16 +17,21 @@
   gap: 20px;
 }
 
-/* IMAGE AREA */
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .profile-img-container {
   position: relative;
-  width: 90px;
-  height: 90px;
+  width: 95px;
+  height: 95px;
 }
 
 .profile-img {
-  width: 90px;
-  height: 90px;
+  width: 95px;
+  height: 95px;
   border-radius: 50%;
   border: 3px solid #009688;
   object-fit: cover;
@@ -35,116 +41,106 @@
   display: none;
 }
 
-/* NEW UPLOAD DESIGN (CIRCLE + CAMERA ICON) */
 .upload-circle-C {
   position: absolute;
-  bottom: -5px;
-  right: -5px;
+  bottom: -6px;
+  right: -6px;
   width: 40px;
   height: 40px;
   background: #009688;
   border-radius: 50%;
-  border: 3px solid #ffffff;
+  border: 3px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.25s;
+  color: white;
+  font-size: 20px;
 }
 
 .upload-circle-C:hover {
   background: #00796b;
 }
 
-.camera-icon {
-  font-size: 20px;
-  color: #fff;
-}
-
-/* LEFT CONTENT */
-.profile-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
 .profile-name {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #222;
-}
-
-.profile-email {
-  color: #555;
 }
 
 .profile-detail {
-  color: #777;
-  font-size: 0.95rem;
-  margin-top: 4px;
+  color: #555;
 }
 
-/* BOXES */
+/* SECTIONS */
 .payment-box {
   background: #fff;
   border-radius: 16px;
   padding: 25px 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 28px;
 }
 
 .payment-box h3 {
   color: #009688;
   font-weight: 700;
-  margin-bottom: 15px;
-}
-
-.payment-info p {
-  margin: 10px 0;
-  color: #333;
-}
-
-.status.active {
-  color: #009688;
-  font-weight: 700;
 }
 
 /* CV */
-.upload-cv-btn {
-  background-color: #009688;
-  padding: 10px 18px;
-  color: white;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.upload-cv-btn:hover {
-  background: #00796b;
-}
-
-.cv-link {
-  color: #009688;
-  font-weight: bold;
-}
-/* ========================= */
-/* BANK CARD PREVIEW */
-/* ========================= */
-
-.card-preview {
-  margin-top: 15px;
+.cv-actions {
+  margin-top: 10px;
   display: flex;
-  justify-content: flex-start;
+  gap: 10px;
 }
 
-.bank-card.teal-card {
+/* 🎯 تعديل الأزرار الثلاثة (View / Replace / Delete) */
+.cv-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+}
+
+.cv-btn {
+  width: 115px; /* نفس العرض لكل زر */
+  height: 42px; /* نفس الارتفاع لكل زر */
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* يخلي النص بالمنتصف تمام */
+}
+
+/* ——— الألوان فقط ——— */
+
+.cv-btn.view {
+  background: #009688;
+  color: white;
+}
+
+.cv-btn.replace {
+  background: #ffe8bb;
+  color: #8a5a00;
+}
+
+.cv-btn.delete {
+  background: #ffd1d2;
+  color: #b10000;
+}
+
+/* BANK CARD */
+.card-preview {
+  margin-top: 10px;
+}
+
+.bank-card {
   width: 330px;
   height: 190px;
   background: linear-gradient(135deg, #009688, #00796b);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 22px;
   color: white;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -157,82 +153,52 @@
   border-radius: 8px;
 }
 
-.card-number {
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 3px;
+.card-buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
 }
 
-.card-holder {
-  opacity: 0.9;
-  margin-top: 10px;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.bank-name-preview {
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-/* ========================= */
-/* OPEN CARD BUTTON */
-/* ========================= */
-
-.open-card-btn {
-  margin-top: 20px;
-  background: #009688;
-  color: white;
+.add-card-btn,
+.edit-card-btn,
+.delete-card-btn {
   padding: 10px 18px;
-  border: none;
   border-radius: 8px;
   font-weight: 600;
+  border: none;
   cursor: pointer;
-  transition: 0.25s;
 }
 
-.open-card-btn:hover {
-  background: #00796b;
+.add-card-btn,
+.edit-card-btn {
+  background: #009688;
+  color: white;
 }
 
-/* ========================= */
+.delete-card-btn {
+  background: #ffd1d2;
+  color: #b20000;
+}
+
 /* MODAL */
-/* ========================= */
-
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.55);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 5000;
+  justify-content: center;
+  z-index: 2000;
 }
 
 .modal-box {
+  width: 500px;
   background: white;
-  width: 420px;
-  padding: 25px;
   border-radius: 14px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+  padding: 25px;
   animation: fadeIn 0.25s ease-out;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Modal Header */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -246,51 +212,67 @@
   cursor: pointer;
 }
 
-/* Labels + Inputs */
+.bank-radio-row {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bank-radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.bank-radio-row input[type="radio"] {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #009688;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+}
+
+.bank-radio-row input[type="radio"]:checked::before {
+  content: "";
+  width: 17px;
+  height: 16px;
+  background: #009688;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
 .modal-input {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
+  margin: 5px 0 12px;
   border: 1px solid #ccc;
-  margin-top: 5px;
-  margin-bottom: 10px;
 }
 
-.modal-input:focus {
-  border-color: #009688;
-  outline: none;
-}
-
-/* Bank radio buttons row */
-.bank-radio-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-}
-
-/* Modal Buttons */
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
+  justify-content: center;
+  gap: 20px;
 }
 
 .save-btn {
   background: #009688;
-  padding: 10px 18px;
-  border: none;
   color: white;
+  border: none;
+  padding: 10px 50px;
   border-radius: 8px;
-  cursor: pointer;
   font-weight: 600;
 }
 
 .clear-btn {
-  background: #ffe5e7;
-  padding: 10px 18px;
+  background: #ffd1d2;
+  color: #b10000;
   border: none;
-  color: #a00000;
+  padding: 10px 50px;
   border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
 }

@@ -1,56 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react"; // Import React and hooks
+// Redux: login action + selecting state
+import { useDispatch } from "react-redux";
 import { login } from "../Features/UserSlice";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Router: navigation + linking
+// Page styling and assets
 import "../Styles/Login.css";
 import loginImg from "../Images/user-register.png";
 import { IoIosArrowBack } from "react-icons/io";
 
 const Login = () => {
+  // ------------------- FORM STATES -------------------
+  // Track email, password, and error messages displayed to the user
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // ------------------- HOOKS -------------------
+  // Used to run Redux actions (login)
   const dispatch = useDispatch();
+
+  // Used to redirect users after successful login
   const navigate = useNavigate();
 
-  const { user, isSuccess } = useSelector((state) => state.users);
-
-  // Handle redirection after a successful login
-  useEffect(() => {
-    if (isSuccess && user) {
-      const role = user.role;
-      if (role === "company") {
-        navigate("/companyprofile", { state: { email: user.email } });
-      } else {
-        navigate("/findjob", { state: { email: user.email } });
-      }
-    }
-  }, [isSuccess, user, navigate]);
-
-  // Handle login attempt
+  // ------------------- LOGIN FUNCTION -------------------
   const handleLogin = async () => {
+    // Basic validation for empty fields
     if (!email || !password) {
       setErrorMsg("Please enter both email and password.");
       return;
     }
 
-    setErrorMsg("");
+    setErrorMsg(""); // clear previous error
 
     try {
+      // unwrap() returns actual login data and throws errors to catch()
       const result = await dispatch(login({ email, password })).unwrap();
 
-      // Save user info locally
+      // Save logged user in localStorage for header navigation
       localStorage.setItem("loggedUser", JSON.stringify(result.user));
       localStorage.setItem("role", result.role);
 
-      // Redirect based on user role
-      if (result.role === "company") navigate("/companyprofile");
-      else navigate("/findjob");
+      // Redirect user based on assigned role
+      if (result.role === "company") {
+        navigate("/company-profile");
+      } else {
+        navigate("/student-profile");
+      }
     } catch (err) {
       console.error("Login failed:", err);
 
-      // Display relevant error message
+      // Display server error messages
       if (err?.error === "Incorrect password") {
         setErrorMsg("Incorrect password. Please try again.");
       } else if (err?.error === "User not found") {
@@ -61,13 +60,16 @@ const Login = () => {
     }
   };
 
+  // ------------------- PAGE UI -------------------
   return (
     <div className="login-page">
+      {/* Back arrow to return to Home */}
       <Link to="/" className="back-arrow">
         <IoIosArrowBack size={28} />
       </Link>
+
       <div className="login-container">
-        {/* Left side: Login form */}
+        {/* ---------- LEFT SIDE: Login Form ---------- */}
         <div className="login-form">
           <h1 className="login-title">
             Welcome <span className="accent">back</span>
@@ -104,14 +106,14 @@ const Login = () => {
             {/* Registration link */}
             <p className="login-text">
               Don’t have an account?{" "}
-              <Link to="/user-register" className="login-link">
+              <Link to="/student-register" className="login-link">
                 Register now!
               </Link>
             </p>
           </form>
         </div>
 
-        {/* Right side: Image */}
+        {/* ---------- RIGHT SIDE: Image ---------- */}
         <div className="login-image">
           <img src={loginImg} alt="Login illustration" />
         </div>

@@ -1,78 +1,37 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../Features/UserSlice";
-import "../Styles/Header.css";
+import { useDispatch, useSelector } from "react-redux"; // Redux: dispatch actions + read user state
+import { Link, useNavigate } from "react-router-dom"; // Routing: navigation + links
+import { logout } from "../Features/UserSlice"; // Redux action: clears user data on logout
+import "../Styles/Header.css"; // Component styling
 
 const Header = () => {
+  // Used to run Redux actions (logout)
   const dispatch = useDispatch();
+
+  // Used for redirecting after logout
   const navigate = useNavigate();
 
-  const { user } = useSelector((state) => state.users);
-  const [role, setRole] = useState(localStorage.getItem("role") || null);
-  const fetchedOnce = useRef(false);
+  // Read full user data + role from Redux
+  const { user, role: reduxRole } = useSelector((state) => state.users);
 
-  // Always synchronize the role with localStorage for reliability
-  useEffect(() => {
-    const savedRole = localStorage.getItem("role");
-    if (savedRole) {
-      setRole(savedRole);
-    } else if (user?.role) {
-      setRole(user.role);
-    }
-  }, [user]);
-
-  // Fetch full user or company data once if not already available
-  useEffect(() => {
-    if (
-      !fetchedOnce.current &&
-      user?.email &&
-      !user?.name &&
-      !user?.companyName
-    ) {
-      fetchedOnce.current = true;
-      const savedRole = localStorage.getItem("role");
-      const endpoint =
-        savedRole === "company"
-          ? `http://localhost:3001/company/${user.email}`
-          : `http://localhost:3001/user/${user.email}`;
-
-      fetch(endpoint)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch profile");
-          return res.json();
-        })
-        .then((data) =>
-          dispatch({ type: "users/fetchUser/fulfilled", payload: data })
-        )
-        .catch((err) => console.error(err));
-    }
-  }, [user?.email, user?.name, user?.companyName, dispatch]);
+  // Final role comes from Redux first, then localStorage
+  const role = reduxRole || user?.role || localStorage.getItem("role");
 
   // Handle logout
   const handleLogout = () => {
-    // Clear stored user data
+    // Clear saved login data
     localStorage.removeItem("loggedUser");
     localStorage.removeItem("role");
 
-    // Reset Redux state
+    // Reset Redux user state
     dispatch(logout());
 
-    // Hide role-specific navigation links immediately
-    setRole(null);
-
-    // Navigate back to home page
+    // Redirect to the Home page
     navigate("/", { replace: true });
-
-    // Force reload to ensure Home.jsx is displayed correctly
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 100);
   };
 
   return (
     <header className="header">
-      {/* Website Branding */}
+      {/* -------- Website Branding (Logo + Title) -------- */}
       <div className="brand">
         <div className="logo-circle">UL</div>
         <div className="brand-text">
@@ -81,38 +40,32 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navigation Links */}
+      {/* -------- Navigation Links Based on Role -------- */}
       <nav className="nav-links">
-        {/* Student Navigation */}
+        {/* ---------- STUDENT NAVIGATION ---------- */}
         {role === "student" && (
           <>
-            <Link to="/findjob">Find Job</Link>
-            <Link to="/myapplications">My Applications</Link>
-            <Link to="/userprofile">Profile</Link>
+            <Link to="/find-job">Find Job</Link>
+            <Link to="/student-applications">My Applications</Link>
+            <Link to="/student-profile">Profile</Link>
+
             <button onClick={handleLogout} className="logout-btn">
               Logout
             </button>
           </>
         )}
 
-        {/* Company Navigation */}
+        {/* ---------- COMPANY NAVIGATION ---------- */}
         {role === "company" && (
           <>
-            <Link to="/companyprofile">Company Profile</Link>
-            <Link to="/postjob">Post Job</Link>
-            <Link to="/companyjobs">My Jobs</Link>
-            <Link to="/applicantsjob">Applicants</Link>
+            <Link to="/company-profile">Company Profile</Link>
+            <Link to="/post-job">Post Job</Link>
+            <Link to="/company-jobs">My Jobs</Link>
+            <Link to="/applicants-job">Applicants</Link>
+
             <button onClick={handleLogout} className="logout-btn">
               Logout
             </button>
-          </>
-        )}
-
-        {/* Guest Navigation */}
-        {!role && (
-          <>
-            <Link to="/"></Link>
-            {/* "Get Started" button and other public actions are inside Home.jsx */}
           </>
         )}
       </nav>
