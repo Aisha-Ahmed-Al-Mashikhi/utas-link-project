@@ -18,11 +18,17 @@ import CompanyProfile from "./Component/CompanyProfile"; // Company profile/dash
 import PostJob from "./Component/PostJob"; // Company creates a new job
 import CompanyJobs from "./Component/CompanyJobs"; // Company job listings
 import ApplicantsJob from "./Component/ApplicantsJob"; // Applicants for a specific job
-import ChatPage from "./Component/ChatPage"; // Chat system
+// import ChatPage from "./Component/ChatPage"; // Chat system
 
 // Public Pages
 import Home from "./Component/Home"; // Landing page
 import About from "./Component/About"; // About the platform
+
+// Chat Pages
+import ChatListStudent from "./Component/ChatListStudent";
+import ChatListCompany from "./Component/ChatListCompany";
+import ChatPageStudent from "./Component/ChatPageStudent";
+import ChatPageCompany from "./Component/ChatPageCompany";
 
 function App() {
   return (
@@ -41,6 +47,14 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/find-job" element={<FindJob />} />
         <Route path="/student-applications" element={<StudentApplications />} />
+        {/* Student chat list */}
+        <Route path="/student-chats" element={<ChatListStudent />} />
+
+        {/* Student chat page (each application) */}
+        <Route
+          path="/student-chat/:applicationId"
+          element={<ChatPageStudent />}
+        />
 
         {/* ---------------- COMPANY ROUTES ---------------- */}
         <Route path="/company-register" element={<CompanyRegister />} />
@@ -48,9 +62,17 @@ function App() {
         <Route path="/post-job" element={<PostJob />} />
         <Route path="/company-jobs" element={<CompanyJobs />} />
         <Route path="/applicants-job" element={<ApplicantsJob />} />
+        {/* Company chat list */}
+        <Route path="/company-chats" element={<ChatListCompany />} />
+
+        {/* Company chat page */}
+        <Route
+          path="/company-chat/:applicationId"
+          element={<ChatPageCompany />}
+        />
 
         {/* ---------------- CHAT ROUTE ---------------- */}
-        <Route path="/chat-page" element={<ChatPage />} />
+        {/* <Route path="/chat-page" element={<ChatPage />} /> */}
       </Routes>
 
       {/* Footer appears on every page */}

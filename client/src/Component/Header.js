@@ -48,6 +48,7 @@ const Header = () => {
             <Link to="/student-profile">Profile</Link>
             <Link to="/find-job">Find Job</Link>
             <Link to="/student-applications">My Applications</Link>
+            <Link to="/student-chats">Chats</Link>
 
             <button onClick={handleLogout} className="logout-btn">
               Logout
@@ -61,7 +62,7 @@ const Header = () => {
             <Link to="/company-profile">Company Profile</Link>
             <Link to="/post-job">Post Job</Link>
             <Link to="/company-jobs">My Jobs</Link>
-            <Link to="/applicants-job">Applicants</Link>
+            <Link to="/company-chats">Chats</Link>
 
             <button onClick={handleLogout} className="logout-btn">
               Logout

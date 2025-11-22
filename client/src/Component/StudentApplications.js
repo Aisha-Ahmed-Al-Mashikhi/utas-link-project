@@ -1,8 +1,10 @@
+// src/Component/StudentApplications.js
+
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchApplications,
-  cancelApplication,
+  fetchStudentApplications,
+  cancelStudentApplication,
 } from "../Features/ApplicationSlice";
 import "../Styles/StudentApplications.css";
 import { useNavigate } from "react-router-dom";
@@ -12,30 +14,32 @@ const StudentApplications = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.users);
-  const { applications, isLoading } = useSelector(
+
+  // نستخدم studentApplications بدال applications
+  const { studentApplications, isLoading } = useSelector(
     (state) => state.applications
   );
 
   // ----------------------------------------------------------
-  // LOAD STUDENT APPLICATIONS (no login check — as requested)
+  // LOAD STUDENT APPLICATIONS
   // ----------------------------------------------------------
   useEffect(() => {
     if (user?.email) {
-      dispatch(fetchApplications(user.email));
+      dispatch(fetchStudentApplications(user.email));
     }
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   // ----------------------------------------------------------
   // CANCEL APPLICATION
   // ----------------------------------------------------------
   const handleCancel = (id) => {
-    dispatch(cancelApplication(id))
+    dispatch(cancelStudentApplication(id))
       .unwrap()
       .then(() => alert("Application canceled successfully."))
       .catch(() => alert("Error canceling application."));
   };
 
-  if (isLoading && applications.length === 0) {
+  if (isLoading && studentApplications.length === 0) {
     return <p>Loading applications...</p>;
   }
 
@@ -50,18 +54,18 @@ const StudentApplications = () => {
       </p>
 
       <div className="applications-list">
-        {applications.length === 0 ? (
+        {studentApplications.length === 0 ? (
           <div className="empty-state">
             <p>No applications yet.</p>
             <button
               className="findjob-btn"
-              onClick={() => navigate("/findjob")}
+              onClick={() => navigate("/find-job")}
             >
               Browse Jobs
             </button>
           </div>
         ) : (
-          applications.map((app) => (
+          studentApplications.map((app) => (
             <div className="application-card" key={app._id}>
               <div className="app-info">
                 <div className="app-icon">🏢</div>
@@ -80,6 +84,15 @@ const StudentApplications = () => {
 
               {/* ACTIONS */}
               <div className="app-actions">
+                {/* CHAT BUTTON */}
+                <button
+                  className="chat-btn"
+                  onClick={() => navigate(`/student-chat/${app._id}`)}
+                >
+                  Chat 💬
+                </button>
+
+                {/* CANCEL / STATUS */}
                 {app.status === "Pending Review" ? (
                   <button
                     className="withdraw-btn"

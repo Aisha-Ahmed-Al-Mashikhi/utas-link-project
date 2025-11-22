@@ -1,130 +1,80 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// src/Component/ApplicantsJob.js
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchApplicants,
+  updateApplicantStatus,
+} from "../Features/ApplicationSlice";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "../Styles/ApplicantsJob.css";
 
 const ApplicantsJob = () => {
-  const [applications, setApplications] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
 
-  //  Protect route: only company users
+  // Get jobId from URL (?jobId=xxxxx)
+  const jobId = params.get("jobId");
+
+  // Get applicants from Redux
+  const { applicants, isLoading } = useSelector((state) => state.applications);
+
+  // Fetch all applicants for this job
   useEffect(() => {
-    const role = localStorage.getItem("role");
-    if (role !== "company") navigate("/login");
-  }, [navigate]);
+    if (jobId) dispatch(fetchApplicants(jobId));
+  }, [dispatch, jobId]);
 
-  //  Fetch applications for this company
-  useEffect(() => {
-    const loggedCompany = JSON.parse(localStorage.getItem("loggedUser"));
-    const organization = loggedCompany?.companyName;
-
-    if (!organization) {
-      console.warn(" No company info found. Please login again.");
-      return;
-    }
-
-    axios
-      .get(`http://localhost:3001/applications/company/${organization}`)
-      .then((res) => {
-        console.log(" Company applications:", res.data);
-        setApplications(res.data);
-      })
-      .catch((err) =>
-        console.error(" Error fetching company applications:", err)
-      );
-  }, []);
-
-  //  Update application status (Accept / Reject)
-  const updateStatus = async (id, status) => {
-    try {
-      await axios.put(`http://localhost:3001/applications/${id}/status`, {
-        status,
-      });
-      alert(`Status changed to ${status}`);
-      setApplications((prev) =>
-        prev.map((a) => (a._id === id ? { ...a, status } : a))
-      );
-    } catch {
-      alert(" Error updating status");
-    }
+  // Accept or Reject applicant
+  const handleAction = (applicationId, status) => {
+    dispatch(updateApplicantStatus({ applicationId, status }));
   };
 
+  if (isLoading) return <p>Loading applicants...</p>;
+
   return (
-    <div className="applicants-dashboard">
-      <h1 className="page-title">
-        Job <span className="highlight">Applicants</span>
+    <div className="applicants-page">
+      <h1 className="title">
+        Applicants for <span className="accent">Job</span>
       </h1>
 
-      {applications.length === 0 ? (
-        <p className="no-apps">No applicants yet.</p>
+      {applicants.length === 0 ? (
+        <p className="empty">No applicants yet.</p>
       ) : (
-        <div className="applicants-table-container">
-          <table className="styled-table">
-            <thead>
-              <tr>
-                <th>Applicant Name</th>
-                <th>Email</th>
-                <th>Job Title</th>
-                <th>Status</th>
-                <th>CV</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {applications.map((app) => (
-                <tr key={app._id}>
-                  <td>{app.applicantName}</td>
-                  <td>{app.applicantEmail}</td>
-                  <td>{app.jobTitle}</td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        app.status === "Accepted"
-                          ? "accepted"
-                          : app.status === "Rejected"
-                          ? "rejected"
-                          : "pending"
-                      }`}
-                    >
-                      {app.status}
-                    </span>
-                  </td>
+        applicants.map((app) => (
+          <div key={app._id} className="applicant-card">
+            <div>
+              <h3>{app.applicantName}</h3>
+              <p>Email: {app.applicantEmail}</p>
+              <p>Status: {app.status}</p>
+            </div>
 
-                  {/*  CV Link */}
-                  <td>
-                    {app.cvLink ? (
-                      <a
-                        href={app.cvLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="cv-btn"
-                      >
-                        View CV
-                      </a>
-                    ) : (
-                      "—"
-                    )}
-                  </td>
+            <div className="actions">
+              {/* Open chat with this applicant */}
+              <button
+                className="chat-btn"
+                onClick={() => navigate(`/company-chat/${app._id}`)}
+              >
+                Chat 💬
+              </button>
 
-                  <td>
-                    <button
-                      className="btn-accept"
-                      onClick={() => updateStatus(app._id, "Accepted")}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className="btn-reject"
-                      onClick={() => updateStatus(app._id, "Rejected")}
-                    >
-                      Reject
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              {/* Accept applicant */}
+              <button
+                className="accept-btn"
+                onClick={() => handleAction(app._id, "Accepted")}
+              >
+                Accept
+              </button>
+
+              {/* Reject applicant */}
+              <button
+                className="reject-btn"
+                onClick={() => handleAction(app._id, "Rejected")}
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        ))
       )}
     </div>
   );

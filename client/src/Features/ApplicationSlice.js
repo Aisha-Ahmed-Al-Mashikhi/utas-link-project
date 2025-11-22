@@ -1,78 +1,111 @@
+// src/Features/ApplicationSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
 
-const initialState = {
-  applications: [],
-  isLoading: false,
-  isSuccess: false,
-  isError: false,
-};
-
-// Fetch applications by email
-export const fetchApplications = createAsyncThunk(
-  "applications/fetchApplications",
-  async (email, thunkAPI) => {
-    try {
-      const res = await axios.get(`${ENV.SERVER_URL}/applications/${email}`);
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Fetch failed");
-    }
+// ======================================
+// 1) STUDENT — FETCH APPLICATIONS
+// ======================================
+export const fetchStudentApplications = createAsyncThunk(
+  "applications/fetchStudentApplications",
+  async (email) => {
+    const res = await axios.get(`${ENV.SERVER_URL}/applications/${email}`);
+    return res.data; // array
   }
 );
 
-// Apply for job
-export const applyJob = createAsyncThunk(
-  "applications/applyJob",
-  async (applicationData, thunkAPI) => {
-    try {
-      const res = await axios.post(`${ENV.SERVER_URL}/apply`, applicationData);
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Apply failed");
-    }
+// ======================================
+// 2) STUDENT — CANCEL APPLICATION
+// ======================================
+export const cancelStudentApplication = createAsyncThunk(
+  "applications/cancelStudentApplication",
+  async (applicationId) => {
+    await axios.delete(`${ENV.SERVER_URL}/applications/${applicationId}`);
+    return applicationId;
   }
 );
 
-// Cancel application
-export const cancelApplication = createAsyncThunk(
-  "applications/cancelApplication",
-  async (id, thunkAPI) => {
-    try {
-      await axios.delete(`${ENV.SERVER_URL}/applications/${id}`);
-      return id;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Cancel failed");
-    }
+// ======================================
+// 3) COMPANY — FETCH APPLICANTS FOR A JOB
+// ======================================
+export const fetchApplicants = createAsyncThunk(
+  "applications/fetchApplicants",
+  async (jobId) => {
+    const res = await axios.get(`${ENV.SERVER_URL}/applicants/${jobId}`);
+    return res.data; // array
   }
 );
 
+// ======================================
+// 4) COMPANY — UPDATE APPLICANT STATUS
+// ======================================
+export const updateApplicantStatus = createAsyncThunk(
+  "applications/updateApplicantStatus",
+  async ({ applicationId, status }) => {
+    const res = await axios.put(
+      `${ENV.SERVER_URL}/applicants/update/${applicationId}`,
+      { status }
+    );
+    return res.data; // updated application
+  }
+);
+
+// ======================================
+// SLICE
+// ======================================
 const applicationSlice = createSlice({
   name: "applications",
-  initialState,
+
+  initialState: {
+    studentApplications: [], // For student
+    applicants: [], // For company
+    isLoading: false,
+  },
+
   reducers: {},
+
   extraReducers: (builder) => {
     builder
-      .addCase(fetchApplications.pending, (state) => {
+      // -------------------------
+      // STUDENT: FETCH APPLICATIONS
+      // -------------------------
+      .addCase(fetchStudentApplications.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchApplications.fulfilled, (state, action) => {
+      .addCase(fetchStudentApplications.fulfilled, (state, action) => {
+        state.studentApplications = action.payload;
         state.isLoading = false;
-        state.applications = action.payload;
-        state.isSuccess = true;
       })
-      .addCase(fetchApplications.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-      })
-      .addCase(applyJob.fulfilled, (state, action) => {
-        state.applications.push(action.payload);
-      })
-      .addCase(cancelApplication.fulfilled, (state, action) => {
-        state.applications = state.applications.filter(
-          (a) => a._id !== action.payload
+
+      // -------------------------
+      // STUDENT: CANCEL APPLICATION
+      // -------------------------
+      .addCase(cancelStudentApplication.fulfilled, (state, action) => {
+        state.studentApplications = state.studentApplications.filter(
+          (app) => app._id !== action.payload
         );
+      })
+
+      // -------------------------
+      // COMPANY: FETCH APPLICANTS
+      // -------------------------
+      .addCase(fetchApplicants.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchApplicants.fulfilled, (state, action) => {
+        state.applicants = action.payload;
+        state.isLoading = false;
+      })
+
+      // -------------------------
+      // COMPANY: UPDATE STATUS
+      // -------------------------
+      .addCase(updateApplicantStatus.fulfilled, (state, action) => {
+        const updated = action.payload;
+        const index = state.applicants.findIndex((a) => a._id === updated._id);
+        if (index !== -1) {
+          state.applicants[index] = updated;
+        }
       });
   },
 });

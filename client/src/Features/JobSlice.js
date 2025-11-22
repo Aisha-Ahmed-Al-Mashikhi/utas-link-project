@@ -1,100 +1,131 @@
-// ==========================================================
-// JobSlice.js  (Final Clean Version)
-// Handles:
-// ✔ Fetch all jobs
-// ✔ Add job (company)
-// ✔ Apply for job (student)
-// ==========================================================
-
+// src/Features/JobSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
 
-// ----------------------------------------------------------
-// FETCH JOBS
-// ----------------------------------------------------------
+// ====================================================
+// 1) FETCH ALL JOBS (Student sees jobs)
+// ====================================================
 export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async () => {
   const res = await axios.get(`${ENV.SERVER_URL}/jobs`);
   return res.data;
 });
 
-// ----------------------------------------------------------
-// ADD JOB (Company)
-// ----------------------------------------------------------
-export const addJob = createAsyncThunk(
-  "jobs/addJob",
-  async (jobData, thunkAPI) => {
-    try {
-      const res = await axios.post(`${ENV.SERVER_URL}/addJob`, jobData);
-      return res.data.job;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Add job failed");
-    }
+// ====================================================
+// 2) FETCH COMPANY JOBS (Only jobs posted by company)
+// ====================================================
+export const fetchCompanyJobs = createAsyncThunk(
+  "jobs/fetchCompanyJobs",
+  async (companyEmail) => {
+    const res = await axios.get(
+      `${ENV.SERVER_URL}/jobs/company/${companyEmail}`
+    );
+    return res.data;
   }
 );
 
-// ----------------------------------------------------------
-// APPLY FOR JOB (Student)
-// ----------------------------------------------------------
+// ====================================================
+// 3) ADD NEW JOB (Company posts a job)
+// ====================================================
+export const addJob = createAsyncThunk("jobs/addJob", async (jobData) => {
+  const res = await axios.post(`${ENV.SERVER_URL}/jobs`, jobData);
+  return res.data;
+});
+
+// ====================================================
+// 4) UPDATE JOB (Company edits a job)
+// ====================================================
+export const updateJob = createAsyncThunk(
+  "jobs/updateJob",
+  async ({ jobId, updatedData }) => {
+    const res = await axios.put(`${ENV.SERVER_URL}/jobs/${jobId}`, updatedData);
+    return res.data;
+  }
+);
+
+// ====================================================
+// 5) DELETE JOB
+// ====================================================
+export const deleteJob = createAsyncThunk("jobs/deleteJob", async (jobId) => {
+  await axios.delete(`${ENV.SERVER_URL}/jobs/${jobId}`);
+  return jobId;
+});
+
+// ====================================================
+// 6) STUDENT APPLY FOR JOB
+// ====================================================
 export const applyForJob = createAsyncThunk(
   "jobs/applyForJob",
-  async (applicationData, thunkAPI) => {
-    try {
-      const res = await axios.post(`${ENV.SERVER_URL}/apply`, applicationData);
-      return res.data; // success message
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Apply failed");
-    }
+  async (applicationData) => {
+    const res = await axios.post(`${ENV.SERVER_URL}/apply`, applicationData);
+    return res.data;
   }
 );
 
-// ----------------------------------------------------------
+// ====================================================
 // SLICE
-// ----------------------------------------------------------
+// ====================================================
 const jobSlice = createSlice({
   name: "jobs",
   initialState: {
-    jobs: [],
+    jobList: [],
+    companyJobs: [],
     isLoading: false,
-    isSuccess: false,
-    isError: false,
-    message: "",
   },
   reducers: {},
+
   extraReducers: (builder) => {
     builder
-      // FETCH JOBS
+      // =========================
+      // FETCH ALL JOBS
+      // =========================
       .addCase(fetchJobs.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(fetchJobs.fulfilled, (state, action) => {
+        state.jobList = action.payload;
         state.isLoading = false;
-        state.jobs = action.payload;
-      })
-      .addCase(fetchJobs.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
       })
 
+      // =========================
+      // FETCH COMPANY JOBS
+      // =========================
+      .addCase(fetchCompanyJobs.fulfilled, (state, action) => {
+        state.companyJobs = action.payload;
+      })
+
+      // =========================
       // ADD JOB
+      // =========================
       .addCase(addJob.fulfilled, (state, action) => {
-        state.jobs.push(action.payload);
-        state.isSuccess = true;
+        state.companyJobs.push(action.payload);
       })
 
-      // APPLY JOB
-      .addCase(applyForJob.pending, (state) => {
-        state.isLoading = true;
+      // =========================
+      // UPDATE JOB
+      // =========================
+      .addCase(updateJob.fulfilled, (state, action) => {
+        const updated = action.payload;
+        const index = state.companyJobs.findIndex((j) => j._id === updated._id);
+        if (index !== -1) {
+          state.companyJobs[index] = updated;
+        }
       })
-      .addCase(applyForJob.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.message = action.payload.message;
+
+      // =========================
+      // DELETE JOB
+      // =========================
+      .addCase(deleteJob.fulfilled, (state, action) => {
+        state.companyJobs = state.companyJobs.filter(
+          (job) => job._id !== action.payload
+        );
       })
-      .addCase(applyForJob.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
+
+      // =========================
+      // APPLY FOR JOB (Student)
+      // =========================
+      .addCase(applyForJob.fulfilled, () => {
+        // No state change needed
       });
   },
 });
