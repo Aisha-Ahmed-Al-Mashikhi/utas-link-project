@@ -1,169 +1,95 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "../Styles/UserProfile.css";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { bankCardSchema } from "../Validations/Bank";
+import React, { useEffect, useState } from "react"; // Import React and its hooks for state and lifecycle
+import { useDispatch, useSelector } from "react-redux"; // Import Redux methods to dispatch actions and read state
+import {
+  fetchUser,
+  uploadCv,
+  deleteCvThunk,
+  updateBankCardThunk,
+  deleteBankCardThunk,
+} from "../Features/UserSlice"; // Import all async thunk actions related to the user
+import { useNavigate } from "react-router-dom"; // For navigation (redirecting user)
+import "../Styles/UserProfile.css"; // Profile page styling
+import { useForm } from "react-hook-form"; // React Hook Form for handling form input values
+import { yupResolver } from "@hookform/resolvers/yup"; // Yup resolver connects Yup validation to React Hook Form
+import { bankCardSchema } from "../Validations/Bank"; // Import validation schema for bank card info
 
 const StudentProfile = () => {
+  // Redux dispatcher
+  const dispatch = useDispatch();
+
+  // Navigation hook
   const navigate = useNavigate();
 
-  const [user, setUser] = useState({});
-  const [preview, setPreview] = useState(null);
-  const [showCardModal, setShowCardModal] = useState(false);
+  // Select user info from Redux state
+  const { user } = useSelector((state) => state.users);
 
-  // RHF
+  // Local states
+  const [preview, setPreview] = useState(null); // Preview for uploaded profile picture
+  const [showCardModal, setShowCardModal] = useState(false); // Controls opening/closing of the bank modal
+
+  // React Hook Form setup with Yup schema
   const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
+    register, // Registers form fields
+    handleSubmit, // Handles form submission
+    setValue, // Allows programmatic value changes
+    reset, // Resets the form fields
+    formState: { errors }, // Contains validation errors
   } = useForm({
-    resolver: yupResolver(bankCardSchema),
+    resolver: yupResolver(bankCardSchema), // Connect Yup schema
   });
 
-  // Load profile
+  // Load logged user on page load
   useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (!savedUser?.email) {
-      alert("Please log in again.");
-      navigate("/login");
-      return;
-    }
+    // Fetch logged user from localStorage
+    const saved = JSON.parse(localStorage.getItem("loggedUser"));
 
-    axios
-      .get(`http://localhost:3001/user/${savedUser.email}`)
-      .then((res) => {
-        setUser(res.data);
+    // If no saved user → redirect to login
+    if (!saved?.email) navigate("/login");
 
-        reset({
-          selectedBank: res.data.bankName || "",
-          cardNumber: res.data.cardNumber || "",
-          cardName: res.data.cardName || "",
-          expiry: res.data.expiry || "",
-          cvv: res.data.cvv || "",
-        });
-      })
-      .catch((err) => console.error(err));
-  }, [navigate, reset]);
+    // Fetch full user info from backend
+    dispatch(fetchUser(saved.email));
+  }, [dispatch, navigate]);
 
-  // Upload CV
-  const handleCvUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("cv", file);
-    formData.append("email", user.email);
-
-    try {
-      const res = await axios.post("http://localhost:3001/uploadCV", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+  // Pre-fill modal fields when opened
+  useEffect(() => {
+    if (showCardModal && user) {
+      reset({
+        selectedBank: user.bankName || "",
+        cardNumber: user.cardNumber || "",
+        cardName: user.cardName || "",
+        expiry: user.expiry || "",
+        cvv: user.cvv || "",
       });
-
-      if (res.data.cvLink) {
-        setUser((prev) => ({ ...prev, cvLink: res.data.cvLink }));
-        alert("CV uploaded successfully!");
-      }
-    } catch {
-      alert("Failed to upload CV.");
     }
+  }, [showCardModal, user, reset]);
+
+  // If user not yet loaded—show loading
+  if (!user) return <p>Loading...</p>;
+
+  // Handle uploading CV file
+  const handleCvUpload = (e) => {
+    if (!e.target.files[0]) return;
+    dispatch(uploadCv({ file: e.target.files[0], email: user.email }));
   };
 
-  // Delete CV
-  const handleDeleteCV = async () => {
-    const confirmDelete = window.confirm("Delete your CV?");
-    if (!confirmDelete) return;
-
-    try {
-      await axios.put("http://localhost:3001/deleteCV", { email: user.email });
-
-      setUser((prev) => ({ ...prev, cvLink: null }));
-
-      alert("CV deleted successfully!");
-    } catch {
-      alert("Error deleting CV.");
-    }
-  };
-
-  // Replace CV
-  const handleReplaceCV = () => {
-    document.getElementById("cvReplaceInput").click();
-  };
-
-  // Image preview
+  // Profile image temporary preview
   const handleImageChange = (e) => {
     const f = e.target.files[0];
     if (f) setPreview(URL.createObjectURL(f));
   };
 
-  // DELETE BANK CARD
-  const handleDeleteBankCard = async () => {
-    const ok = window.confirm("Delete saved card?");
-    if (!ok) return;
-
-    try {
-      await axios.put("http://localhost:3001/updateBankCard", {
-        email: user.email,
-        bankName: "",
-        cardNumber: "",
-        cardName: "",
-        expiry: "",
-        cvv: "",
-      });
-
-      setUser((prev) => ({
-        ...prev,
-        bankName: "",
-        cardNumber: "",
-        cardName: "",
-        expiry: "",
-        cvv: "",
-      }));
-
-      alert("Card deleted.");
-    } catch {
-      alert("Failed to delete card.");
-    }
+  // Save bank card info
+  const onSaveCard = (data) => {
+    dispatch(updateBankCardThunk({ email: user.email, ...data }));
+    setShowCardModal(false);
   };
-
-  // SAVE CARD
-  const saveCardInfo = async (data) => {
-    try {
-      await axios.put("http://localhost:3001/updateBankCard", {
-        email: user.email,
-        bankName: data.selectedBank,
-        cardNumber: data.cardNumber,
-        cardName: data.cardName,
-        expiry: data.expiry,
-        cvv: data.cvv,
-      });
-
-      alert("Card saved successfully!");
-      setShowCardModal(false);
-
-      setUser((prev) => ({
-        ...prev,
-        bankName: data.selectedBank,
-        cardNumber: data.cardNumber,
-        cardName: data.cardName,
-        expiry: data.expiry,
-        cvv: data.cvv,
-      }));
-    } catch {
-      alert("Error saving card.");
-    }
-  };
-
-  if (!user?.email) return <p>Loading profile...</p>;
 
   return (
     <div className="profile-page">
-      {/* PROFILE CARD */}
+      {/* ---------- PROFILE CARD ---------- */}
       <div className="profile-card">
         <div className="profile-left">
+          {/* Image section */}
           <div className="profile-img-container">
             <img
               src={
@@ -174,10 +100,12 @@ const StudentProfile = () => {
               className="profile-img"
             />
 
+            {/* Icon to upload new image */}
             <label htmlFor="imageUpload" className="upload-circle-C">
               📷
             </label>
 
+            {/* Hidden file input */}
             <input
               type="file"
               id="imageUpload"
@@ -186,17 +114,18 @@ const StudentProfile = () => {
             />
           </div>
 
+          {/* Basic user details */}
           <div>
             <h2 className="profile-name">{user.name}</h2>
             <p className="profile-email">{user.email}</p>
             <p className="profile-detail">
-              {user.major || "Student"} {user.age ? `• Age ${user.age}` : ""}
+              {user.major} {user.age ? `• Age ${user.age}` : ""}
             </p>
           </div>
         </div>
       </div>
 
-      {/* ACADEMIC INFO */}
+      {/* ---------- ACADEMIC INFO ---------- */}
       <div className="payment-box">
         <h3>Academic Information</h3>
 
@@ -217,7 +146,7 @@ const StudentProfile = () => {
         </div>
       </div>
 
-      {/* CV */}
+      {/* ---------- CV SECTION ---------- */}
       <div className="payment-box">
         <h3>Curriculum Vitae (CV)</h3>
 
@@ -226,10 +155,12 @@ const StudentProfile = () => {
             <p className="cv-success">CV Uploaded Successfully</p>
 
             <div className="cv-actions">
+              {/* View CV */}
               <a href={user.cvLink} target="_blank" className="cv-btn view">
                 View
               </a>
 
+              {/* Hidden file input to replace CV */}
               <input
                 type="file"
                 id="cvReplaceInput"
@@ -238,17 +169,28 @@ const StudentProfile = () => {
                 onChange={handleCvUpload}
               />
 
-              <button className="cv-btn replace" onClick={handleReplaceCV}>
+              {/* Replace */}
+              <button
+                className="cv-btn replace"
+                onClick={() =>
+                  document.getElementById("cvReplaceInput").click()
+                }
+              >
                 Replace
               </button>
 
-              <button className="cv-btn delete" onClick={handleDeleteCV}>
+              {/* Delete */}
+              <button
+                className="cv-btn delete"
+                onClick={() => dispatch(deleteCvThunk(user.email))}
+              >
                 Delete
               </button>
             </div>
           </div>
         ) : (
           <>
+            {/* Hidden upload button */}
             <input
               type="file"
               id="cvUpload"
@@ -257,6 +199,7 @@ const StudentProfile = () => {
               onChange={handleCvUpload}
             />
 
+            {/* Upload visible label */}
             <label htmlFor="cvUpload" className="upload-cv-btn">
               Upload CV (PDF)
             </label>
@@ -264,7 +207,7 @@ const StudentProfile = () => {
         )}
       </div>
 
-      {/* BANK CARD */}
+      {/* ---------- BANK CARD SECTION ---------- */}
       <div className="payment-box">
         <h3>Bank / Benefit Card</h3>
 
@@ -272,12 +215,11 @@ const StudentProfile = () => {
           <div className="bank-card teal-card">
             <div className="bank-chip"></div>
 
+            {/* Show actual or default values */}
             <p className="card-number">
               {user.cardNumber || "XXXX XXXX XXXX XXXX"}
             </p>
-
             <p className="card-holder">{user.cardName || "Card Holder"}</p>
-
             <p className="bank-name-preview">
               {user.bankName || "No Bank Selected"}
             </p>
@@ -285,36 +227,37 @@ const StudentProfile = () => {
         </div>
 
         <div className="card-buttons">
-          {!user.cardNumber && (
+          {/* If no card → show Add */}
+          {!user.cardNumber ? (
             <button
               className="add-card-btn"
               onClick={() => setShowCardModal(true)}
             >
               + Add Card
             </button>
-          )}
-
-          {user.cardNumber && (
+          ) : (
             <>
+              {/* Edit */}
               <button
                 className="edit-card-btn"
                 onClick={() => setShowCardModal(true)}
               >
-                Edit Card
+                Edit
               </button>
 
+              {/* Delete */}
               <button
                 className="delete-card-btn"
-                onClick={handleDeleteBankCard}
+                onClick={() => dispatch(deleteBankCardThunk(user.email))}
               >
-                Delete Card
+                Delete
               </button>
             </>
           )}
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* ---------- BANK MODAL ---------- */}
       {showCardModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -328,76 +271,49 @@ const StudentProfile = () => {
               </button>
             </div>
 
-            {/* BANK OPTIONS */}
+            {/* Select Bank */}
             <label>Select Bank</label>
+
             <div className="bank-radio-row">
-              <label>
-                <input
-                  type="radio"
-                  value="Bank Muscat"
-                  {...register("selectedBank", {
-                    onChange: (e) => setValue("selectedBank", e.target.value),
-                  })}
-                />
-                Bank Muscat
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  value="Bank Dhofar"
-                  {...register("selectedBank", {
-                    onChange: (e) => setValue("selectedBank", e.target.value),
-                  })}
-                />
-                Bank Dhofar
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  value="NBO"
-                  {...register("selectedBank", {
-                    onChange: (e) => setValue("selectedBank", e.target.value),
-                  })}
-                />
-                NBO
-              </label>
+              {["Bank Muscat", "Bank Dhofar", "NBO"].map((bank) => (
+                <label key={bank}>
+                  <input
+                    type="radio"
+                    value={bank}
+                    {...register("selectedBank")}
+                  />
+                  {bank}
+                </label>
+              ))}
             </div>
+
             <p className="error">{errors.selectedBank?.message}</p>
 
-            {/* CARD NUMBER */}
+            {/* Card Number */}
             <label>Card Number</label>
             <input
               className="modal-input"
               {...register("cardNumber", {
                 onChange: (e) => {
-                  let v = e.target.value.replace(/\D/g, "");
-                  v = v.match(/.{1,4}/g)?.join(" ") || v;
+                  let v = e.target.value.replace(/\D/g, ""); // allow digits only
+                  v = v.match(/.{1,4}/g)?.join(" ") || v; // format XXXX XXXX ...
                   setValue("cardNumber", v);
                 },
               })}
             />
             <p className="error">{errors.cardNumber?.message}</p>
 
-            {/* NAME */}
+            {/* Card Name */}
             <label>Cardholder Name</label>
-            <input
-              className="modal-input"
-              {...register("cardName", {
-                onChange: (e) => setValue("cardName", e.target.value),
-              })}
-            />
+            <input className="modal-input" {...register("cardName")} />
             <p className="error">{errors.cardName?.message}</p>
 
-            {/* EXPIRY */}
+            {/* Expiry */}
             <label>Expiration Date</label>
             <input
               type="month"
               className="modal-input"
-              {...register("expiry", {
-                onChange: (e) => setValue("expiry", e.target.value),
-              })}
+              {...register("expiry")}
             />
             <p className="error">{errors.expiry?.message}</p>
 
@@ -407,17 +323,15 @@ const StudentProfile = () => {
               type="password"
               maxLength="4"
               className="modal-input"
-              {...register("cvv", {
-                onChange: (e) => setValue("cvv", e.target.value),
-              })}
+              {...register("cvv")}
             />
             <p className="error">{errors.cvv?.message}</p>
 
+            {/* Buttons */}
             <div className="modal-buttons">
-              <button className="save-btn" onClick={handleSubmit(saveCardInfo)}>
+              <button className="save-btn" onClick={handleSubmit(onSaveCard)}>
                 Save
               </button>
-
               <button className="clear-btn" onClick={() => reset()}>
                 Clear
               </button>

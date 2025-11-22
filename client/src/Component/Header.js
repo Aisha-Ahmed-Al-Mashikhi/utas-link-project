@@ -45,9 +45,9 @@ const Header = () => {
         {/* ---------- STUDENT NAVIGATION ---------- */}
         {role === "student" && (
           <>
+            <Link to="/student-profile">Profile</Link>
             <Link to="/find-job">Find Job</Link>
             <Link to="/student-applications">My Applications</Link>
-            <Link to="/student-profile">Profile</Link>
 
             <button onClick={handleLogout} className="logout-btn">
               Logout

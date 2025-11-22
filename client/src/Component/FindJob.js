@@ -1,8 +1,17 @@
-import axios from "axios";
+// =====================================================
+// FindJob.jsx (Final Version WITHOUT any login checks)
+// Uses Redux for jobs + user profile
+// Applies only CV + Bank validation
+// =====================================================
+
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchJobs } from "../Features/JobSlice";
+
+// Redux
+import { fetchJobs, applyForJob } from "../Features/JobSlice";
+import { fetchUser } from "../Features/UserSlice";
+
 import "../Styles/FindJob.css";
 
 const FindJob = () => {
@@ -10,87 +19,75 @@ const FindJob = () => {
   const navigate = useNavigate();
 
   const { jobs, isLoading } = useSelector((state) => state.jobs);
+  const { user } = useSelector((state) => state.users);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [userCvLink, setUserCvLink] = useState(null);
-  const [userBank, setUserBank] = useState(null);
 
-  // Protect student route
-  useEffect(() => {
-    const role = localStorage.getItem("role");
-    if (!role) navigate("/login");
-  }, [navigate]);
-
-  // Load all jobs
+  // ----------------------------------------------------------
+  // LOAD JOBS
+  // ----------------------------------------------------------
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch]);
 
-  // Load CV + Bank info
+  // ----------------------------------------------------------
+  // LOAD USER PROFILE (CV + BANK)
+  // ----------------------------------------------------------
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-
     if (loggedUser?.email) {
-      axios
-        .get(`http://localhost:3001/user/${loggedUser.email}`)
-        .then((res) => {
-          setUserCvLink(res.data.cvLink || null);
-          setUserBank(res.data.bankName || null);
-        })
-        .catch((err) => console.error("Error fetching user profile:", err));
+      dispatch(fetchUser(loggedUser.email));
     }
-  }, []);
+  }, [dispatch]);
 
-  // search filter
-  const filteredJobs = jobs.filter(
-    (job) =>
-      job.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.skills.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // ----------------------------------------------------------
+  // SEARCH FILTER
+  // ----------------------------------------------------------
+  const filteredJobs = jobs.filter((job) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      job.jobTitle.toLowerCase().includes(term) ||
+      job.organization.toLowerCase().includes(term) ||
+      (job.skills || "").toString().toLowerCase().includes(term)
+    );
+  });
 
-  // Apply handler
+  // ----------------------------------------------------------
+  // APPLY JOB  CV + bank
+  // ----------------------------------------------------------
   const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-    if (!loggedUser) {
-      alert("Please log in first!");
-      navigate("/login");
-      return;
-    }
-
-    // CV Required
-    if (!userCvLink) {
+    // Check CV
+    if (!user?.cvLink) {
       alert("Please upload your CV before applying.");
-      navigate("/userprofile");
-      return;
+      return navigate("/userprofile");
     }
 
-    // Bank Required
-    if (!userBank) {
+    // Check Bank Card
+    if (!user?.bankName) {
       alert("Please add your bank/benefit card before applying.");
-      navigate("/userprofile");
-      return;
+      return navigate("/userprofile");
     }
+
+    const appData = {
+      jobId: job._id,
+      jobTitle: job.jobTitle,
+      organization: job.organization,
+      applicantEmail: loggedUser.email,
+      applicantName: loggedUser.name,
+      cvLink: user.cvLink,
+    };
 
     try {
-      const applicationData = {
-        jobId: job._id,
-        jobTitle: job.jobTitle,
-        organization: job.organization,
-        applicantEmail: loggedUser.email,
-        applicantName: loggedUser.name,
-        cvLink: userCvLink,
-      };
-
-      await axios.post("http://localhost:3001/apply", applicationData);
+      await dispatch(applyForJob(appData)).unwrap();
       alert("Job applied successfully!");
-    } catch (err) {
-      alert("You have already applied or an error occurred.");
+    } catch {
+      alert("You already applied.");
     }
   };
 
-  if (isLoading) return <p>Loading jobs...</p>;
+  if (isLoading && jobs.length === 0) return <p>Loading jobs...</p>;
 
   return (
     <div className="findjob-page">
@@ -117,8 +114,8 @@ const FindJob = () => {
         {filteredJobs.length === 0 ? (
           <p className="no-jobs">No jobs found.</p>
         ) : (
-          filteredJobs.map((job, index) => (
-            <div key={index} className="job-card">
+          filteredJobs.map((job) => (
+            <div key={job._id} className="job-card">
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
                 <span className="rate">

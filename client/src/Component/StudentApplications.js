@@ -16,16 +16,18 @@ const StudentApplications = () => {
     (state) => state.applications
   );
 
-  // Protect route: redirect to login if no user is logged in
+  // ----------------------------------------------------------
+  // LOAD STUDENT APPLICATIONS (no login check — as requested)
+  // ----------------------------------------------------------
   useEffect(() => {
-    if (!user || !user.email) {
-      navigate("/login");
-      return;
+    if (user?.email) {
+      dispatch(fetchApplications(user.email));
     }
-    dispatch(fetchApplications(user.email));
-  }, [dispatch, user, navigate]);
+  }, [dispatch]);
 
-  // Handle canceling an application
+  // ----------------------------------------------------------
+  // CANCEL APPLICATION
+  // ----------------------------------------------------------
   const handleCancel = (id) => {
     dispatch(cancelApplication(id))
       .unwrap()
@@ -33,36 +35,50 @@ const StudentApplications = () => {
       .catch(() => alert("Error canceling application."));
   };
 
-  if (isLoading) return <p>Loading applications...</p>;
+  if (isLoading && applications.length === 0) {
+    return <p>Loading applications...</p>;
+  }
 
   return (
     <div className="applications-page">
       <h1 className="applications-title">
         My <span className="accent">Applications</span>
       </h1>
+
       <p className="applications-sub">
         Track the status of your submitted job applications.
       </p>
 
       <div className="applications-list">
         {applications.length === 0 ? (
-          <p>No applications yet.</p>
+          <div className="empty-state">
+            <p>No applications yet.</p>
+            <button
+              className="findjob-btn"
+              onClick={() => navigate("/findjob")}
+            >
+              Browse Jobs
+            </button>
+          </div>
         ) : (
           applications.map((app) => (
             <div className="application-card" key={app._id}>
               <div className="app-info">
                 <div className="app-icon">🏢</div>
+
                 <div>
                   <h3 className="job-title">{app.jobTitle}</h3>
                   <p className="company">Company: {app.organization}</p>
                   <p className="details">Email: {app.applicantEmail}</p>
+
+                  {/* Status badge */}
                   <p className={`status-badge ${app.status?.toLowerCase()}`}>
                     {app.status || "Pending Review"}
                   </p>
                 </div>
               </div>
 
-              {/* Action buttons change depending on application status */}
+              {/* ACTIONS */}
               <div className="app-actions">
                 {app.status === "Pending Review" ? (
                   <button
