@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
 
-// FETCH MESSAGES FROM MONGO
 export const fetchMessages = createAsyncThunk(
   "chat/fetchMessages",
   async (applicationId) => {
@@ -11,7 +10,6 @@ export const fetchMessages = createAsyncThunk(
   }
 );
 
-// SEND MESSAGE TO MONGO
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async (msgData) => {
@@ -38,12 +36,8 @@ const chatSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMessages.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(fetchMessages.fulfilled, (state, action) => {
         state.messages = action.payload;
-        state.isLoading = false;
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.messages.push(action.payload);

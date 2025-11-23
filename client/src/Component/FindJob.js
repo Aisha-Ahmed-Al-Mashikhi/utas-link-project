@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx (Final Version WITHOUT any login checks)
+// FindJob.jsx (Final FIXED Version)
 // Uses Redux for jobs + user profile
 // Applies only CV + Bank validation
 // =====================================================
@@ -18,21 +18,18 @@ const FindJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { jobs, isLoading } = useSelector((state) => state.jobs);
+  // FIXED: jobs → jobList
+  const { jobList, isLoading } = useSelector((state) => state.jobs);
   const { user } = useSelector((state) => state.users);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ----------------------------------------------------------
-  // LOAD JOBS
-  // ----------------------------------------------------------
+  // Load jobs
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch]);
 
-  // ----------------------------------------------------------
-  // LOAD USER PROFILE (CV + BANK)
-  // ----------------------------------------------------------
+  // Load user profile (CV + BANK)
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
     if (loggedUser?.email) {
@@ -40,10 +37,8 @@ const FindJob = () => {
     }
   }, [dispatch]);
 
-  // ----------------------------------------------------------
-  // SEARCH FILTER
-  // ----------------------------------------------------------
-  const filteredJobs = jobs.filter((job) => {
+  // Search filter
+  const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
       job.jobTitle.toLowerCase().includes(term) ||
@@ -52,26 +47,24 @@ const FindJob = () => {
     );
   });
 
-  // ----------------------------------------------------------
-  // APPLY JOB  CV + bank
-  // ----------------------------------------------------------
+  // APPLY JOB
   const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-    // Check CV
+    // CV check
     if (!user?.cvLink) {
       alert("Please upload your CV before applying.");
-      return navigate("/userprofile");
+      return navigate("/student-profile");
     }
 
-    // Check Bank Card
+    // Bank check
     if (!user?.bankName) {
-      alert("Please add your bank/benefit card before applying.");
-      return navigate("/userprofile");
+      alert("Please add your bank card before applying.");
+      return navigate("/student-profile");
     }
 
     const appData = {
-      jobId: job._id,
+      jobId: job._id, // IMPORTANT: correct ID
       jobTitle: job.jobTitle,
       organization: job.organization,
       applicantEmail: loggedUser.email,
@@ -87,7 +80,7 @@ const FindJob = () => {
     }
   };
 
-  if (isLoading && jobs.length === 0) return <p>Loading jobs...</p>;
+  if (isLoading && jobList.length === 0) return <p>Loading jobs...</p>;
 
   return (
     <div className="findjob-page">

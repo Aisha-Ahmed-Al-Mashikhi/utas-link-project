@@ -1,17 +1,22 @@
+// src/Component/ChatPageStudent.js
+
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMessages, sendMessage } from "../Features/ChatSlice";
-import { addIncomingMessage } from "../Features/ChatSlice";
+import {
+  fetchMessages,
+  sendMessage,
+  addIncomingMessage,
+} from "../Features/ChatSlice";
 import "../Styles/Chat.css";
 import { io } from "socket.io-client";
 
-// Create socket connection
 const socket = io("http://localhost:3001");
 
 const ChatPageStudent = () => {
   const { applicationId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { messages } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.users);
@@ -19,67 +24,62 @@ const ChatPageStudent = () => {
   const [text, setText] = useState("");
   const endRef = useRef(null);
 
-  // Load messages from Mongo
   useEffect(() => {
     dispatch(fetchMessages(applicationId));
   }, [applicationId, dispatch]);
 
-  // Join socket room
   useEffect(() => {
     socket.emit("join_room", applicationId);
 
-    // Listen for real-time incoming messages
     socket.on("receive_message", (msg) => {
       dispatch(addIncomingMessage(msg));
     });
 
-    return () => {
-      socket.off("receive_message");
-    };
+    return () => socket.off("receive_message");
   }, [applicationId, dispatch]);
 
-  // Auto scroll bottom
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Send message (DB + socket)
   const handleSend = () => {
     if (!text.trim()) return;
 
-    const msgData = {
+    const msg = {
       applicationId,
       senderEmail: user.email,
       senderRole: "student",
       message: text,
-      createdAt: new Date(),
+      createdAt: Date.now(),
     };
 
-    // 1) save to DB
-    dispatch(sendMessage(msgData));
-
-    // 2) send real-time via socket
-    socket.emit("send_message", msgData);
-
+    dispatch(sendMessage(msg));
+    socket.emit("send_message", msg);
     setText("");
   };
 
   return (
-    <div className="chat-container">
-      <h2 className="chat-title">
-        Chat <span className="accent">Support</span>
-      </h2>
+    <div className="chat-wrapper">
+      <div className="chat-header">
+        <h2>
+          Chat <span className="accent">Support</span>
+        </h2>
+
+        <button className="close-chat" onClick={() => navigate(-1)}>
+          ✕
+        </button>
+      </div>
 
       <div className="chat-box">
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`msg-row ${
-              msg.senderEmail === user.email ? "msg-right" : "msg-left"
+            className={`chat-row ${
+              msg.senderEmail === user.email ? "right" : "left"
             }`}
           >
             <div
-              className={`msg-bubble ${
+              className={`bubble ${
                 msg.senderEmail === user.email ? "me" : "them"
               }`}
             >
@@ -96,14 +96,11 @@ const ChatPageStudent = () => {
 
       <div className="chat-input-area">
         <input
-          className="chat-input"
           placeholder="Write a message..."
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button className="send-btn" onClick={handleSend}>
-          Send ➤
-        </button>
+        <button onClick={handleSend}>Send ➤</button>
       </div>
     </div>
   );

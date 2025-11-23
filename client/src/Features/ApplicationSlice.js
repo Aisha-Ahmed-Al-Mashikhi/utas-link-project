@@ -31,8 +31,8 @@ export const cancelStudentApplication = createAsyncThunk(
 export const fetchApplicants = createAsyncThunk(
   "applications/fetchApplicants",
   async (jobId) => {
-    const res = await axios.get(`${ENV.SERVER_URL}/applicants/${jobId}`);
-    return res.data; // array
+    const res = await axios.get(`${ENV.SERVER_URL}/applicants?jobId=${jobId}`);
+    return res.data;
   }
 );
 

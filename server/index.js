@@ -59,7 +59,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 app.use("/uploads", express.static(uploadDir));
 
-// ------------------- REGISTER USER -------------------
+/*───────────────────────────────────────────────
+ ░░  AUTH (REGISTER + LOGIN)
+───────────────────────────────────────────────*/
+
+// REGISTER STUDENT
 app.post("/registerUser", async (req, res) => {
   try {
     const { name, email, password, major, age } = req.body;
@@ -85,7 +89,7 @@ app.post("/registerUser", async (req, res) => {
   }
 });
 
-// ------------------- REGISTER COMPANY -------------------
+// REGISTER COMPANY
 app.post("/registerCompany", async (req, res) => {
   try {
     const { companyName, email, password, industry, location } = req.body;
@@ -110,7 +114,7 @@ app.post("/registerCompany", async (req, res) => {
   }
 });
 
-// ------------------- LOGIN -------------------
+// LOGIN (STUDENT + COMPANY)
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -134,7 +138,10 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ------------------- FETCH PROFILES -------------------
+/*───────────────────────────────────────────────
+ ░░  LOAD PROFILES
+───────────────────────────────────────────────*/
+
 app.get("/user/:email", async (req, res) => {
   const user = await UserModel.findOne({ email: req.params.email });
   res.json(user);
@@ -145,61 +152,110 @@ app.get("/company/:email", async (req, res) => {
   res.json(company);
 });
 
-// ------------------- FETCH JOBS FOR COMPANY -------------------
+/*───────────────────────────────────────────────
+ ░░  JOBS CRUD
+───────────────────────────────────────────────*/
+
+// GET COMPANY JOBS
 app.get("/jobs/company/:email", async (req, res) => {
   try {
-    const email = req.params.email;
-
-    const jobs = await JobModel.find({ postedBy: email }).sort({
+    const jobs = await JobModel.find({ postedBy: req.params.email }).sort({
       createdAt: -1,
     });
-
     res.json(jobs);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Failed to load company jobs" });
   }
 });
 
-// ------------------- FETCH ALL JOBS -------------------
+// GET ALL JOBS
 app.get("/jobs", async (req, res) => {
   const jobs = await JobModel.find().sort({ createdAt: -1 });
   res.json(jobs);
 });
 
-// ------------------- CREATE JOB -------------------
+// CREATE JOB
 app.post("/jobs", async (req, res) => {
   try {
     const newJob = new JobModel(req.body);
     await newJob.save();
     res.json(newJob);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Job creation failed" });
   }
 });
 
-// ------------------- UPDATE JOB -------------------
+// UPDATE JOB
 app.put("/jobs/:id", async (req, res) => {
   try {
     const updated = await JobModel.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     res.json(updated);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Update failed" });
   }
 });
 
-// ------------------- DELETE JOB -------------------
+// DELETE JOB
 app.delete("/jobs/:id", async (req, res) => {
   try {
     await JobModel.findByIdAndDelete(req.params.id);
     res.json({ success: true });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Delete failed" });
   }
 });
 
-// ------------------- STUDENT APPLICATIONS -------------------
+/*───────────────────────────────────────────────
+ ░░  APPLICATIONS
+───────────────────────────────────────────────*/
+
+// APPLY FOR JOB  ✅ Fixed
+app.post("/apply", async (req, res) => {
+  try {
+    const {
+      jobId,
+      jobTitle,
+      organization,
+      applicantEmail,
+      applicantName,
+      cvLink,
+    } = req.body;
+
+    if (!jobId) {
+      return res.status(400).json({ error: "Missing jobId" });
+    }
+
+    const exist = await ApplicationModel.findOne({
+      jobId,
+      applicantEmail,
+    });
+
+    if (exist) {
+      return res.status(400).json({ error: "Already applied" });
+    }
+
+    const newApp = new ApplicationModel({
+      jobId,
+      jobTitle,
+      organization,
+      applicantEmail,
+      applicantName,
+      cvLink,
+      status: "Pending",
+      createdAt: new Date(),
+    });
+
+    await newApp.save();
+
+    res.json(newApp);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET APPLICATIONS OF ONE STUDENT
 app.get("/applications/:email", async (req, res) => {
   const apps = await ApplicationModel.find({
     applicantEmail: req.params.email,
@@ -208,16 +264,20 @@ app.get("/applications/:email", async (req, res) => {
   res.json(apps);
 });
 
-// ------------------- APPLICANTS FOR ONE JOB -------------------
-app.get("/applicants/:jobId", async (req, res) => {
-  const apps = await ApplicationModel.find({
-    jobId: req.params.jobId,
-  }).sort({ createdAt: -1 });
+// GET APPLICANTS FOR ONE JOB (FIXED)
+app.get("/applicants", async (req, res) => {
+  const jobId = req.query.jobId;
+
+  if (!jobId) {
+    return res.status(400).json({ error: "Missing jobId" });
+  }
+
+  const apps = await ApplicationModel.find({ jobId }).sort({ appliedAt: -1 });
 
   res.json(apps);
 });
 
-// ------------------- UPDATE APPLICANT STATUS -------------------
+// UPDATE APPLICANT STATUS
 app.put("/applicants/update/:id", async (req, res) => {
   const updated = await ApplicationModel.findByIdAndUpdate(
     req.params.id,
@@ -227,7 +287,10 @@ app.put("/applicants/update/:id", async (req, res) => {
   res.json(updated);
 });
 
-// ------------------- CHAT -------------------
+/*───────────────────────────────────────────────
+ ░░  CHAT (API)
+───────────────────────────────────────────────*/
+
 app.get("/chat/:applicationId", async (req, res) => {
   const messages = await ChatModel.find({
     applicationId: req.params.applicationId,
@@ -236,7 +299,27 @@ app.get("/chat/:applicationId", async (req, res) => {
   res.json(messages);
 });
 
-// ------------------- SOCKET.IO CHAT -------------------
+app.post("/chat/send", async (req, res) => {
+  try {
+    const msg = new ChatModel({
+      applicationId: req.body.applicationId,
+      senderEmail: req.body.senderEmail,
+      senderRole: req.body.senderRole,
+      message: req.body.message,
+      createdAt: Date.now(),
+    });
+
+    await msg.save();
+    res.json(msg);
+  } catch (err) {
+    res.status(500).json({ error: "Message not saved" });
+  }
+});
+
+/*───────────────────────────────────────────────
+ ░░  SOCKET.IO (REALTIME)
+───────────────────────────────────────────────*/
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -250,7 +333,7 @@ io.on("connection", (socket) => {
       senderEmail: data.senderEmail,
       senderRole: data.senderRole,
       message: data.message,
-      createdAt: new Date(),
+      createdAt: Date.now(),
     });
 
     await msg.save();
@@ -263,7 +346,10 @@ io.on("connection", (socket) => {
   });
 });
 
-// ------------------- START SERVER -------------------
+/*───────────────────────────────────────────────
+ ░░  START SERVER
+───────────────────────────────────────────────*/
+
 httpServer.listen(3001, () =>
   console.log("Server + Socket.io running on port 3001")
 );

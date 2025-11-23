@@ -24,10 +24,12 @@ const ChatPageCompany = () => {
   const [text, setText] = useState("");
   const bottomRef = useRef(null);
 
+  // Load messages on mount
   useEffect(() => {
     dispatch(fetchMessages(applicationId));
   }, [applicationId, dispatch]);
 
+  // Join Socket room + listen for incoming messages
   useEffect(() => {
     socket.emit("join_room", applicationId);
 
@@ -38,23 +40,45 @@ const ChatPageCompany = () => {
     return () => socket.off("receive_message");
   }, [applicationId, dispatch]);
 
+  // Auto-scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // ===== FIX: ALWAYS GET VALID COMPANY EMAIL =====
+  const getCompanyEmail = () => {
+    return (
+      company?.email ||
+      JSON.parse(localStorage.getItem("loggedUser"))?.email ||
+      null
+    );
+  };
+
   const handleSend = () => {
     if (!text.trim()) return;
 
+    const senderEmail = getCompanyEmail();
+
+    // Protect from sending invalid message
+    if (!senderEmail) {
+      alert("Company email not loaded yet! Try again.");
+      return;
+    }
+
     const msg = {
       applicationId,
-      senderEmail: company.email,
+      senderEmail,
       senderRole: "company",
       message: text,
       createdAt: new Date(),
     };
 
+    // Save to DB
     dispatch(sendMessage(msg));
+
+    // Real-time
     socket.emit("send_message", msg);
+
     setText("");
   };
 
@@ -66,6 +90,7 @@ const ChatPageCompany = () => {
           Chat with <span className="accent">Applicant</span>
         </h2>
 
+        {/* CLOSE BUTTON */}
         <button className="close-chat" onClick={() => navigate(-1)}>
           ✕
         </button>
@@ -77,12 +102,12 @@ const ChatPageCompany = () => {
           <div
             key={idx}
             className={`chat-row ${
-              msg.senderEmail === company.email ? "right" : "left"
+              msg.senderEmail === getCompanyEmail() ? "right" : "left"
             }`}
           >
             <div
               className={`bubble ${
-                msg.senderEmail === company.email ? "me" : "them"
+                msg.senderEmail === getCompanyEmail() ? "me" : "them"
               }`}
             >
               <p>{msg.message}</p>
@@ -96,7 +121,7 @@ const ChatPageCompany = () => {
         <div ref={bottomRef}></div>
       </div>
 
-      {/* INPUT AREA */}
+      {/* INPUT */}
       <div className="chat-input-area">
         <input
           type="text"

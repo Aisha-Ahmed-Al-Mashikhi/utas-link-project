@@ -1,28 +1,31 @@
+// src/Component/CompanyJobs.js
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCompanyJobs, deleteJob, updateJob } from "../Features/JobSlice";
 import "../Styles/CompanyJobs.css";
+import { useNavigate } from "react-router-dom";
 
 const CompanyJobs = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { company } = useSelector((state) => state.companies);
+  // نجيب الوظائف من الـ Redux
   const { companyJobs, isLoading } = useSelector((state) => state.jobs);
 
   const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
 
   /* =====================================================
-      FIX: Load jobs correctly even after Chat page
+      Load company jobs using localStorage ONLY
   ===================================================== */
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    const email = company?.email || savedUser?.email;
 
-    if (email) {
-      dispatch(fetchCompanyJobs(email));
+    if (savedUser?.email) {
+      dispatch(fetchCompanyJobs(savedUser.email));
     }
-  }, [company, dispatch]);
+  }, [dispatch]);
 
   const openEdit = (job) => {
     setEditedJob(job);
@@ -85,9 +88,7 @@ const CompanyJobs = () => {
 
               <button
                 className="applicants-btn"
-                onClick={() =>
-                  (window.location.href = `/applicants-job?jobId=${job._id}`)
-                }
+                onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
               >
                 Applicants 👥
               </button>
@@ -96,7 +97,7 @@ const CompanyJobs = () => {
         ))
       )}
 
-      {/* ================== EDIT MODAL ================== */}
+      {/* =============== EDIT MODAL =============== */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -125,7 +126,6 @@ const CompanyJobs = () => {
               <option>Logistics / Operations</option>
             </select>
 
-            {/* ============ SECTOR ============ */}
             <label>Sector</label>
             <div className="sector-edit-row">
               <label className="sector-edit-box">
@@ -202,7 +202,6 @@ const CompanyJobs = () => {
               <button className="save-btn" onClick={saveEdit}>
                 Save
               </button>
-
               <button
                 className="cancel-btn"
                 onClick={() => setShowModal(false)}
