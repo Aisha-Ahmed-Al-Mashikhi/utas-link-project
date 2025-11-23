@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.home {
+  background: #f5faf8;
+  text-align: center;
+  padding: 90px 20px;
+}
+
+.home-section {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.hero {
+  padding: 60px 0 90px;
+}
+
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.accent {
+  color: #009688;
+}
+
+.hero-text {
+  max-width: 600px;
+  margin: 16px auto 32px;
+  color: #575757;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.hero-btn {
+  background: #009688;
+  color: #fff;
+  padding: 14px 32px;
+  border: none;
+  font-size: 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.15s;
+  font-weight: 600;
+}
+
+.hero-btn:hover {
+  background: #007d73;
+}
+.posts-container {
+  width: 100%;
+  margin: 60px 0;
+  padding: 50px 0;
+  background: rgba(255, 255, 255, 0.45); /* شفاف */
+  backdrop-filter: blur(12px); /* تأثير زجاج */
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 0; /* ممتد للجانبين */
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #222;
+}
