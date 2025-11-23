@@ -1,30 +1,33 @@
+// src/Component/ChatPageCompany.js
+
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMessages, sendMessage } from "../Features/ChatSlice";
-import { addIncomingMessage } from "../Features/ChatSlice";
+import {
+  fetchMessages,
+  sendMessage,
+  addIncomingMessage,
+} from "../Features/ChatSlice";
 import "../Styles/Chat.css";
 import { io } from "socket.io-client";
 
-// Create socket connection
 const socket = io("http://localhost:3001");
 
 const ChatPageCompany = () => {
   const { applicationId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { messages } = useSelector((state) => state.chat);
-  const { user } = useSelector((state) => state.users);
+  const { company } = useSelector((state) => state.companies);
 
   const [text, setText] = useState("");
-  const endRef = useRef(null);
+  const bottomRef = useRef(null);
 
-  // Load messages from DB
   useEffect(() => {
     dispatch(fetchMessages(applicationId));
   }, [applicationId, dispatch]);
 
-  // Join socket room
   useEffect(() => {
     socket.emit("join_room", applicationId);
 
@@ -35,49 +38,51 @@ const ChatPageCompany = () => {
     return () => socket.off("receive_message");
   }, [applicationId, dispatch]);
 
-  // Scroll to bottom
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // send message
   const handleSend = () => {
     if (!text.trim()) return;
 
-    const msgData = {
+    const msg = {
       applicationId,
-      senderEmail: user.email,
+      senderEmail: company.email,
       senderRole: "company",
       message: text,
       createdAt: new Date(),
     };
 
-    // Save to DB
-    dispatch(sendMessage(msgData));
-
-    // Real-time send
-    socket.emit("send_message", msgData);
-
+    dispatch(sendMessage(msg));
+    socket.emit("send_message", msg);
     setText("");
   };
 
   return (
-    <div className="chat-container">
-      <h2 className="chat-title">
-        Chat with <span className="accent">Applicant</span>
-      </h2>
+    <div className="chat-wrapper">
+      {/* HEADER */}
+      <div className="chat-header">
+        <h2>
+          Chat with <span className="accent">Applicant</span>
+        </h2>
 
+        <button className="close-chat" onClick={() => navigate(-1)}>
+          ✕
+        </button>
+      </div>
+
+      {/* CHAT AREA */}
       <div className="chat-box">
-        {messages.map((msg, i) => (
+        {messages.map((msg, idx) => (
           <div
-            key={i}
-            className={`msg-row ${
-              msg.senderEmail === user.email ? "msg-right" : "msg-left"
+            key={idx}
+            className={`chat-row ${
+              msg.senderEmail === company.email ? "right" : "left"
             }`}
           >
             <div
-              className={`msg-bubble ${
-                msg.senderEmail === user.email ? "me" : "them"
+              className={`bubble ${
+                msg.senderEmail === company.email ? "me" : "them"
               }`}
             >
               <p>{msg.message}</p>
@@ -87,19 +92,20 @@ const ChatPageCompany = () => {
             </div>
           </div>
         ))}
-        <div ref={endRef}></div>
+
+        <div ref={bottomRef}></div>
       </div>
 
+      {/* INPUT AREA */}
       <div className="chat-input-area">
         <input
-          className="chat-input"
+          type="text"
           placeholder="Write a message..."
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button className="send-btn" onClick={handleSend}>
-          Send ➤
-        </button>
+
+        <button onClick={handleSend}>Send ➤</button>
       </div>
     </div>
   );

@@ -13,18 +13,14 @@ const ApplicantsJob = () => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
-  // Get jobId from URL (?jobId=xxxxx)
   const jobId = params.get("jobId");
 
-  // Get applicants from Redux
   const { applicants, isLoading } = useSelector((state) => state.applications);
 
-  // Fetch all applicants for this job
   useEffect(() => {
     if (jobId) dispatch(fetchApplicants(jobId));
   }, [dispatch, jobId]);
 
-  // Accept or Reject applicant
   const handleAction = (applicationId, status) => {
     dispatch(updateApplicantStatus({ applicationId, status }));
   };
@@ -34,47 +30,44 @@ const ApplicantsJob = () => {
   return (
     <div className="applicants-page">
       <h1 className="title">
-        Applicants for <span className="accent">Job</span>
+        Job <span className="accent">Applicants</span>
       </h1>
 
       {applicants.length === 0 ? (
         <p className="empty">No applicants yet.</p>
       ) : (
-        applicants.map((app) => (
-          <div key={app._id} className="applicant-card">
-            <div>
+        <div className="applicants-grid">
+          {applicants.map((app) => (
+            <div key={app._id} className="applicant-card">
               <h3>{app.applicantName}</h3>
               <p>Email: {app.applicantEmail}</p>
               <p>Status: {app.status}</p>
+
+              <div className="actions">
+                <button
+                  className="chat-btn"
+                  onClick={() => navigate(`/company-chat/${app._id}`)}
+                >
+                  Chat 💬
+                </button>
+
+                <button
+                  className="accept-btn"
+                  onClick={() => handleAction(app._id, "Accepted")}
+                >
+                  Accept ✔
+                </button>
+
+                <button
+                  className="reject-btn"
+                  onClick={() => handleAction(app._id, "Rejected")}
+                >
+                  Reject ✖
+                </button>
+              </div>
             </div>
-
-            <div className="actions">
-              {/* Open chat with this applicant */}
-              <button
-                className="chat-btn"
-                onClick={() => navigate(`/company-chat/${app._id}`)}
-              >
-                Chat 💬
-              </button>
-
-              {/* Accept applicant */}
-              <button
-                className="accept-btn"
-                onClick={() => handleAction(app._id, "Accepted")}
-              >
-                Accept
-              </button>
-
-              {/* Reject applicant */}
-              <button
-                className="reject-btn"
-                onClick={() => handleAction(app._id, "Rejected")}
-              >
-                Reject
-              </button>
-            </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   );

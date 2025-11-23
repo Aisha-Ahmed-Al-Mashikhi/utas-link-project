@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
 
 const PostJob = () => {
+  // STATES (طريقة الأستاذة)
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
   const [sector, setSector] = useState("");
@@ -15,6 +16,7 @@ const PostJob = () => {
   const [description, setDescription] = useState("");
   const [payout, setPayout] = useState("");
 
+  // RHF (للتحقق فقط)
   const {
     register,
     handleSubmit,
@@ -25,6 +27,7 @@ const PostJob = () => {
     mode: "onChange",
   });
 
+  // OPTIONS
   const CATEGORIES = [
     "Design / Marketing",
     "Technology / IT",
@@ -37,15 +40,13 @@ const PostJob = () => {
 
   const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
 
+  // SUBMIT
   const onSubmit = async () => {
     try {
       const company = JSON.parse(localStorage.getItem("loggedUser"));
-      if (!company) {
-        alert("Please log in first.");
-        return;
-      }
+      if (!company) return alert("Please log in first.");
 
-      await axios.post("http://localhost:3001/addJob", {
+      await axios.post("http://localhost:3001/jobs", {
         jobTitle,
         category,
         sector,
@@ -60,6 +61,7 @@ const PostJob = () => {
 
       alert("Job posted successfully!");
 
+      // CLEAR
       reset();
       setJobTitle("");
       setCategory("");
@@ -85,6 +87,7 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Job Title */}
           <label>Job Title</label>
           <input
             type="text"
@@ -97,6 +100,7 @@ const PostJob = () => {
           <p className="error">{errors.jobTitle?.message}</p>
 
           <div className="row-flex">
+            {/* Category */}
             <div className="col-half">
               <label>Category</label>
               <select
@@ -115,10 +119,9 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector — UPDATED */}
+            {/* Sector */}
             <div className="col-half">
               <label>Sector</label>
-
               <div className="sector-inline">
                 {SECTORS.map((s) => (
                   <label key={s} className="sector-box-inline">
@@ -134,12 +137,12 @@ const PostJob = () => {
                   </label>
                 ))}
               </div>
-
               <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
 
           <div className="row-flex">
+            {/* Rate */}
             <div className="col-half">
               <label>Rate (OMR)</label>
               <input
@@ -153,6 +156,7 @@ const PostJob = () => {
               <p className="error">{errors.rate?.message}</p>
             </div>
 
+            {/* Rate Type */}
             <div className="col-half">
               <label>Rate Type</label>
               <select
@@ -172,6 +176,7 @@ const PostJob = () => {
             </div>
           </div>
 
+          {/* Skills */}
           <label>Skills Required</label>
           <input
             type="text"
@@ -183,6 +188,7 @@ const PostJob = () => {
           />
           <p className="error">{errors.skills?.message}</p>
 
+          {/* Description */}
           <label>Description</label>
           <textarea
             value={description}
@@ -193,6 +199,7 @@ const PostJob = () => {
           />
           <p className="error">{errors.description?.message}</p>
 
+          {/* Payout */}
           <label>Payout (optional)</label>
           <input
             type="text"
@@ -204,6 +211,7 @@ const PostJob = () => {
           />
           <p className="error">{errors.payout?.message}</p>
 
+          {/* Buttons */}
           <div className="actions">
             <button type="submit" className="btn-primary">
               Post Job

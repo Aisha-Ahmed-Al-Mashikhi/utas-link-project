@@ -37,9 +37,13 @@ export const addJob = createAsyncThunk("jobs/addJob", async (jobData) => {
 // ====================================================
 export const updateJob = createAsyncThunk(
   "jobs/updateJob",
-  async ({ jobId, updatedData }) => {
-    const res = await axios.put(`${ENV.SERVER_URL}/jobs/${jobId}`, updatedData);
-    return res.data;
+  async (job, thunkAPI) => {
+    try {
+      const res = await axios.put(`${ENV.SERVER_URL}/jobs/${job._id}`, job);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue("Update failed");
+    }
   }
 );
 

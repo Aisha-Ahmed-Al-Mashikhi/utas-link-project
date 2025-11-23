@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "../Styles/UserProfile.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { bankCardSchema } from "../Validations/Bank";
+import { bankCardSchema } from "../Validations/BankCardValidation";
 import {
   fetchCompany,
   uploadProfile,
@@ -20,17 +20,19 @@ const CompanyProfile = () => {
 
   const { company } = useSelector((state) => state.companies);
 
+  // PROFILE IMAGE PREVIEW
   const [preview, setPreview] = useState(null);
-  const [showCardModal, setShowCardModal] = useState(false);
 
-  // BANK STATES – طريقة الأستاذة (useState + register)
+  // BANK STATES — طريقة الأستاذة
   const [selectedBank, setSelectedBank] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cardName, setCardName] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
 
-  // RHF
+  const [showCardModal, setShowCardModal] = useState(false);
+
+  // REACT HOOK FORM (Validation Only)
   const {
     register,
     handleSubmit,
@@ -40,9 +42,9 @@ const CompanyProfile = () => {
     resolver: yupResolver(bankCardSchema),
   });
 
-  /* ====================================
+  /* ===============================
         LOAD COMPANY
-  ==================================== */
+  =============================== */
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
@@ -50,9 +52,9 @@ const CompanyProfile = () => {
     dispatch(fetchCompany(saved.email));
   }, [dispatch, navigate]);
 
-  /* ====================================
-        SYNC COMPANY DATA INTO FORM
-  ==================================== */
+  /* ===============================
+        FILL BANK INFO (if exists)
+  =============================== */
   useEffect(() => {
     if (company?.email) {
       setSelectedBank(company.bankName || "");
@@ -62,18 +64,18 @@ const CompanyProfile = () => {
       setCvv(company.cvv || "");
 
       reset({
-        selectedBank: company.bankName || "",
-        cardNumber: company.cardNumber || "",
-        cardName: company.cardName || "",
-        expiry: company.expiry || "",
-        cvv: company.cvv || "",
+        selectedBank: company.bankName,
+        cardNumber: company.cardNumber,
+        cardName: company.cardName,
+        expiry: company.expiry,
+        cvv: company.cvv,
       });
     }
   }, [company, reset]);
 
-  /* ====================================
+  /* ===============================
         UPLOAD PROFILE IMAGE
-  ==================================== */
+  =============================== */
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -82,9 +84,9 @@ const CompanyProfile = () => {
     setPreview(URL.createObjectURL(file));
   };
 
-  /* ====================================
+  /* ===============================
         UPLOAD LICENSE PDF
-  ==================================== */
+  =============================== */
   const handleLicenseUpload = (e) => {
     const f = e.target.files[0];
     if (!f) return;
@@ -92,17 +94,17 @@ const CompanyProfile = () => {
     dispatch(uploadLicense({ email: company.email, file: f }));
   };
 
-  /* ====================================
+  /* ===============================
         DELETE LICENSE
-  ==================================== */
+  =============================== */
   const handleDeleteLicense = () => {
     if (!window.confirm("Delete license?")) return;
     dispatch(deleteLicense(company.email));
   };
 
-  /* ====================================
-        SAVE BANK INFO
-  ==================================== */
+  /* ===============================
+        SAVE BANK CARD INFO
+  =============================== */
   const saveCardInfo = () => {
     dispatch(
       updateBankInfo({
@@ -116,23 +118,25 @@ const CompanyProfile = () => {
         },
       })
     );
-
     setShowCardModal(false);
   };
 
-  /* ====================================
-        DELETE BANK INFO
-  ==================================== */
+  /* ===============================
+        DELETE BANK CARD
+  =============================== */
   const removeBank = () => {
     if (!window.confirm("Delete bank card?")) return;
+
     dispatch(deleteBankCard(company.email));
 
-    reset();
+    // RESET LOCAL STATES
     setSelectedBank("");
     setCardNumber("");
     setCardName("");
     setExpiry("");
     setCvv("");
+
+    reset();
   };
 
   return (
@@ -165,6 +169,7 @@ const CompanyProfile = () => {
           <div>
             <h2 className="profile-name">{company.companyName}</h2>
             <p className="profile-email">{company.email}</p>
+
             <p className="profile-detail">
               {company.industry} • {company.location}
             </p>
@@ -189,7 +194,7 @@ const CompanyProfile = () => {
                 View
               </a>
 
-              <label htmlFor="licenseUpload" className="cv-btn replace">
+              <label htmlFor="licenseUP" className="cv-btn replace">
                 Replace
               </label>
 
@@ -198,7 +203,7 @@ const CompanyProfile = () => {
               </button>
 
               <input
-                id="licenseUpload"
+                id="licenseUP"
                 type="file"
                 accept=".pdf"
                 style={{ display: "none" }}
@@ -209,13 +214,14 @@ const CompanyProfile = () => {
         ) : (
           <>
             <input
-              id="licenseUpload"
+              id="licenseUP"
               type="file"
               accept=".pdf"
               style={{ display: "none" }}
               onChange={handleLicenseUpload}
             />
-            <label htmlFor="licenseUpload" className="upload-cv-btn">
+
+            <label htmlFor="licenseUP" className="upload-cv-btn">
               Upload License (PDF)
             </label>
           </>
@@ -242,6 +248,7 @@ const CompanyProfile = () => {
           </div>
         </div>
 
+        {/* BUTTONS */}
         <div className="card-buttons">
           {!company.cardNumber ? (
             <button
@@ -267,7 +274,7 @@ const CompanyProfile = () => {
         </div>
       </div>
 
-      {/* ===== MODAL ===== */}
+      {/* ===== BANK MODAL ===== */}
       {showCardModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -283,43 +290,24 @@ const CompanyProfile = () => {
 
             {/* BANK OPTIONS */}
             <label>Select Bank</label>
+
             <div className="bank-radio-row">
-              <label>
-                <input
-                  type="radio"
-                  value="Bank Muscat"
-                  {...register("selectedBank")}
-                  checked={selectedBank === "Bank Muscat"}
-                  onChange={(e) => setSelectedBank(e.target.value)}
-                />
-                Bank Muscat
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  value="Bank Dhofar"
-                  {...register("selectedBank")}
-                  checked={selectedBank === "Bank Dhofar"}
-                  onChange={(e) => setSelectedBank(e.target.value)}
-                />
-                Bank Dhofar
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  value="NBO"
-                  {...register("selectedBank")}
-                  checked={selectedBank === "NBO"}
-                  onChange={(e) => setSelectedBank(e.target.value)}
-                />
-                NBO
-              </label>
+              {["Bank Muscat", "Bank Dhofar", "NBO"].map((bank) => (
+                <label key={bank}>
+                  <input
+                    type="radio"
+                    value={bank}
+                    {...register("selectedBank")}
+                    checked={selectedBank === bank}
+                    onChange={(e) => setSelectedBank(e.target.value)}
+                  />
+                  {bank}
+                </label>
+              ))}
             </div>
             <p className="error">{errors.selectedBank?.message}</p>
 
-            {/* NUMBER */}
+            {/* CARD NUMBER */}
             <label>Card Number</label>
             <input
               className="modal-input"
@@ -333,7 +321,7 @@ const CompanyProfile = () => {
             />
             <p className="error">{errors.cardNumber?.message}</p>
 
-            {/* NAME */}
+            {/* CARD HOLDER NAME */}
             <label>Cardholder Name</label>
             <input
               className="modal-input"
@@ -343,7 +331,7 @@ const CompanyProfile = () => {
             />
             <p className="error">{errors.cardName?.message}</p>
 
-            {/* EXPIRY */}
+            {/* EXPIRY DATE */}
             <label>Expiration Date</label>
             <input
               type="month"
@@ -366,12 +354,23 @@ const CompanyProfile = () => {
             />
             <p className="error">{errors.cvv?.message}</p>
 
+            {/* BUTTONS */}
             <div className="modal-buttons">
               <button className="save-btn" onClick={handleSubmit(saveCardInfo)}>
                 Save
               </button>
 
-              <button className="clear-btn" onClick={() => reset()}>
+              <button
+                className="clear-btn"
+                onClick={() => {
+                  reset();
+                  setSelectedBank("");
+                  setCardNumber("");
+                  setCardName("");
+                  setExpiry("");
+                  setCvv("");
+                }}
+              >
                 Clear
               </button>
             </div>

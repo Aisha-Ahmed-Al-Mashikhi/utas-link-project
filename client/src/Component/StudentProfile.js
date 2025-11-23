@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom"; // For navigation (redirecting u
 import "../Styles/UserProfile.css"; // Profile page styling
 import { useForm } from "react-hook-form"; // React Hook Form for handling form input values
 import { yupResolver } from "@hookform/resolvers/yup"; // Yup resolver connects Yup validation to React Hook Form
-import { bankCardSchema } from "../Validations/Bank"; // Import validation schema for bank card info
+import { bankCardSchema } from "../Validations/BankCardValidation"; // Import validation schema for bank card info
 
 const StudentProfile = () => {
   // Redux dispatcher

@@ -9,24 +9,29 @@ const CompanyJobs = () => {
   const { company } = useSelector((state) => state.companies);
   const { companyJobs, isLoading } = useSelector((state) => state.jobs);
 
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
 
+  /* =====================================================
+      FIX: Load jobs correctly even after Chat page
+  ===================================================== */
   useEffect(() => {
-    const email =
-      company?.email || JSON.parse(localStorage.getItem("loggedUser"))?.email;
+    const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    const email = company?.email || savedUser?.email;
 
-    if (email) dispatch(fetchCompanyJobs(email));
+    if (email) {
+      dispatch(fetchCompanyJobs(email));
+    }
   }, [company, dispatch]);
 
-  const handleEdit = (index) => {
-    setEditingIndex(index);
-    setEditedJob(companyJobs[index]);
+  const openEdit = (job) => {
+    setEditedJob(job);
+    setShowModal(true);
   };
 
-  const handleSave = () => {
+  const saveEdit = () => {
     dispatch(updateJob(editedJob));
-    setEditingIndex(null);
+    setShowModal(false);
   };
 
   const handleDelete = (id) => {
@@ -40,58 +45,173 @@ const CompanyJobs = () => {
   return (
     <div className="companyjobs-page">
       <h1 className="companyjobs-title">
-        My <span className="accent">Posted Jobs</span>
+        My <span className="accent">Jobs</span>
       </h1>
 
       {companyJobs.length === 0 ? (
         <p className="no-jobs">No jobs posted yet.</p>
       ) : (
-        companyJobs.map((job, index) => (
+        companyJobs.map((job) => (
           <div className="job-card" key={job._id}>
-            {editingIndex === index ? (
-              <>
-                <input
-                  value={editedJob.jobTitle}
-                  onChange={(e) =>
-                    setEditedJob({ ...editedJob, jobTitle: e.target.value })
-                  }
-                />
+            <h3>{job.jobTitle}</h3>
 
-                <textarea
-                  value={editedJob.description}
-                  onChange={(e) =>
-                    setEditedJob({
-                      ...editedJob,
-                      description: e.target.value,
-                    })
-                  }
-                />
+            <p className="org">{job.organization}</p>
 
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => setEditingIndex(null)}>Cancel</button>
-              </>
-            ) : (
-              <>
-                <h3>{job.jobTitle}</h3>
-                <p>{job.organization}</p>
-                <p>{job.description}</p>
+            <div className="tags">
+              <span className="tag">{job.category}</span>
+              <span className="tag">{job.sector}</span>
+            </div>
 
-                <div className="job-actions">
-                  <button onClick={() => handleEdit(index)}>Edit</button>
-                  <button onClick={() => handleDelete(job._id)}>Delete</button>
+            <p className="desc">{job.description}</p>
+            <p className="skills">
+              <strong>Skills:</strong> {job.skills}
+            </p>
 
-                  <button
-                    onClick={() =>
-                      (window.location.href = `/applicants-job?jobId=${job._id}`)
-                    }
-                  >
-                    Applicants 👥
-                  </button>
-                </div>
-              </>
-            )}
+            <p className="payout">
+              <strong>Payout Terms:</strong> {job.payout || "Not specified"}
+            </p>
+
+            <div className="job-actions">
+              <button className="edit-btn" onClick={() => openEdit(job)}>
+                Edit
+              </button>
+
+              <button
+                className="delete-btn"
+                onClick={() => handleDelete(job._id)}
+              >
+                Delete
+              </button>
+
+              <button
+                className="applicants-btn"
+                onClick={() =>
+                  (window.location.href = `/applicants-job?jobId=${job._id}`)
+                }
+              >
+                Applicants 👥
+              </button>
+            </div>
           </div>
         ))
+      )}
+
+      {/* ================== EDIT MODAL ================== */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2>Edit Job</h2>
+
+            <label>Job Title</label>
+            <input
+              value={editedJob.jobTitle}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, jobTitle: e.target.value })
+              }
+            />
+
+            <label>Category</label>
+            <select
+              value={editedJob.category}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, category: e.target.value })
+              }
+            >
+              <option value="">Select</option>
+              <option>Design / Marketing</option>
+              <option>Technology / IT</option>
+              <option>Business / Finance</option>
+              <option>Education / Training</option>
+              <option>Logistics / Operations</option>
+            </select>
+
+            {/* ============ SECTOR ============ */}
+            <label>Sector</label>
+            <div className="sector-edit-row">
+              <label className="sector-edit-box">
+                <input
+                  type="radio"
+                  value="Private Company"
+                  checked={editedJob.sector === "Private Company"}
+                  onChange={(e) =>
+                    setEditedJob({ ...editedJob, sector: e.target.value })
+                  }
+                />
+                <span>Private Company</span>
+              </label>
+
+              <label className="sector-edit-box">
+                <input
+                  type="radio"
+                  value="Government"
+                  checked={editedJob.sector === "Government"}
+                  onChange={(e) =>
+                    setEditedJob({ ...editedJob, sector: e.target.value })
+                  }
+                />
+                <span>Government</span>
+              </label>
+            </div>
+
+            <label>Rate (OMR)</label>
+            <input
+              value={editedJob.rate}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, rate: e.target.value })
+              }
+            />
+
+            <label>Rate Type</label>
+            <select
+              value={editedJob.rateType}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, rateType: e.target.value })
+              }
+            >
+              <option value="">Select</option>
+              <option>Per Hour</option>
+              <option>Per Task</option>
+              <option>Per Day</option>
+            </select>
+
+            <label>Skills Required</label>
+            <input
+              value={editedJob.skills}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, skills: e.target.value })
+              }
+            />
+
+            <label>Description</label>
+            <textarea
+              value={editedJob.description}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, description: e.target.value })
+              }
+            />
+
+            <label>Payout Terms (optional)</label>
+            <input
+              value={editedJob.payout}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, payout: e.target.value })
+              }
+            />
+
+            <div className="modal-actions">
+              <button className="save-btn" onClick={saveEdit}>
+                Save
+              </button>
+
+              <button
+                className="cancel-btn"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
