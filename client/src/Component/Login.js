@@ -24,53 +24,39 @@ const Login = () => {
 
   // ------------------- LOGIN FUNCTION -------------------
   const handleLogin = async () => {
-    // Basic validation for empty fields
-    if (!email || !password) {
-      setErrorMsg("Please enter both email and password.");
-      return;
-    }
-
-    setErrorMsg(""); // clear previous error
-
-    try {
-      // unwrap() returns actual login data and throws errors to catch()
-      const result = await dispatch(login({ email, password })).unwrap();
-
-      // Save logged user in localStorage for header navigation
-      localStorage.setItem("loggedUser", JSON.stringify(result.user));
-      localStorage.setItem("role", result.role);
-
-      // Redirect user based on assigned role
-      if (result.role === "company") {
-        navigate("/company-profile");
-      } else {
-        navigate("/student-profile");
-      }
-    } /* catch (err) {
-      console.error("Login failed:", err);
-
-      // Display server error messages
-      if (err?.error === "Incorrect password") {
-        setErrorMsg("Incorrect password. Please try again.");
-      } else if (err?.error === "User not found") {
-        setErrorMsg("No account found with this email.");
-      } else {
-        setErrorMsg("Something went wrong. Please try again.");
-      } */
-    catch (err) {
-  console.error("Login failed:", err);
-
-  const msg = err?.message || err?.error;
-
-  if (msg === "Incorrect password") {
-    setErrorMsg("Incorrect password. Please try again.");
-  } else if (msg === "User not found") {
-    setErrorMsg("No account found with this email.");
-  } else {
-    setErrorMsg("Something went wrong. Please try again.");
+  if (!email || !password) {
+    setErrorMsg("Please enter both email and password.");
+    return;
   }
+
+  setErrorMsg(""); // clear previous error
+
+  try {
+    const result = await dispatch(login({ email, password })).unwrap();
+
+    localStorage.setItem("loggedUser", JSON.stringify(result.user));
+    localStorage.setItem("role", result.role);
+
+    if (result.role === "company") {
+      navigate("/company-profile");
+    } else {
+      navigate("/student-profile");
     }
-  };
+
+  } catch (err) {
+    console.error("Login failed:", err);
+
+    const msg = err?.message || err?.error;
+
+    if (msg === "Incorrect password") {
+      setErrorMsg("Incorrect password. Please try again.");
+    } else if (msg === "User not found") {
+      setErrorMsg("No account found with this email.");
+    } else {
+      setErrorMsg("Something went wrong. Please try again.");
+    }
+  }
+};
 
   // ------------------- PAGE UI -------------------
   return (
