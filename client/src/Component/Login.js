@@ -69,7 +69,6 @@ const Login = () => {
   } else {
     setErrorMsg("Something went wrong. Please try again.");
   }
-}
     }
   };
 
