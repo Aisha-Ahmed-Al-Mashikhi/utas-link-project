@@ -46,7 +46,7 @@ const Login = () => {
       } else {
         navigate("/student-profile");
       }
-    } catch (err) {
+    } /* catch (err) {
       console.error("Login failed:", err);
 
       // Display server error messages
@@ -56,7 +56,20 @@ const Login = () => {
         setErrorMsg("No account found with this email.");
       } else {
         setErrorMsg("Something went wrong. Please try again.");
-      }
+      } */
+    catch (err) {
+  console.error("Login failed:", err);
+
+  const msg = err?.message || err?.error;
+
+  if (msg === "Incorrect password") {
+    setErrorMsg("Incorrect password. Please try again.");
+  } else if (msg === "User not found") {
+    setErrorMsg("No account found with this email.");
+  } else {
+    setErrorMsg("Something went wrong. Please try again.");
+  }
+}
     }
   };
 
