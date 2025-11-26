@@ -45,13 +45,17 @@ app.use(
 );
 
 // ------------------- DATABASE -------------------
-const connectString = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+//const connectString = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
+//mongoose
+  //.connect(connectString)
+  //.then(() => console.log("MongoDB Connected"))
+ // .catch((err) => console.error("Mongo Error:", err));
 
 mongoose
-  .connect(connectString)
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("Mongo Error:", err));
-
 // ------------------- FILE UPLOADS -------------------
 const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
