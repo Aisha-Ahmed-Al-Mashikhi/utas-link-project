@@ -25,8 +25,8 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    #origin: "http://localhost:3000",
-    #methods: ["GET", "POST"],
+    //origin: "http://localhost:3000",
+    //methods: ["GET", "POST"],
     origin: process.env.CLIENT_URL,
     methods: ["GET", "POST"],
     credentials: true
@@ -37,10 +37,10 @@ const io = new Server(httpServer, {
 app.use(express.json());
 app.use(
   cors({
-    #origin: "http://localhost:3000",
-    #credentials: true,
+    //origin: "http://localhost:3000",
+    //credentials: true,
     origin: process.env.CLIENT_URL,
-credentials: true
+    credentials: true
   })
 );
 
