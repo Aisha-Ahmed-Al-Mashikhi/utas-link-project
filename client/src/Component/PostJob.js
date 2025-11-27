@@ -29,13 +29,20 @@ const PostJob = () => {
     mode: "onChange",
   });
 
-  // OPTIONS
+   // OPTIONS
   const CATEGORIES = [
     "Design / Marketing",
     "Technology / IT",
     "Business / Finance",
     "Education / Training",
     "Logistics / Operations",
+
+    // ⭐ Added new categories
+    "Hospitality / Coffee Shops",
+    "Food & Beverage",
+    "Customer Service",
+    "Retail / Store",
+    "Other",
   ];
 
   const SECTORS = ["Private Company", "Government"];
