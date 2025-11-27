@@ -189,6 +189,30 @@ app.post("/uploadCV", upload.single("cv"), async (req, res) => {
     res.status(500).json({ error: "CV upload failed" });
   }
 });
+app.put("/deleteCV", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user || !user.cvLink) {
+      return res.status(404).json({ error: "CV not found" });
+    }
+
+    const filePath = path.join(process.cwd(), user.cvLink);
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    user.cvLink = "";
+    await user.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Delete failed" });
+  }
+});
 
 /*───────────────────────────────────────────────
  ░░  JOBS CRUD
