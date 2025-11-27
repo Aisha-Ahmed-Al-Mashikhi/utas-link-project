@@ -4,6 +4,8 @@ import "../Styles/PostJob.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
+import { SERVER_URL } from "../config";
+
 
 const PostJob = () => {
   // STATES (طريقة الأستاذة)
@@ -46,7 +48,7 @@ const PostJob = () => {
       const company = JSON.parse(localStorage.getItem("loggedUser"));
       if (!company) return alert("Please log in first.");
 
-      await axios.post("http://localhost:3001/jobs", {
+      await axios.post(`${SERVER_URL}/jobs`, {
         jobTitle,
         category,
         sector,
