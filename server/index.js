@@ -102,7 +102,8 @@ app.post("/registerUser", async (req, res) => {
 // REGISTER COMPANY
 app.post("/registerCompany", async (req, res) => {
   try {
-    const { companyName, email, password, industry, location } = req.body;
+    const { companyName, email, password, industry, location, foundedDate } =
+      req.body;
 
     const exist = await CompanyModel.findOne({ email });
     if (exist) return res.status(400).json({ error: "Email exists" });
@@ -115,6 +116,7 @@ app.post("/registerCompany", async (req, res) => {
       password: hash,
       industry,
       location,
+      foundedDate,
     });
 
     await company.save();
