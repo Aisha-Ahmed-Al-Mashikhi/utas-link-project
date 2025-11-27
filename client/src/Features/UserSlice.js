@@ -1,15 +1,9 @@
-// Redux Toolkit functions
+// ===================== IMPORTS =====================
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
-// Axios for API requests
 import axios from "axios";
-
-// ENV file contains SERVER_URL
 import * as ENV from "../config";
 
-// -----------------------------------------
-// Initial global state
-// -----------------------------------------
+// ===================== INITIAL STATE =====================
 const initialState = {
   user: JSON.parse(localStorage.getItem("loggedUser")) || null,
   role: localStorage.getItem("role") || null,
@@ -20,9 +14,7 @@ const initialState = {
   message: "",
 };
 
-// -----------------------------------------
-// REGISTER USER (Student)
-// -----------------------------------------
+// ===================== REGISTER USER =====================
 export const registerUser = createAsyncThunk(
   "users/registerUser",
   async (data, thunkAPI) => {
@@ -35,30 +27,24 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-// -----------------------------------------
-// LOGIN USER (Student OR Company)
-// -----------------------------------------
+// ===================== LOGIN =====================
 export const login = createAsyncThunk("users/login", async (data, thunkAPI) => {
   try {
     const res = await axios.post(`${ENV.SERVER_URL}/login`, data);
-    return res.data; // { user, role }
+    return res.data;
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response?.data || "Login failed");
   }
 });
 
-// -----------------------------------------
-// LOGOUT
-// -----------------------------------------
+// ===================== LOGOUT =====================
 export const logout = createAsyncThunk("users/logout", async () => {
   localStorage.removeItem("loggedUser");
   localStorage.removeItem("role");
   return true;
 });
 
-// -----------------------------------------
-// FETCH USER (For Profile Page)
-// -----------------------------------------
+// ===================== FETCH USER =====================
 export const fetchUser = createAsyncThunk(
   "users/fetchUser",
   async (email, thunkAPI) => {
@@ -71,12 +57,28 @@ export const fetchUser = createAsyncThunk(
   }
 );
 
-// -------------------------------
-// UPLOAD CV (Profile)
-// -------------------------------
-// -----------------------------------------
-// DELETE CV (Profile)
-// -----------------------------------------
+// ===================== UPLOAD CV =====================
+export const uploadCv = createAsyncThunk(
+  "users/uploadCv",
+  async ({ file, email }, thunkAPI) => {
+    try {
+      const form = new FormData();
+      form.append("cv", file);
+      form.append("email", email);
+
+      const res = await axios.post(`${ENV.SERVER_URL}/uploadCV`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      // Return full URL to fix View button
+      return `${ENV.SERVER_URL}${res.data.cvLink}`;
+    } catch (err) {
+      return thunkAPI.rejectWithValue("CV upload failed");
+    }
+  }
+);
+
+// ===================== DELETE CV =====================
 export const deleteCvThunk = createAsyncThunk(
   "users/deleteCv",
   async (email, thunkAPI) => {
@@ -89,60 +91,20 @@ export const deleteCvThunk = createAsyncThunk(
   }
 );
 
-
-
-
-// -----------------------------------------
-// DELETE CV (Profile)
-// -----------------------------------------
-// DELETE CV
-app.put("/deleteCV", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const user = await UserModel.findOne({ email });
-
-    if (!user || !user.cvLink) {
-      return res.status(404).json({ error: "CV not found" });
-    }
-
-    const filePath = path.join(process.cwd(), user.cvLink);
-
-    // Delete file if exists
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
-    // Remove from DB
-    user.cvLink = "";
-    await user.save();
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Delete failed" });
-  }
-});
-
-
-// -----------------------------------------
-// UPDATE BANK CARD (Profile)
-// -----------------------------------------
+// ===================== UPDATE BANK CARD =====================
 export const updateBankCardThunk = createAsyncThunk(
   "users/updateBankCard",
   async (data, thunkAPI) => {
     try {
       const res = await axios.put(`${ENV.SERVER_URL}/updateBankCard`, data);
-      return res.data.user; // updated user returned
+      return res.data.user;
     } catch {
       return thunkAPI.rejectWithValue("Bank update failed");
     }
   }
 );
 
-// -----------------------------------------
-// DELETE BANK CARD (Profile)
-// -----------------------------------------
+// ===================== DELETE BANK CARD =====================
 export const deleteBankCardThunk = createAsyncThunk(
   "users/deleteBankCard",
   async (email, thunkAPI) => {
@@ -163,9 +125,7 @@ export const deleteBankCardThunk = createAsyncThunk(
   }
 );
 
-// -----------------------------------------
-// Slice
-// -----------------------------------------
+// ===================== SLICE =====================
 const userSlice = createSlice({
   name: "users",
   initialState,
@@ -221,7 +181,7 @@ const userSlice = createSlice({
         state.role = null;
       })
 
-      // FETCH USER (Profile)
+      // FETCH USER
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
@@ -241,7 +201,7 @@ const userSlice = createSlice({
         state.user = action.payload;
       })
 
-      // DELETE BANK CARD
+      // DELETE BANK
       .addCase(deleteBankCardThunk.fulfilled, (state, action) => {
         state.user = action.payload;
       });
