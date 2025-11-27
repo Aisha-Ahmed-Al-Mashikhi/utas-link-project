@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { SERVER_URL } from "../config";
 
 // ==================== FETCH ALL POSTS ====================
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  const res = await axios.get("http://localhost:3001/posts");
+  const res = await axios.get(`${SERVER_URL}/posts`);
   return res.data;
 });
 
 // ==================== ADD POST ====================
 export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
-  const res = await axios.post("http://localhost:3001/addPost", postData);
+  const res = await axios.post(`${SERVER_URL}/addPost`, postData);
   return res.data;
 });
 
@@ -17,7 +18,7 @@ export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
 export const likePost = createAsyncThunk(
   "posts/likePost",
   async ({ postId, userId }) => {
-    const res = await axios.put(`http://localhost:3001/likePost/${postId}`, {
+    const res = await axios.put(`${SERVER_URL}/likePost/${postId}`, {
       userId,
     });
     return res.data.post;
@@ -28,7 +29,7 @@ export const likePost = createAsyncThunk(
 export const dislikePost = createAsyncThunk(
   "posts/dislikePost",
   async ({ postId, userId }) => {
-    const res = await axios.put(`http://localhost:3001/dislikePost/${postId}`, {
+    const res = await axios.put(`${SERVER_URL}/dislikePost/${postId}`, {
       userId,
     });
     return res.data.post;
