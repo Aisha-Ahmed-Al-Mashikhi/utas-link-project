@@ -168,20 +168,7 @@ app.get("/company/:email", async (req, res) => {
  ░░  UPLOAD CV (STUDENT PROFILE)
 ───────────────────────────────────────────────*/
 
-const cvStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const cvDir = path.join(process.cwd(), "uploads/cv");
-    if (!fs.existsSync(cvDir)) fs.mkdirSync(cvDir, { recursive: true });
-    cb(null, cvDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, "_"));
-  },
-});
-
-const uploadCV = multer({ storage: cvStorage });
-
-app.post("/uploadCV", uploadCV.single("cv"), async (req, res) => {
+app.post("/uploadCV", upload.single("cv"), async (req, res) => {
   try {
     const email = req.body.email;
 
@@ -189,17 +176,17 @@ app.post("/uploadCV", uploadCV.single("cv"), async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const cvPath = `/uploads/cv/${req.file.filename}`;
+    const cvPath = `/uploads/${req.file.filename}`;
 
     await UserModel.findOneAndUpdate(
       { email },
-      { cv: cvPath }
+      { cvLink: cvPath },
+      { new: true }
     );
 
-    return res.json({ cvLink: cvPath });
+    res.json({ cvLink: cvPath });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "CV upload failed" });
+    res.status(500).json({ error: "CV upload failed" });
   }
 });
 
