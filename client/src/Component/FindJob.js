@@ -18,7 +18,6 @@ const FindJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // FIXED: jobs → jobList
   const { jobList, isLoading } = useSelector((state) => state.jobs);
   const { user } = useSelector((state) => state.users);
 
@@ -29,12 +28,10 @@ const FindJob = () => {
     dispatch(fetchJobs());
   }, [dispatch]);
 
-  // Load user profile (CV + BANK)
+  // Load full user profile
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (loggedUser?.email) {
-      dispatch(fetchUser(loggedUser.email));
-    }
+    if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
   }, [dispatch]);
 
   // Search filter
@@ -42,7 +39,7 @@ const FindJob = () => {
     const term = searchTerm.toLowerCase();
     return (
       job.jobTitle.toLowerCase().includes(term) ||
-      job.organization.toLowerCase().includes(term) ||
+      (job.organization || "").toLowerCase().includes(term) ||
       (job.skills || "").toString().toLowerCase().includes(term)
     );
   });
@@ -63,18 +60,25 @@ const FindJob = () => {
       return navigate("/student-profile");
     }
 
-   const appData = {
-  jobId: job._id,
-  jobTitle: job.jobTitle,
-  organization: job.postedBy,
-  applicantEmail: loggedUser.email,
-  applicantName: loggedUser.name,
-  cvLink: user.cvLink,
-};
-console.log("APP DATA:", appData);
+    // FIX: correct organization value
+    const appData = {
+      jobId: job._id,
+      jobTitle: job.jobTitle,
+      organization: job.postedBy, // FIXED
+      applicantEmail: loggedUser.email,
+      applicantName: loggedUser.name,
+      cvLink: user.cvLink,
+    };
 
-dispatch(applyForJob(appData)).unwrap().then(() => alert("Job applied successfully!")).catch(() => alert("You already applied."));
+    console.log("APP DATA:", appData);
 
+    dispatch(applyForJob(appData))
+      .unwrap()
+      .then(() => alert("Job applied successfully!"))
+      .catch(() => alert("You already applied."));
+  };
+
+  // Loading
   if (isLoading && jobList.length === 0) return <p>Loading jobs...</p>;
 
   return (
@@ -111,7 +115,7 @@ dispatch(applyForJob(appData)).unwrap().then(() => alert("Job applied successful
                 </span>
               </div>
 
-              <p className="org-name">{job.organization}</p>
+              <p className="org-name">{job.organization || job.postedBy}</p>
 
               <div className="tags">
                 <span className="tag">{job.sector}</span>
