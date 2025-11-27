@@ -74,31 +74,21 @@ export const fetchUser = createAsyncThunk(
 // -------------------------------
 // UPLOAD CV (Profile)
 // -------------------------------
-export const uploadCv = createAsyncThunk(
-  "users/uploadCv",
-  async ({ file, email }, thunkAPI) => {
+// -----------------------------------------
+// DELETE CV (Profile)
+// -----------------------------------------
+export const deleteCvThunk = createAsyncThunk(
+  "users/deleteCv",
+  async (email, thunkAPI) => {
     try {
-      const form = new FormData();
-      form.append("cv", file);
-      form.append("email", email);
-
-      const res = await axios.post(
-        `${ENV.SERVER_URL}/uploadCV`,
-        form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      // return full server URL for correct viewing
-      return `${ENV.SERVER_URL}${res.data.cvLink}`;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("CV upload failed");
+      await axios.put(`${ENV.SERVER_URL}/deleteCV`, { email });
+      return true;
+    } catch {
+      return thunkAPI.rejectWithValue("CV delete failed");
     }
   }
 );
+
 
 
 
