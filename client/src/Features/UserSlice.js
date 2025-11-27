@@ -92,12 +92,14 @@ export const uploadCv = createAsyncThunk(
         }
       );
 
-      return res.data.cvLink; // return new CV link
+      // return full server URL for correct viewing
+      return `${ENV.SERVER_URL}${res.data.cvLink}`;
     } catch (err) {
       return thunkAPI.rejectWithValue("CV upload failed");
     }
   }
 );
+
 
 
 // -----------------------------------------
