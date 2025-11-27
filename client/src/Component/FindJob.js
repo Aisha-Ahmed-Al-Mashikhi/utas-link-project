@@ -64,7 +64,7 @@ const FindJob = () => {
     const appData = {
       jobId: job._id,
       jobTitle: job.jobTitle,
-      organization: job.postedBy, // FIXED
+      organization: job.organization || "Unknown Company",
       applicantEmail: loggedUser.email,
       applicantName: loggedUser.name,
       cvLink: user.cvLink,
