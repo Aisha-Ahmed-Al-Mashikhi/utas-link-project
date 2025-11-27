@@ -66,20 +66,14 @@ const FindJob = () => {
    const appData = {
   jobId: job._id,
   jobTitle: job.jobTitle,
-  organization: job.companyName || "Unknown",
+  organization: job.postedBy,
   applicantEmail: loggedUser.email,
   applicantName: loggedUser.name,
   cvLink: user.cvLink,
 };
+console.log("APP DATA:", appData);
 
-
-    try {
-      await dispatch(applyForJob(appData)).unwrap();
-      alert("Job applied successfully!");
-    } catch {
-      alert("You already applied.");
-    }
-  };
+dispatch(applyForJob(appData)).unwrap().then(() => alert("Job applied successfully!")).catch(() => alert("You already applied."));
 
   if (isLoading && jobList.length === 0) return <p>Loading jobs...</p>;
 
