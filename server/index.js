@@ -198,6 +198,60 @@ app.put("/deleteCV", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
+ ░░  BANK CARD (ADD / EDIT / DELETE)
+───────────────────────────────────────────────*/
+
+// UPDATE OR ADD BANK CARD
+app.put("/updateBankCard", async (req, res) => {
+  try {
+    const { email, selectedBank, cardNumber, cardName, expiry, cvv } = req.body;
+
+    const user = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        bankName: selectedBank,
+        cardNumber,
+        cardName,
+        expiry,
+        cvv,
+      },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ error: "Bank update failed" });
+  }
+});
+
+// DELETE BANK CARD
+app.put("/deleteBankCard", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        bankName: "",
+        cardNumber: "",
+        cardName: "",
+        expiry: "",
+        cvv: "",
+      },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ error: "Bank delete failed" });
+  }
+});
+
+/*───────────────────────────────────────────────
  ░░  JOBS CRUD
 ───────────────────────────────────────────────*/
 
