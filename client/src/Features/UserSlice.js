@@ -109,15 +109,7 @@ export const deleteBankCardThunk = createAsyncThunk(
   "users/deleteBankCard",
   async (email, thunkAPI) => {
     try {
-      const res = await axios.put(`${ENV.SERVER_URL}/updateBankCard`, {
-        email,
-        bankName: "",
-        cardNumber: "",
-        cardName: "",
-        expiry: "",
-        cvv: "",
-      });
-
+      const res = await axios.put(`${ENV.SERVER_URL}/deleteBankCard`, { email });
       return res.data.user;
     } catch {
       return thunkAPI.rejectWithValue("Delete bank failed");
