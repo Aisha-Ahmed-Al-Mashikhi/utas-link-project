@@ -175,6 +175,7 @@ app.post("/uploadCV", upload.single("cv"), async (req, res) => {
   }
 });
 
+// DELETE CV
 app.put("/deleteCV", async (req, res) => {
   try {
     const { email } = req.body;
@@ -201,7 +202,6 @@ app.put("/deleteCV", async (req, res) => {
  ░░  BANK CARD (ADD / EDIT / DELETE)
 ───────────────────────────────────────────────*/
 
-// UPDATE OR ADD BANK CARD
 app.put("/updateBankCard", async (req, res) => {
   try {
     const { email, selectedBank, cardNumber, cardName, expiry, cvv } = req.body;
@@ -226,7 +226,6 @@ app.put("/updateBankCard", async (req, res) => {
   }
 });
 
-// DELETE BANK CARD
 app.put("/deleteBankCard", async (req, res) => {
   try {
     const { email } = req.body;
@@ -280,6 +279,7 @@ app.post("/jobs", async (req, res) => {
  ░░  APPLICATIONS
 ───────────────────────────────────────────────*/
 
+// APPLY
 app.post("/apply", async (req, res) => {
   try {
     const {
@@ -314,6 +314,19 @@ app.post("/apply", async (req, res) => {
     res.json(newApp);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ⭐⭐⭐ NEW — GET STUDENT APPLICATIONS (Fix 404)
+app.get("/applications/:email", async (req, res) => {
+  try {
+    const apps = await ApplicationModel.find({
+      applicantEmail: req.params.email,
+    }).sort({ createdAt: -1 });
+
+    res.json(apps);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch applications" });
   }
 });
 
