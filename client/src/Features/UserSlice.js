@@ -105,17 +105,35 @@ export const uploadCv = createAsyncThunk(
 // -----------------------------------------
 // DELETE CV (Profile)
 // -----------------------------------------
-export const deleteCvThunk = createAsyncThunk(
-  "users/deleteCv",
-  async (email, thunkAPI) => {
-    try {
-      await axios.put(`${ENV.SERVER_URL}/deleteCV`, { email });
-      return true;
-    } catch {
-      return thunkAPI.rejectWithValue("CV delete failed");
+// DELETE CV
+app.put("/deleteCV", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user || !user.cvLink) {
+      return res.status(404).json({ error: "CV not found" });
     }
+
+    const filePath = path.join(process.cwd(), user.cvLink);
+
+    // Delete file if exists
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    // Remove from DB
+    user.cvLink = "";
+    await user.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Delete failed" });
   }
-);
+});
+
 
 // -----------------------------------------
 // UPDATE BANK CARD (Profile)
