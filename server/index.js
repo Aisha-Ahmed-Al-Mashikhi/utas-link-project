@@ -306,7 +306,7 @@ app.post("/apply", async (req, res) => {
       applicantName,
       cvLink,
       status: "Pending",
-      createdAt: new Date(),
+      appliedAt: new Date(),
     });
 
     await newApp.save();
