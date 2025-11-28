@@ -17,7 +17,7 @@ const CompanySchema = new mongoose.Schema(
     cvv: String,
 
     // FILES
-    licenseFile: String, // Optional license document
+    tradeLicense: String, // Optional license document
     profileImage: String, // Company profile image
   },
   { timestamps: true }
