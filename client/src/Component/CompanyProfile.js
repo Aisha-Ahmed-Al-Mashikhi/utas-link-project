@@ -23,7 +23,7 @@ const CompanyProfile = () => {
   // PROFILE IMAGE PREVIEW
   const [preview, setPreview] = useState(null);
 
-  // BANK STATES — طريقة الأستاذة
+  // BANK STATES — 
   const [selectedBank, setSelectedBank] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cardName, setCardName] = useState("");
@@ -177,56 +177,65 @@ const CompanyProfile = () => {
         </div>
       </div>
 
-      {/* ===== LICENSE SECTION ===== */}
-      <div className="payment-box">
-        <h3>Business License</h3>
+    {/* ===== LICENSE SECTION ===== */}
+<div className="payment-box">
+  <h3>Business License</h3>
 
-        {company.licenseFile ? (
-          <div className="cv-section">
-            <p className="cv-success">License Uploaded Successfully</p>
+  {company.tradeLicense ? (
+    <div className="cv-section">
+      <p className="cv-success">License Uploaded Successfully</p>
 
-            <div className="cv-actions">
-              <a
-                href={company.licenseFile}
-                target="_blank"
-                className="cv-btn view"
-              >
-                View
-              </a>
+      <div className="cv-actions">
 
-              <label htmlFor="licenseUP" className="cv-btn replace">
-                Replace
-              </label>
+        {/* VIEW */}
+        <a
+          href={company.tradeLicense}
+          target="_blank"
+          className="cv-btn view"
+        >
+          View
+        </a>
 
-              <button className="cv-btn delete" onClick={handleDeleteLicense}>
-                Delete
-              </button>
+        {/* HIDDEN FILE INPUT */}
+        <input
+          id="licenseUP"
+          type="file"
+          accept=".pdf"
+          style={{ display: "none" }}
+          onChange={handleLicenseUpload}
+        />
 
-              <input
-                id="licenseUP"
-                type="file"
-                accept=".pdf"
-                style={{ display: "none" }}
-                onChange={handleLicenseUpload}
-              />
-            </div>
-          </div>
-        ) : (
-          <>
-            <input
-              id="licenseUP"
-              type="file"
-              accept=".pdf"
-              style={{ display: "none" }}
-              onChange={handleLicenseUpload}
-            />
+        {/* REPLACE */}
+        <button
+          className="cv-btn replace"
+          onClick={() => document.getElementById("licenseUP").click()}
+        >
+          Replace
+        </button>
 
-            <label htmlFor="licenseUP" className="upload-cv-btn">
-              Upload License (PDF)
-            </label>
-          </>
-        )}
+        {/* DELETE */}
+        <button className="cv-btn delete" onClick={handleDeleteLicense}>
+          Delete
+        </button>
       </div>
+    </div>
+  ) : (
+    <>
+      <input
+        id="licenseUP"
+        type="file"
+        accept=".pdf"
+        style={{ display: "none" }}
+        onChange={handleLicenseUpload}
+      />
+
+      <label htmlFor="licenseUP" className="upload-cv-btn">
+        Upload License (PDF)
+      </label>
+    </>
+  )}
+</div>
+
 
       {/* ===== BANK CARD ===== */}
       <div className="payment-box">
