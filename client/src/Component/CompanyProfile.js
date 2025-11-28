@@ -188,11 +188,11 @@ const CompanyProfile = () => {
       <div className="cv-actions">
 
         {/* VIEW */}
-        <a
-          href={company.tradeLicense}
-          target="_blank"
-          className="cv-btn view"
-        >
+        <a 
+  href={`${ENV.SERVER_URL}${company.licenseFile}`} 
+  target="_blank" 
+  className="cv-btn view"
+>
           View
         </a>
 
