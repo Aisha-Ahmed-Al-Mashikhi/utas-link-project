@@ -440,6 +440,25 @@ app.put("/company/deleteBankCard", async (req, res) => {
     res.status(500).json({ error: "Delete bank failed" });
   }
 });
+/*───────────────────────────────────────────────
+ ░░  COMPANY — GET APPLICANTS FOR JOB
+───────────────────────────────────────────────*/
+
+app.get("/applicants", async (req, res) => {
+  try {
+    const { jobId } = req.query;
+
+    if (!jobId)
+      return res.status(400).json({ error: "Missing jobId" });
+
+    const applicants = await ApplicationModel.find({ jobId })
+      .sort({ appliedAt: -1 });
+
+    res.json(applicants);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load applicants" });
+  }
+});
 
 
 /*───────────────────────────────────────────────
