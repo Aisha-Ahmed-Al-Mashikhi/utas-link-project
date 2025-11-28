@@ -330,6 +330,43 @@ app.get("/applications/:email", async (req, res) => {
   }
 });
 
+app.post("/uploadCompanyFile", upload.single("file"), async (req, res) => {
+  try {
+    const email = req.body.email;
+
+    if (!req.file)
+      return res.status(400).json({ error: "No file uploaded" });
+
+    const filePath = `/uploads/${req.file.filename}`;
+
+    await CompanyModel.findOneAndUpdate(
+      { email },
+      { companyFile: filePath }
+    );
+
+    res.json({ fileLink: filePath });
+  } catch {
+    res.status(500).json({ error: "Upload failed" });
+  }
+});
+app.put("/company/updateBank", async (req, res) => {
+  try {
+    const { email, bankName, cardNumber, cardName, expiry, cvv } = req.body;
+
+    const company = await CompanyModel.findOneAndUpdate(
+      { email },
+      { bankName, cardNumber, cardName, expiry, cvv },
+      { new: true }
+    );
+
+    if (!company) return res.status(404).json({ error: "Company not found" });
+
+    res.json(company);
+  } catch {
+    res.status(500).json({ error: "Bank update failed" });
+  }
+});
+
 /*───────────────────────────────────────────────
  ░░  CHAT + SOCKET
 ───────────────────────────────────────────────*/
