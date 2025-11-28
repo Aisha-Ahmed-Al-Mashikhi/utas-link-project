@@ -330,25 +330,69 @@ app.get("/applications/:email", async (req, res) => {
   }
 });
 
+/*───────────────────────────────────────────────
+ ░░  COMPANY FILE UPLOADS
+───────────────────────────────────────────────*/
+
 app.post("/uploadCompanyFile", upload.single("file"), async (req, res) => {
   try {
-    const email = req.body.email;
+    const { email, type } = req.body;
 
     if (!req.file)
       return res.status(400).json({ error: "No file uploaded" });
 
     const filePath = `/uploads/${req.file.filename}`;
 
-    await CompanyModel.findOneAndUpdate(
+    const updateData = {};
+
+    // نوع الملف
+    if (type === "profile") updateData.profileImage = filePath;
+    if (type === "license") updateData.tradeLicense = filePath;
+
+    const company = await CompanyModel.findOneAndUpdate(
       { email },
-      { companyFile: filePath }
+      updateData,
+      { new: true }
     );
 
-    res.json({ fileLink: filePath });
-  } catch {
-    res.status(500).json({ error: "Upload failed" });
+    if (!company)
+      return res.status(404).json({ error: "Company not found" });
+
+    res.json({ company });
+  } catch (err) {
+    res.status(500).json({ error: "Company upload failed" });
   }
 });
+
+/*───────────────────────────────────────────────
+ ░░  COMPANY DELETE LICENSE
+───────────────────────────────────────────────*/
+
+app.put("/company/deleteLicense", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const company = await CompanyModel.findOne({ email });
+
+    if (!company || !company.tradeLicense)
+      return res.status(404).json({ error: "No license found" });
+
+    const filePath = path.join(process.cwd(), company.tradeLicense);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+    company.tradeLicense = "";
+    await company.save();
+
+    res.json({ company });
+  } catch {
+    res.status(500).json({ error: "License delete failed" });
+  }
+});
+
+/*───────────────────────────────────────────────
+ ░░  COMPANY UPDATE BANK
+───────────────────────────────────────────────*/
+
 app.put("/company/updateBank", async (req, res) => {
   try {
     const { email, bankName, cardNumber, cardName, expiry, cvv } = req.body;
@@ -359,13 +403,44 @@ app.put("/company/updateBank", async (req, res) => {
       { new: true }
     );
 
-    if (!company) return res.status(404).json({ error: "Company not found" });
+    if (!company)
+      return res.status(404).json({ error: "Company not found" });
 
-    res.json(company);
+    res.json({ company });
   } catch {
     res.status(500).json({ error: "Bank update failed" });
   }
 });
+
+/*───────────────────────────────────────────────
+ ░░  COMPANY DELETE BANK CARD
+───────────────────────────────────────────────*/
+
+app.put("/company/deleteBankCard", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const company = await CompanyModel.findOneAndUpdate(
+      { email },
+      {
+        bankName: "",
+        cardNumber: "",
+        cardName: "",
+        expiry: "",
+        cvv: "",
+      },
+      { new: true }
+    );
+
+    if (!company)
+      return res.status(404).json({ error: "Company not found" });
+
+    res.json({ company });
+  } catch {
+    res.status(500).json({ error: "Delete bank failed" });
+  }
+});
+
 
 /*───────────────────────────────────────────────
  ░░  CHAT + SOCKET
