@@ -12,6 +12,7 @@ import {
   updateBankInfo,
   deleteBankCard,
 } from "../Features/CompanySlice";
+import * as ENV from "../config";
 import { useNavigate } from "react-router-dom";
 
 const CompanyProfile = () => {
@@ -20,10 +21,8 @@ const CompanyProfile = () => {
 
   const { company } = useSelector((state) => state.companies);
 
-  // PROFILE IMAGE PREVIEW
   const [preview, setPreview] = useState(null);
 
-  // BANK STATES — 
   const [selectedBank, setSelectedBank] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cardName, setCardName] = useState("");
@@ -32,7 +31,6 @@ const CompanyProfile = () => {
 
   const [showCardModal, setShowCardModal] = useState(false);
 
-  // REACT HOOK FORM (Validation Only)
   const {
     register,
     handleSubmit,
@@ -42,9 +40,6 @@ const CompanyProfile = () => {
     resolver: yupResolver(bankCardSchema),
   });
 
-  /* ===============================
-        LOAD COMPANY
-  =============================== */
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
@@ -52,9 +47,6 @@ const CompanyProfile = () => {
     dispatch(fetchCompany(saved.email));
   }, [dispatch, navigate]);
 
-  /* ===============================
-        FILL BANK INFO (if exists)
-  =============================== */
   useEffect(() => {
     if (company?.email) {
       setSelectedBank(company.bankName || "");
@@ -73,9 +65,6 @@ const CompanyProfile = () => {
     }
   }, [company, reset]);
 
-  /* ===============================
-        UPLOAD PROFILE IMAGE
-  =============================== */
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -84,9 +73,6 @@ const CompanyProfile = () => {
     setPreview(URL.createObjectURL(file));
   };
 
-  /* ===============================
-        UPLOAD LICENSE PDF
-  =============================== */
   const handleLicenseUpload = (e) => {
     const f = e.target.files[0];
     if (!f) return;
@@ -94,17 +80,11 @@ const CompanyProfile = () => {
     dispatch(uploadLicense({ email: company.email, file: f }));
   };
 
-  /* ===============================
-        DELETE LICENSE
-  =============================== */
   const handleDeleteLicense = () => {
     if (!window.confirm("Delete license?")) return;
     dispatch(deleteLicense(company.email));
   };
 
-  /* ===============================
-        SAVE BANK CARD INFO
-  =============================== */
   const saveCardInfo = () => {
     dispatch(
       updateBankInfo({
@@ -121,15 +101,11 @@ const CompanyProfile = () => {
     setShowCardModal(false);
   };
 
-  /* ===============================
-        DELETE BANK CARD
-  =============================== */
   const removeBank = () => {
     if (!window.confirm("Delete bank card?")) return;
 
     dispatch(deleteBankCard(company.email));
 
-    // RESET LOCAL STATES
     setSelectedBank("");
     setCardNumber("");
     setCardName("");
@@ -177,65 +153,64 @@ const CompanyProfile = () => {
         </div>
       </div>
 
-    {/* ===== LICENSE SECTION ===== */}
-<div className="payment-box">
-  <h3>Business License</h3>
+      {/* ===== LICENSE SECTION ===== */}
+      <div className="payment-box">
+        <h3>Business License</h3>
 
-  {company.tradeLicense ? (
-    <div className="cv-section">
-      <p className="cv-success">License Uploaded Successfully</p>
+        {company.tradeLicense ? (
+          <div className="cv-section">
+            <p className="cv-success">License Uploaded Successfully</p>
 
-      <div className="cv-actions">
+            <div className="cv-actions">
 
-        {/* VIEW */}
-        <a 
-  href={`${ENV.SERVER_URL}${company.licenseFile}`} 
-  target="_blank" 
-  className="cv-btn view"
->
-          View
-        </a>
+              {/* VIEW */}
+              <a
+                href={`${ENV.SERVER_URL}${company.tradeLicense}`}
+                target="_blank"
+                className="cv-btn view"
+              >
+                View
+              </a>
 
-        {/* HIDDEN FILE INPUT */}
-        <input
-          id="licenseUP"
-          type="file"
-          accept=".pdf"
-          style={{ display: "none" }}
-          onChange={handleLicenseUpload}
-        />
+              {/* HIDDEN INPUT */}
+              <input
+                id="licenseUP"
+                type="file"
+                accept=".pdf"
+                style={{ display: "none" }}
+                onChange={handleLicenseUpload}
+              />
 
-        {/* REPLACE */}
-        <button
-          className="cv-btn replace"
-          onClick={() => document.getElementById("licenseUP").click()}
-        >
-          Replace
-        </button>
+              {/* REPLACE */}
+              <button
+                className="cv-btn replace"
+                onClick={() => document.getElementById("licenseUP").click()}
+              >
+                Replace
+              </button>
 
-        {/* DELETE */}
-        <button className="cv-btn delete" onClick={handleDeleteLicense}>
-          Delete
-        </button>
+              {/* DELETE */}
+              <button className="cv-btn delete" onClick={handleDeleteLicense}>
+                Delete
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <input
+              id="licenseUP"
+              type="file"
+              accept=".pdf"
+              style={{ display: "none" }}
+              onChange={handleLicenseUpload}
+            />
+
+            <label htmlFor="licenseUP" className="upload-cv-btn">
+              Upload License (PDF)
+            </label>
+          </>
+        )}
       </div>
-    </div>
-  ) : (
-    <>
-      <input
-        id="licenseUP"
-        type="file"
-        accept=".pdf"
-        style={{ display: "none" }}
-        onChange={handleLicenseUpload}
-      />
-
-      <label htmlFor="licenseUP" className="upload-cv-btn">
-        Upload License (PDF)
-      </label>
-    </>
-  )}
-</div>
-
 
       {/* ===== BANK CARD ===== */}
       <div className="payment-box">
@@ -257,7 +232,6 @@ const CompanyProfile = () => {
           </div>
         </div>
 
-        {/* BUTTONS */}
         <div className="card-buttons">
           {!company.cardNumber ? (
             <button
@@ -297,7 +271,6 @@ const CompanyProfile = () => {
               </button>
             </div>
 
-            {/* BANK OPTIONS */}
             <label>Select Bank</label>
 
             <div className="bank-radio-row">
@@ -316,7 +289,6 @@ const CompanyProfile = () => {
             </div>
             <p className="error">{errors.selectedBank?.message}</p>
 
-            {/* CARD NUMBER */}
             <label>Card Number</label>
             <input
               className="modal-input"
@@ -330,7 +302,6 @@ const CompanyProfile = () => {
             />
             <p className="error">{errors.cardNumber?.message}</p>
 
-            {/* CARD HOLDER NAME */}
             <label>Cardholder Name</label>
             <input
               className="modal-input"
@@ -340,7 +311,6 @@ const CompanyProfile = () => {
             />
             <p className="error">{errors.cardName?.message}</p>
 
-            {/* EXPIRY DATE */}
             <label>Expiration Date</label>
             <input
               type="month"
@@ -351,7 +321,6 @@ const CompanyProfile = () => {
             />
             <p className="error">{errors.expiry?.message}</p>
 
-            {/* CVV */}
             <label>CVV</label>
             <input
               type="password"
@@ -363,7 +332,6 @@ const CompanyProfile = () => {
             />
             <p className="error">{errors.cvv?.message}</p>
 
-            {/* BUTTONS */}
             <div className="modal-buttons">
               <button className="save-btn" onClick={handleSubmit(saveCardInfo)}>
                 Save
