@@ -1,27 +1,24 @@
 import mongoose from "mongoose";
 
 const ChatSchema = new mongoose.Schema({
-  applicationId: {
-    type: String,
-    required: true,
-  },
+  applicationId: { type: String, required: true },
 
   from: {
-    email: { type: String, required: true },
-    name: { type: String, required: true },
-    role: { type: String, required: true }
+    email: String,
+    name: String,
+    role: String,
   },
 
   to: {
-    email: { type: String, required: true },
-    name: { type: String, required: true },
-    role: { type: String, required: true }
+    email: String,
+    name: String,
+    role: String,
   },
 
   message: {
-    text: { type: String, required: true },
-    sentAt: { type: Date, default: Date.now }
-  }
+    text: String,
+    sentAt: { type: Date, default: Date.now },
+  },
 });
 
 export default mongoose.model("Chat", ChatSchema);
