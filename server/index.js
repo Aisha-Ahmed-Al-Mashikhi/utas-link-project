@@ -502,19 +502,33 @@ io.on("connection", (socket) => {
 
   socket.on("join_room", (id) => socket.join(id));
 
-  socket.on("send_message", async (data) => {
-    const msg = new ChatModel({
-      applicationId: data.applicationId,
-      senderEmail: data.senderEmail,
-      senderRole: data.senderRole,
-      message: data.message,
-      createdAt: Date.now(),
-    });
+socket.on("send_message", async (data) => {
+  const msg = new ChatModel({
+    applicationId: data.applicationId,
 
-    await msg.save();
+    from: {
+      email: data.fromEmail,
+      name: data.fromName,
+      role: data.fromRole
+    },
 
-    io.to(data.applicationId).emit("receive_message", msg);
+    to: {
+      email: data.toEmail,
+      name: data.toName,
+      role: data.toRole
+    },
+
+    message: {
+      text: data.message,
+      sentAt: Date.now()
+    }
   });
+
+  await msg.save();
+
+  io.to(data.applicationId).emit("receive_message", msg);
+});
+
 });
 
 /*───────────────────────────────────────────────
