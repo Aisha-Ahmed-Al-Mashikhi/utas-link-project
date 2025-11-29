@@ -26,9 +26,13 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-// CORS (أسلوب الدكتورة)
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://utas-link-project-client-zcdd.onrender.com"
+];
+
 const corsOptions = {
-  origin: ENV.CLIENT_URL,
+  origin: allowedOrigins,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
@@ -255,7 +259,7 @@ app.post("/chat/send", async (req, res) => {
 // ------------------- SOCKET.IO (REALTIME CHAT) -------------------
 const io = new Server(httpServer, {
   cors: {
-    origin: ENV.CLIENT_URL,
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -296,7 +300,7 @@ app.get("/posts", async (req, res) => {
 });
 
 
-// ------------------- START SERVER (أسلوب الدكتورة) -------------------
+// ------------------- START SERVER  -------------------
 const port = ENV.PORT || 3001;
 
 httpServer.listen(port, () => {
