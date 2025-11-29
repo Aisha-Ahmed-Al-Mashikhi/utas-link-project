@@ -469,6 +469,31 @@ app.get("/applicants", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
+ ░░  UPDATE APPLICATION STATUS (ACCEPT / REJECT)
+───────────────────────────────────────────────*/
+
+app.put("/applicants/update/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { status } = req.body; // "Accepted" أو "Rejected"
+
+    const updated = await ApplicationModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: "Application not found" });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: "Update failed", details: err.message });
+  }
+});
+
+/*───────────────────────────────────────────────
  ░░  CHAT + SOCKET
 ───────────────────────────────────────────────*/
 
