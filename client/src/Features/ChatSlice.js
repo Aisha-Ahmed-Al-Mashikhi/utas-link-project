@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
 
-// GET all messages
+// GET messages
 export const fetchMessages = createAsyncThunk(
   "chat/fetchMessages",
   async (applicationId) => {
@@ -11,11 +11,11 @@ export const fetchMessages = createAsyncThunk(
   }
 );
 
-// POST new message
+// POST message
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
-  async (messageData) => {
-    const res = await axios.post(`${ENV.SERVER_URL}/chat`, messageData);
+  async (msgData) => {
+    const res = await axios.post(`${ENV.SERVER_URL}/chat`, msgData);
     return res.data;
   }
 );
