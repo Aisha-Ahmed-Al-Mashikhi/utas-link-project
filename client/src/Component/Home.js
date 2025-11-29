@@ -16,9 +16,8 @@ const Home = () => {
         </h1>
 
         <p className="hero-text">
-          Connect ambitious students with Dhofar companies and ministries for
-          flexible, part-time work. Training options are available for
-          newcomers.
+          Connecting ambitious students with Dhofar companies and ministries
+          to access flexible, part-time work opportunities.
         </p>
 
         <Link to="/login">
