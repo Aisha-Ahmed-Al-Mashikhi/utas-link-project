@@ -112,7 +112,7 @@ const ChatPageCompany = () => {
                 msg.senderEmail === getCompanyEmail() ? "me" : "them"
               }`}
             >
-              <p>{msg.message}</p>
+              <p>{msg.message?.text || msg.message}</p>
               <span className="time">
                 {new Date(msg.createdAt).toLocaleTimeString()}
               </span>
