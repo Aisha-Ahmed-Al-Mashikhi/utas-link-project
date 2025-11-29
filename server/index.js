@@ -23,28 +23,30 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
+// ------------------- ALLOWED ORIGINS (FIXED) -------------------
 const allowedOrigins = [
   "http://localhost:3000",
-  process.env.CLIENT_URL,
+  "https://utas-link-project-client-zcdd.onrender.com",
+  process.env.CLIENT_URL?.trim(),
 ];
 
-// SOCKET.IO
-const io = new Server(httpServer, {
-  cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
-// ------------------- MIDDLEWARE -------------------
-app.use(express.json());
+// ------------------- CORS FIX (IMPORTANT) -------------------
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
+
+app.use(express.json());
 
 // ------------------- DATABASE -------------------
 mongoose
@@ -296,6 +298,14 @@ app.post("/chat/send", async (req, res) => {
   }
 });
 
+// ------------------- SOCKET.IO -------------------
+const io = new Server(httpServer, {
+  cors: {
+    origin: allowedOrigins,
+    credentials: true,
+  },
+});
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -341,3 +351,4 @@ const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () =>
   console.log("Server running on port " + PORT)
 );
+
