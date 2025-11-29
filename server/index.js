@@ -1,14 +1,9 @@
 // ------------------- IMPORTS -------------------
-import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import bcrypt from "bcryptjs";
+import express from "express";
+import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { createServer } from "http";
-import { Server } from "socket.io";
 
 import UserModel from "./Models/UserModel.js";
 import CompanyModel from "./Models/CompanyModel.js";
@@ -17,115 +12,113 @@ import ApplicationModel from "./Models/ApplicationModel.js";
 import ChatModel from "./Models/ChatModel.js";
 import { PostModel } from "./Models/PostModel.js";
 
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+import * as ENV from "./config.js";
+
 dotenv.config();
 
-// ------------------- SERVER + SOCKET -------------------
+// ------------------- APP INIT -------------------
 const app = express();
-const httpServer = createServer(app);
-
-// ------------------- ALLOWED ORIGINS (FIXED) -------------------
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://utas-link-project-client-zcdd.onrender.com",
-  process.env.CLIENT_URL?.trim(),
-];
-
-// ------------------- CORS FIX (IMPORTANT) -------------------
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("❌ Blocked by CORS:", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
-
 app.use(express.json());
 
-// ------------------- DATABASE -------------------
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error("Mongo Error:", err));
+// ------------------- CORS (أسلوب الدكتورة) -------------------
+const corsOptions = {
+  origin: ENV.CLIENT_URL,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+};
 
-// ------------------- FILE UPLOADS -------------------
-const uploadDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+app.use(cors(corsOptions));
+
+// ------------------- DATABASE CONNECTION -------------------
+const connectString = `mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=${ENV.APPNAME}`;
+
+mongoose
+  .connect(connectString, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log("DB Error:", err));
+
+// ------------------- FILE UPLOAD (CV) -------------------
+const uploadFolder = path.join(process.cwd(), "uploads");
+
+if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
+  destination: (req, file, cb) => cb(null, uploadFolder),
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, "_")),
 });
 
 const upload = multer({ storage });
 
-app.use("/uploads", express.static(uploadDir));
+app.use("/uploads", express.static(uploadFolder));
 
 /*───────────────────────────────────────────────
- ░░  AUTH (REGISTER + LOGIN)
+ ░░ REGISTER STUDENT
 ───────────────────────────────────────────────*/
-
-// REGISTER STUDENT
 app.post("/registerUser", async (req, res) => {
   try {
     const { name, email, password, major, age } = req.body;
 
     const exist = await UserModel.findOne({ email });
-    if (exist) return res.status(400).json({ error: "Email exists" });
+    if (exist) return res.status(400).json({ error: "Email already registered" });
 
-    const hash = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
     const user = new UserModel({
       name,
       email,
-      password: hash,
+      password: hashed,
       major,
       age,
       role: "Student",
     });
 
     await user.save();
-    res.json({ user });
+    res.send({ user, msg: "Added" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Error registering user" });
   }
 });
 
-// REGISTER COMPANY
+/*───────────────────────────────────────────────
+ ░░ REGISTER COMPANY
+───────────────────────────────────────────────*/
 app.post("/registerCompany", async (req, res) => {
   try {
     const { companyName, email, password, industry, location, foundedDate } =
       req.body;
 
     const exist = await CompanyModel.findOne({ email });
-    if (exist) return res.status(400).json({ error: "Email exists" });
+    if (exist) return res.status(400).json({ error: "Email already registered" });
 
-    const hash = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
     const company = new CompanyModel({
       companyName,
       email,
-      password: hash,
+      password: hashed,
       industry,
       location,
       foundedDate,
     });
 
     await company.save();
-    res.json({ company });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.send({ company, msg: "Added" });
+  } catch {
+    res.status(500).json({ error: "Error registering company" });
   }
 });
 
-// LOGIN
+/*───────────────────────────────────────────────
+ ░░ LOGIN
+───────────────────────────────────────────────*/
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -141,214 +134,151 @@ app.post("/login", async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: "Incorrect password" });
+    if (!match) return res.status(401).json({ error: "Wrong password" });
 
-    res.json({ user, role });
-  } catch {
-    res.status(500).json({ error: "Server error" });
+    res.send({ user, role, message: "Success" });
+  } catch (err) {
+    res.status(500).json({ error: "Login error" });
   }
 });
 
 /*───────────────────────────────────────────────
- ░░  LOAD PROFILES
+ ░░ LOAD PROFILES
 ───────────────────────────────────────────────*/
-
 app.get("/user/:email", async (req, res) => {
-  const user = await UserModel.findOne({ email: req.params.email });
-  res.json(user);
+  const data = await UserModel.findOne({ email: req.params.email });
+  res.send(data);
 });
 
 app.get("/company/:email", async (req, res) => {
-  const company = await CompanyModel.findOne({ email: req.params.email });
-  res.json(company);
+  const data = await CompanyModel.findOne({ email: req.params.email });
+  res.send(data);
 });
 
 /*───────────────────────────────────────────────
- ░░  UPLOAD CV
+ ░░ UPLOAD CV
 ───────────────────────────────────────────────*/
-
 app.post("/uploadCV", upload.single("cv"), async (req, res) => {
   try {
+    if (!req.file) return res.status(400).json({ error: "No CV uploaded" });
+
     const email = req.body.email;
-
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-
     const cvPath = `/uploads/${req.file.filename}`;
 
     await UserModel.findOneAndUpdate({ email }, { cvLink: cvPath });
 
-    res.json({ cvLink: cvPath });
+    res.send({ cvLink: cvPath });
   } catch {
     res.status(500).json({ error: "CV upload failed" });
   }
 });
 
 /*───────────────────────────────────────────────
- ░░  JOBS CRUD
+ ░░ JOBS
 ───────────────────────────────────────────────*/
-
-app.get("/jobs/company/:email", async (req, res) => {
-  const jobs = await JobModel.find({ postedBy: req.params.email }).sort({
-    createdAt: -1,
-  });
-  res.json(jobs);
+app.get("/jobs", async (req, res) => {
+  const jobs = await JobModel.find().sort({ createdAt: -1 });
+  res.send(jobs);
 });
 
-app.get("/jobs", async (req, res) => {
-  res.json(await JobModel.find().sort({ createdAt: -1 }));
+app.get("/jobs/company/:email", async (req, res) => {
+  const jobs = await JobModel.find({ postedBy: req.params.email });
+  res.send(jobs);
 });
 
 app.post("/jobs", async (req, res) => {
   try {
-    const newJob = new JobModel(req.body);
-    await newJob.save();
-    res.json(newJob);
+    const job = new JobModel(req.body);
+    await job.save();
+    res.send(job);
   } catch {
     res.status(500).json({ error: "Job creation failed" });
   }
 });
 
 /*───────────────────────────────────────────────
- ░░  APPLICATIONS
+ ░░ APPLICATIONS
 ───────────────────────────────────────────────*/
-
 app.post("/apply", async (req, res) => {
   try {
-    const {
-      jobId,
-      jobTitle,
-      organization,
-      applicantEmail,
-      applicantName,
-      cvLink,
-    } = req.body;
-
     const exist = await ApplicationModel.findOne({
-      jobId,
-      applicantEmail,
+      jobId: req.body.jobId,
+      applicantEmail: req.body.applicantEmail,
     });
 
     if (exist) return res.status(400).json({ error: "Already applied" });
 
     const newApp = new ApplicationModel({
-      jobId,
-      jobTitle,
-      organization,
-      applicantEmail,
-      applicantName,
-      cvLink,
+      ...req.body,
       status: "Pending",
       appliedAt: new Date(),
     });
 
     await newApp.save();
-
-    res.json(newApp);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.send(newApp);
+  } catch {
+    res.status(500).json({ error: "Apply failed" });
   }
 });
 
-// GET STUDENT APPLICATIONS
 app.get("/applications/:email", async (req, res) => {
-  try {
-    const apps = await ApplicationModel.find({
-      applicantEmail: req.params.email,
-    }).sort({ createdAt: -1 });
+  const apps = await ApplicationModel.find({
+    applicantEmail: req.params.email,
+  }).sort({ createdAt: -1 });
 
-    res.json(apps);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch applications" });
-  }
+  res.send(apps);
 });
 
 /*───────────────────────────────────────────────
- ░░  CHAT + SOCKET
+ ░░ CHAT (GET + POST)
 ───────────────────────────────────────────────*/
 
+// GET ALL MESSAGES (APPLICATION)
 app.get("/chat/:applicationId", async (req, res) => {
   try {
-    const messages = await ChatModel.find({
+    const msgs = await ChatModel.find({
       applicationId: req.params.applicationId,
-    }).sort({ createdAt: 1 });
+    }).sort({ "message.sentAt": 1 });
 
-    res.json(messages);
+    res.send(msgs);
   } catch (err) {
-    res.status(500).json({ error: "Failed to get messages" });
+    res.status(500).json({ error: "Failed to load messages" });
   }
 });
 
-app.post("/chat/send", async (req, res) => {
+// POST MESSAGE
+app.post("/chat", async (req, res) => {
   try {
-    const { applicationId, senderEmail, senderRole, message } = req.body;
+    const newMsg = new ChatModel(req.body);
+    await newMsg.save();
 
-    const msg = new ChatModel({
-      applicationId,
-      senderEmail,
-      senderRole,
-      message,
-      createdAt: Date.now(),
-    });
-
-    await msg.save();
-
-    res.json(msg);
+    res.send(newMsg);
   } catch (err) {
     res.status(500).json({ error: "Failed to send message" });
   }
 });
 
-// ------------------- SOCKET.IO -------------------
-const io = new Server(httpServer, {
-  cors: {
-    origin: allowedOrigins,
-    credentials: true,
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  socket.on("join_room", (id) => socket.join(id));
-
-  socket.on("send_message", async (data) => {
-    const msg = new ChatModel({
-      applicationId: data.applicationId,
-      senderEmail: data.senderEmail,
-      senderRole: data.senderRole,
-      message: data.message,
-      createdAt: Date.now(),
-    });
-
-    await msg.save();
-
-    io.to(data.applicationId).emit("receive_message", msg);
-  });
-});
-
 /*───────────────────────────────────────────────
- ░░  POSTS
+ ░░ POSTS
 ───────────────────────────────────────────────*/
-
 app.post("/addPost", async (req, res) => {
   try {
-    const post = await PostModel.create(req.body);
-    res.json(post);
+    const p = await PostModel.create(req.body);
+    res.send(p);
   } catch {
     res.status(500).json({ msg: "Error adding post" });
   }
 });
 
 app.get("/posts", async (req, res) => {
-  res.json(await PostModel.find().sort({ createdAt: -1 }));
+  const posts = await PostModel.find().sort({ createdAt: -1 });
+  res.send(posts);
 });
 
 /*───────────────────────────────────────────────
- ░░  START SERVER
+ ░░ START SERVER
 ───────────────────────────────────────────────*/
-
-const PORT = process.env.PORT || 3001;
-httpServer.listen(PORT, () =>
-  console.log("Server running on port " + PORT)
-);
-
+const port = ENV.PORT || 3001;
+app.listen(port, () => {
+  console.log(`You are connected at port: ${port}`);
+});
