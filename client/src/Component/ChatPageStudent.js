@@ -85,7 +85,7 @@ const ChatPageStudent = () => {
                 msg.senderEmail === user.email ? "me" : "them"
               }`}
             >
-              <p>{msg.message}</p>
+              <p>{msg.message?.text || msg.message}</p>
               <span className="time">
                 {new Date(msg.createdAt).toLocaleTimeString()}
               </span>
