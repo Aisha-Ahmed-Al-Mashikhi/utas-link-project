@@ -9,54 +9,54 @@ import {
   addIncomingMessage,
 } from "../Features/ChatSlice";
 import "../Styles/Chat.css";
-import { io } from "socket.io-client";
-
-const socket = io(process.env.REACT_APP_SERVER_URL, {
-  transports: ["websocket"],
-});
 
 const ChatPageStudent = () => {
   const { applicationId } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { messages } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.users);
 
   const [text, setText] = useState("");
-  const endRef = useRef(null);
+  const bottomRef = useRef(null);
 
+  // Load messages when page opens
   useEffect(() => {
     dispatch(fetchMessages(applicationId));
   }, [applicationId, dispatch]);
 
+  // Auto scroll to bottom
   useEffect(() => {
-    socket.emit("join_room", applicationId);
-
-    socket.on("receive_message", (msg) => {
-      dispatch(addIncomingMessage(msg));
-    });
-
-    return () => socket.off("receive_message");
-  }, [applicationId, dispatch]);
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Handle SEND
   const handleSend = () => {
     if (!text.trim()) return;
 
-    const msg = {
+    const msgData = {
       applicationId,
-      senderEmail: user.email,
-      senderRole: "student",
-      message: text,
-      createdAt: Date.now(),
+
+      from: {
+        email: user.email,
+        name: user.name,
+        role: "student",
+      },
+
+      to: {
+        email: "company@email.com", // سيتم تغييره عند الاسترجاع من التطبيق
+        name: "Company",
+        role: "company",
+      },
+
+      message: {
+        text: text,
+        sentAt: new Date(),
+      },
     };
 
-    dispatch(sendMessage(msg));
-    socket.emit("send_message", msg);
+    dispatch(sendMessage(msgData));
     setText("");
   };
 
@@ -77,23 +77,23 @@ const ChatPageStudent = () => {
           <div
             key={i}
             className={`chat-row ${
-              msg.senderEmail === user.email ? "right" : "left"
+              msg.from.email === user.email ? "right" : "left"
             }`}
           >
             <div
               className={`bubble ${
-                msg.senderEmail === user.email ? "me" : "them"
+                msg.from.email === user.email ? "me" : "them"
               }`}
             >
-              <p>{msg.message?.text || msg.message}</p>
+              <p>{msg.message.text}</p>
               <span className="time">
-                {new Date(msg.createdAt).toLocaleTimeString()}
+                {new Date(msg.message.sentAt).toLocaleTimeString()}
               </span>
             </div>
           </div>
         ))}
 
-        <div ref={endRef}></div>
+        <div ref={bottomRef}></div>
       </div>
 
       <div className="chat-input-area">
@@ -102,6 +102,7 @@ const ChatPageStudent = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
+
         <button onClick={handleSend}>Send ➤</button>
       </div>
     </div>
