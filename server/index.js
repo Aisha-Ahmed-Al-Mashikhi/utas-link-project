@@ -547,6 +547,42 @@ app.post("/addPost", async (req, res) => {
 app.get("/posts", async (req, res) => {
   res.json(await PostModel.find().sort({ createdAt: -1 }));
 });
+/*───────────────────────────────────────────────
+ ░░  GET CHAT MESSAGES
+───────────────────────────────────────────────*/
+app.get("/chat/:applicationId", async (req, res) => {
+  try {
+    const messages = await ChatModel.find({
+      applicationId: req.params.applicationId,
+    }).sort({ createdAt: 1 });
+
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get messages" });
+  }
+});
+/*───────────────────────────────────────────────
+ ░░  SEND CHAT MESSAGE (REST API)
+───────────────────────────────────────────────*/
+app.post("/chat/send", async (req, res) => {
+  try {
+    const { applicationId, senderEmail, senderRole, message } = req.body;
+
+    const msg = new ChatModel({
+      applicationId,
+      senderEmail,
+      senderRole,
+      message,
+      createdAt: Date.now(),
+    });
+
+    await msg.save();
+
+    res.json(msg);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to send message" });
+  }
+});
 
 /*───────────────────────────────────────────────
  ░░  START SERVER
