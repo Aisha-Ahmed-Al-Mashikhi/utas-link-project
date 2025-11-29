@@ -23,13 +23,13 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-// NEW — Allowed origins for CORS + WebSockets
+// Allowed Origins
 const allowedOrigins = [
   "http://localhost:3000",
-  process.env.CLIENT_URL,   // https://utas-link-project-client-zcdd.onrender.com
+  process.env.CLIENT_URL,
 ];
 
-// ----- SOCKET.IO -----
+// WebSocket
 const io = new Server(httpServer, {
   cors: {
     origin: allowedOrigins,
@@ -182,31 +182,8 @@ app.post("/uploadCV", upload.single("cv"), async (req, res) => {
   }
 });
 
-// DELETE CV
-app.put("/deleteCV", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const user = await UserModel.findOne({ email });
-
-    if (!user || !user.cvLink)
-      return res.status(404).json({ error: "CV not found" });
-
-    const filePath = path.join(process.cwd(), user.cvLink);
-
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-
-    user.cvLink = "";
-    await user.save();
-
-    res.json({ success: true });
-  } catch {
-    res.status(500).json({ error: "Delete failed" });
-  }
-});
-
 /*───────────────────────────────────────────────
- ░░  BANK CARD (ADD / EDIT / DELETE)
+ ░░  BANK CARD CRUD
 ───────────────────────────────────────────────*/
 
 app.put("/updateBankCard", async (req, res) => {
@@ -215,13 +192,7 @@ app.put("/updateBankCard", async (req, res) => {
 
     const user = await UserModel.findOneAndUpdate(
       { email },
-      {
-        bankName: selectedBank,
-        cardNumber,
-        cardName,
-        expiry,
-        cvv,
-      },
+      { bankName: selectedBank, cardNumber, cardNumber, cardName, expiry, cvv },
       { new: true }
     );
 
@@ -230,30 +201,6 @@ app.put("/updateBankCard", async (req, res) => {
     res.json({ user });
   } catch (err) {
     res.status(500).json({ error: "Bank update failed" });
-  }
-});
-
-app.put("/deleteBankCard", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const user = await UserModel.findOneAndUpdate(
-      { email },
-      {
-        bankName: "",
-        cardNumber: "",
-        cardName: "",
-        expiry: "",
-        cvv: "",
-      },
-      { new: true }
-    );
-
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    res.json({ user });
-  } catch (err) {
-    res.status(500).json({ error: "Bank delete failed" });
   }
 });
 
@@ -286,7 +233,6 @@ app.post("/jobs", async (req, res) => {
  ░░  APPLICATIONS
 ───────────────────────────────────────────────*/
 
-// APPLY
 app.post("/apply", async (req, res) => {
   try {
     const {
@@ -324,7 +270,6 @@ app.post("/apply", async (req, res) => {
   }
 });
 
-// GET STUDENT APPLICATIONS
 app.get("/applications/:email", async (req, res) => {
   try {
     const apps = await ApplicationModel.find({
@@ -338,218 +283,10 @@ app.get("/applications/:email", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░  COMPANY FILE UPLOADS
+ ░░  CHAT — 
 ───────────────────────────────────────────────*/
 
-app.post("/uploadCompanyFile", upload.single("file"), async (req, res) => {
-  try {
-    const { email, type } = req.body;
-
-    if (!req.file)
-      return res.status(400).json({ error: "No file uploaded" });
-
-    const filePath = `/uploads/${req.file.filename}`;
-
-    const updateData = {};
-
-    if (type === "profile") updateData.profileImage = filePath;
-    if (type === "license") updateData.tradeLicense = filePath;
-
-    const company = await CompanyModel.findOneAndUpdate(
-      { email },
-      updateData,
-      { new: true }
-    );
-
-    if (!company)
-      return res.status(404).json({ error: "Company not found" });
-
-    res.json({ company });
-  } catch (err) {
-    res.status(500).json({ error: "Company upload failed" });
-  }
-});
-
-/*───────────────────────────────────────────────
- ░░  COMPANY DELETE LICENSE
-───────────────────────────────────────────────*/
-
-app.put("/company/deleteLicense", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const company = await CompanyModel.findOne({ email });
-
-    if (!company || !company.tradeLicense)
-      return res.status(404).json({ error: "No license found" });
-
-    const filePath = path.join(process.cwd(), company.tradeLicense);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-
-    company.tradeLicense = "";
-    await company.save();
-
-    res.json({ company });
-  } catch {
-    res.status(500).json({ error: "License delete failed" });
-  }
-});
-
-/*───────────────────────────────────────────────
- ░░  COMPANY UPDATE BANK
-───────────────────────────────────────────────*/
-
-app.put("/company/updateBank", async (req, res) => {
-  try {
-    const { email, bankName, cardNumber, cardName, expiry, cvv } = req.body;
-
-    const company = await CompanyModel.findOneAndUpdate(
-      { email },
-      { bankName, cardNumber, cardName, expiry, cvv },
-      { new: true }
-    );
-
-    if (!company)
-      return res.status(404).json({ error: "Company not found" });
-
-    res.json({ company });
-  } catch {
-    res.status(500).json({ error: "Bank update failed" });
-  }
-});
-
-/*───────────────────────────────────────────────
- ░░  COMPANY DELETE BANK CARD
-───────────────────────────────────────────────*/
-
-app.put("/company/deleteBankCard", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const company = await CompanyModel.findOneAndUpdate(
-      { email },
-      {
-        bankName: "",
-        cardNumber: "",
-        cardName: "",
-        expiry: "",
-        cvv: "",
-      },
-      { new: true }
-    );
-
-    if (!company)
-      return res.status(404).json({ error: "Company not found" });
-
-    res.json({ company });
-  } catch {
-    res.status(500).json({ error: "Delete bank failed" });
-  }
-});
-
-/*───────────────────────────────────────────────
- ░░  COMPANY — GET APPLICANTS FOR JOB
-───────────────────────────────────────────────*/
-
-app.get("/applicants", async (req, res) => {
-  try {
-    const { jobId } = req.query;
-
-    if (!jobId)
-      return res.status(400).json({ error: "Missing jobId" });
-
-    const applicants = await ApplicationModel.find({ jobId }).sort({
-      appliedAt: -1,
-    });
-
-    res.json(applicants);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to load applicants" });
-  }
-});
-
-/*───────────────────────────────────────────────
- ░░  UPDATE APPLICATION STATUS (ACCEPT / REJECT)
-───────────────────────────────────────────────*/
-
-app.put("/applicants/update/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const { status } = req.body; // "Accepted" أو "Rejected"
-
-    const updated = await ApplicationModel.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
-
-    if (!updated) {
-      return res.status(404).json({ error: "Application not found" });
-    }
-
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ error: "Update failed", details: err.message });
-  }
-});
-
-/*───────────────────────────────────────────────
- ░░  CHAT + SOCKET
-───────────────────────────────────────────────*/
-
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  socket.on("join_room", (id) => socket.join(id));
-
-socket.on("send_message", async (data) => {
-  const msg = new ChatModel({
-    applicationId: data.applicationId,
-
-    from: {
-      email: data.fromEmail,
-      name: data.fromName,
-      role: data.fromRole
-    },
-
-    to: {
-      email: data.toEmail,
-      name: data.toName,
-      role: data.toRole
-    },
-
-    message: {
-      text: data.message,
-      sentAt: Date.now()
-    }
-  });
-
-  await msg.save();
-
-  io.to(data.applicationId).emit("receive_message", msg);
-});
-
-});
-
-/*───────────────────────────────────────────────
- ░░  POSTS
-───────────────────────────────────────────────*/
-
-app.post("/addPost", async (req, res) => {
-  try {
-    const post = await PostModel.create(req.body);
-    res.json(post);
-  } catch {
-    res.status(500).json({ msg: "Error adding post" });
-  }
-});
-
-app.get("/posts", async (req, res) => {
-  res.json(await PostModel.find().sort({ createdAt: -1 }));
-});
-/*───────────────────────────────────────────────
- ░░  GET CHAT MESSAGES
-───────────────────────────────────────────────*/
+// Get chat messages
 app.get("/chat/:applicationId", async (req, res) => {
   try {
     const messages = await ChatModel.find({
@@ -561,9 +298,8 @@ app.get("/chat/:applicationId", async (req, res) => {
     res.status(500).json({ error: "Failed to get messages" });
   }
 });
-/*───────────────────────────────────────────────
- ░░  SEND CHAT MESSAGE (REST API)
-───────────────────────────────────────────────*/
+
+// Send chat message
 app.post("/chat/send", async (req, res) => {
   try {
     const { applicationId, senderEmail, senderRole, message } = req.body;
@@ -582,6 +318,47 @@ app.post("/chat/send", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Failed to send message" });
   }
+});
+
+/*───────────────────────────────────────────────
+ ░░  SOCKET.IO — REALTIME CHAT
+───────────────────────────────────────────────*/
+
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  socket.on("join_room", (id) => socket.join(id));
+
+  socket.on("send_message", async (data) => {
+    const msg = new ChatModel({
+      applicationId: data.applicationId,
+      senderEmail: data.senderEmail,
+      senderRole: data.senderRole,
+      message: data.message,
+      createdAt: Date.now(),
+    });
+
+    await msg.save();
+
+    io.to(data.applicationId).emit("receive_message", msg);
+  });
+});
+
+/*───────────────────────────────────────────────
+ ░░  POSTS
+───────────────────────────────────────────────*/
+
+app.post("/addPost", async (req, res) => {
+  try {
+    const post = await PostModel.create(req.body);
+    res.json(post);
+  } catch {
+    res.status(500).json({ msg: "Error adding post" });
+  }
+});
+
+app.get("/posts", async (req, res) => {
+  res.json(await PostModel.find().sort({ createdAt: -1 }));
 });
 
 /*───────────────────────────────────────────────
