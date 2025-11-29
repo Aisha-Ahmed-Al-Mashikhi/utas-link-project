@@ -23,9 +23,16 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
+// NEW — Allowed origins for CORS + WebSockets
+const allowedOrigins = [
+  "http://localhost:3000",
+  process.env.CLIENT_URL,   // https://utas-link-project-client-zcdd.onrender.com
+];
+
+// ----- SOCKET.IO -----
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -35,7 +42,7 @@ const io = new Server(httpServer, {
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: allowedOrigins,
     credentials: true,
   })
 );
@@ -317,7 +324,7 @@ app.post("/apply", async (req, res) => {
   }
 });
 
-// ⭐⭐⭐ NEW — GET STUDENT APPLICATIONS (Fix 404)
+// GET STUDENT APPLICATIONS
 app.get("/applications/:email", async (req, res) => {
   try {
     const apps = await ApplicationModel.find({
@@ -345,7 +352,6 @@ app.post("/uploadCompanyFile", upload.single("file"), async (req, res) => {
 
     const updateData = {};
 
-    // نوع الملف
     if (type === "profile") updateData.profileImage = filePath;
     if (type === "license") updateData.tradeLicense = filePath;
 
@@ -440,6 +446,7 @@ app.put("/company/deleteBankCard", async (req, res) => {
     res.status(500).json({ error: "Delete bank failed" });
   }
 });
+
 /*───────────────────────────────────────────────
  ░░  COMPANY — GET APPLICANTS FOR JOB
 ───────────────────────────────────────────────*/
@@ -451,15 +458,15 @@ app.get("/applicants", async (req, res) => {
     if (!jobId)
       return res.status(400).json({ error: "Missing jobId" });
 
-    const applicants = await ApplicationModel.find({ jobId })
-      .sort({ appliedAt: -1 });
+    const applicants = await ApplicationModel.find({ jobId }).sort({
+      appliedAt: -1,
+    });
 
     res.json(applicants);
   } catch (err) {
     res.status(500).json({ error: "Failed to load applicants" });
   }
 });
-
 
 /*───────────────────────────────────────────────
  ░░  CHAT + SOCKET
