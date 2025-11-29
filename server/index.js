@@ -233,7 +233,7 @@ app.get("/applications/:email", async (req, res) => {
  ░░ CHAT (GET + POST)
 ───────────────────────────────────────────────*/
 
-// GET ALL MESSAGES (APPLICATION)
+// GET all messages for application
 app.get("/chat/:applicationId", async (req, res) => {
   try {
     const msgs = await ChatModel.find({
@@ -246,7 +246,7 @@ app.get("/chat/:applicationId", async (req, res) => {
   }
 });
 
-// POST MESSAGE
+// POST new message
 app.post("/chat", async (req, res) => {
   try {
     const newMsg = new ChatModel(req.body);
