@@ -23,29 +23,27 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-// Allowed Origins
-const allowedOrigins = [
-  "http://localhost:3000",
-  process.env.CLIENT_URL,
-];
+// ----------- CORRECT CORS FOR RENDER -----------
+const allowedOrigin = process.env.CLIENT_URL || "http://localhost:3000";
 
 // WebSocket
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins,
+    origin: allowedOrigin,
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
-// ------------------- MIDDLEWARE -------------------
-app.use(express.json());
+// ----------- REST API CORS -----------
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: allowedOrigin,
     credentials: true,
   })
 );
+
+app.use(express.json());
 
 // ------------------- DATABASE -------------------
 mongoose
@@ -71,7 +69,6 @@ app.use("/uploads", express.static(uploadDir));
  ░░  AUTH (REGISTER + LOGIN)
 ───────────────────────────────────────────────*/
 
-// REGISTER STUDENT
 app.post("/registerUser", async (req, res) => {
   try {
     const { name, email, password, major, age } = req.body;
@@ -97,7 +94,6 @@ app.post("/registerUser", async (req, res) => {
   }
 });
 
-// REGISTER COMPANY
 app.post("/registerCompany", async (req, res) => {
   try {
     const { companyName, email, password, industry, location, foundedDate } =
@@ -183,28 +179,6 @@ app.post("/uploadCV", upload.single("cv"), async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░  BANK CARD CRUD
-───────────────────────────────────────────────*/
-
-app.put("/updateBankCard", async (req, res) => {
-  try {
-    const { email, selectedBank, cardNumber, cardName, expiry, cvv } = req.body;
-
-    const user = await UserModel.findOneAndUpdate(
-      { email },
-      { bankName: selectedBank, cardNumber, cardNumber, cardName, expiry, cvv },
-      { new: true }
-    );
-
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    res.json({ user });
-  } catch (err) {
-    res.status(500).json({ error: "Bank update failed" });
-  }
-});
-
-/*───────────────────────────────────────────────
  ░░  JOBS CRUD
 ───────────────────────────────────────────────*/
 
@@ -270,6 +244,7 @@ app.post("/apply", async (req, res) => {
   }
 });
 
+// GET STUDENT APPLICATIONS
 app.get("/applications/:email", async (req, res) => {
   try {
     const apps = await ApplicationModel.find({
@@ -283,7 +258,7 @@ app.get("/applications/:email", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░  CHAT — 
+ ░░  CHAT REST API
 ───────────────────────────────────────────────*/
 
 // Get chat messages
@@ -321,7 +296,7 @@ app.post("/chat/send", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░  SOCKET.IO — REALTIME CHAT
+ ░░  SOCKET.IO REALTIME CHAT
 ───────────────────────────────────────────────*/
 
 io.on("connection", (socket) => {
