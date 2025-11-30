@@ -1,40 +1,62 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, fetchUserPosts } from "../Features/PostSlice";
+import { addPost, fetchPosts, fetchUserPosts } from "../Features/PostSlice";
 import "../Styles/CreatePost.css";
 
 const CreatePost = () => {
-  const [postMsg, setPostMsg] = useState("");
-  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.users);
 
-  const handleSubmit = () => {
-    if (!postMsg.trim()) return;
+  const [postMsg, setPostMsg] = useState("");
 
-    const data = {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      alert("Please login first.");
+      return;
+    }
+
+    if (postMsg.trim().length === 0) {
+      alert("Write something first.");
+      return;
+    }
+
+    // Prepare post data
+    const newPost = {
+      name: user.name,
       email: user.email,
-      name: user.name || user.companyName,
       postMsg,
+      role: user.role,
     };
 
-    dispatch(addPost(data)).then(() => {
-      dispatch(fetchUserPosts(user.email)); // refresh my posts
-      setPostMsg("");
-    });
+    try {
+      await dispatch(addPost(newPost)).unwrap(); // Wait until added
+
+      setPostMsg(""); // clear field
+
+      // Refresh posts (global)
+      dispatch(fetchPosts());
+
+      // Refresh MY posts
+      dispatch(fetchUserPosts(user.email));
+    } catch (err) {
+      console.log("Error posting:", err);
+    }
   };
 
   return (
-    <div className="create-post-card">
-      <h3>What's on your mind?</h3>
+    <div className="create-post-container">
+      <h3 className="title">What's on your mind?</h3>
 
       <textarea
-        className="create-post-textarea"
+        className="post-input"
+        placeholder="Write something..."
         value={postMsg}
         onChange={(e) => setPostMsg(e.target.value)}
-        placeholder="Write something..."
       ></textarea>
 
-      <button onClick={handleSubmit} className="create-post-btn">
+      <button className="post-btn" onClick={handleSubmit}>
         Post
       </button>
     </div>
