@@ -14,7 +14,7 @@ const getIP = async () => {
    INTERNAL – GET LOCATION
 ──────────────────────────────*/
 const getGeo = async (ip) => {
-  const res = await axios.get(`https://ipinfo.io/json?token=YOUR_TOKEN`);
+  const res = await axios.get(`https://ipinfo.io/json?token=384ae3842ac4c9`);
   const loc = res.data || {};
 
   return {
