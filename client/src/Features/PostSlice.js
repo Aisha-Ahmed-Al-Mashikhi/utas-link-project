@@ -2,19 +2,25 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { SERVER_URL } from "../config";
 
-// ==================== FETCH ALL POSTS ====================
+/*───────────────────────────────────────────────
+ ░░ FETCH ALL POSTS
+───────────────────────────────────────────────*/
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const res = await axios.get(`${SERVER_URL}/posts`);
   return res.data;
 });
 
-// ==================== ADD POST ====================
+/*───────────────────────────────────────────────
+ ░░ ADD NEW POST
+───────────────────────────────────────────────*/
 export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
   const res = await axios.post(`${SERVER_URL}/addPost`, postData);
   return res.data;
 });
 
-// ==================== LIKE POST ====================
+/*───────────────────────────────────────────────
+ ░░ LIKE POST
+───────────────────────────────────────────────*/
 export const likePost = createAsyncThunk(
   "posts/likePost",
   async ({ postId, userId }) => {
@@ -25,7 +31,9 @@ export const likePost = createAsyncThunk(
   }
 );
 
-// ==================== DISLIKE POST ====================
+/*───────────────────────────────────────────────
+ ░░ DISLIKE POST
+───────────────────────────────────────────────*/
 export const dislikePost = createAsyncThunk(
   "posts/dislikePost",
   async ({ postId, userId }) => {
@@ -36,29 +44,67 @@ export const dislikePost = createAsyncThunk(
   }
 );
 
-// ==================== SLICE ====================
+/*───────────────────────────────────────────────
+ ░░ FETCH USER POSTS (My Posts)
+───────────────────────────────────────────────*/
+export const fetchUserPosts = createAsyncThunk(
+  "posts/fetchUserPosts",
+  async (email) => {
+    const res = await axios.get(`${SERVER_URL}/posts/user/${email}`);
+    return res.data;
+  }
+);
+
+/*───────────────────────────────────────────────
+ ░░ UPDATE POST
+───────────────────────────────────────────────*/
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  async ({ id, postMsg }) => {
+    const res = await axios.put(`${SERVER_URL}/updatePost/${id}`, {
+      postMsg,
+    });
+    return res.data;
+  }
+);
+
+/*───────────────────────────────────────────────
+ ░░ DELETE POST
+───────────────────────────────────────────────*/
+export const deletePost = createAsyncThunk("posts/deletePost", async (id) => {
+  await axios.delete(`${SERVER_URL}/deletePost/${id}`);
+  return id;
+});
+
+/*───────────────────────────────────────────────
+ ░░ SLICE
+───────────────────────────────────────────────*/
 const postSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
+    myPosts: [],
     status: "idle",
+    error: null,
   },
 
   reducers: {},
 
   extraReducers: (builder) => {
     builder
-      // FETCH
+
+      /* FETCH ALL */
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.posts = action.payload;
       })
 
-      // ADD
+      /* ADD POST */
       .addCase(addPost.fulfilled, (state, action) => {
         state.posts.unshift(action.payload);
+        state.myPosts.unshift(action.payload);
       })
 
-      // LIKE
+      /* LIKE */
       .addCase(likePost.fulfilled, (state, action) => {
         const index = state.posts.findIndex(
           (p) => p._id === action.payload._id
@@ -66,12 +112,31 @@ const postSlice = createSlice({
         if (index !== -1) state.posts[index] = action.payload;
       })
 
-      // DISLIKE
+      /* DISLIKE */
       .addCase(dislikePost.fulfilled, (state, action) => {
         const index = state.posts.findIndex(
           (p) => p._id === action.payload._id
         );
         if (index !== -1) state.posts[index] = action.payload;
+      })
+
+      /* FETCH MY POSTS */
+      .addCase(fetchUserPosts.fulfilled, (state, action) => {
+        state.myPosts = action.payload;
+      })
+
+      /* UPDATE POST */
+      .addCase(updatePost.fulfilled, (state, action) => {
+        const index = state.myPosts.findIndex(
+          (p) => p._id === action.payload._id
+        );
+        if (index !== -1) state.myPosts[index] = action.payload;
+      })
+
+      /* DELETE POST */
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.myPosts = state.myPosts.filter((p) => p._id !== action.payload);
+        state.posts = state.posts.filter((p) => p._id !== action.payload);
       });
   },
 });
