@@ -155,10 +155,13 @@ const StudentProfile = () => {
             <p className="cv-success">CV Uploaded Successfully</p>
 
             <div className="cv-actions">
-              {/* View CV */}
-              <a href={user.cvLink} target="_blank" className="cv-btn view">
-                View
-              </a>
+              <a
+  href={`${ENV.SERVER_URL}${user.cvLink}`}
+  target="_blank"
+  className="cv-btn view"
+>
+  View
+</a>
 
               {/* Hidden file input to replace CV */}
               <input
