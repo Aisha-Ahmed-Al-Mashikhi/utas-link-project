@@ -4,13 +4,12 @@ import axios from "axios";
 import * as ENV from "../config";
 
 // ======================================
-// 1) STUDENT — FETCH APPLICATIONS (FIXED)
+// 1) STUDENT — FETCH APPLICATIONS  (ORIGINAL)
 // ======================================
 export const fetchStudentApplications = createAsyncThunk(
   "applications/fetchStudentApplications",
   async (email) => {
-    const encodedEmail = encodeURIComponent(email); 
-    const res = await axios.get(`${ENV.SERVER_URL}/applications/${encodedEmail}`);
+    const res = await axios.get(`${ENV.SERVER_URL}/applications/${email}`);
     return res.data;
   }
 );
@@ -67,6 +66,7 @@ const applicationSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      // STUDENT: FETCH
       .addCase(fetchStudentApplications.pending, (state) => {
         state.isLoading = true;
       })
@@ -75,12 +75,14 @@ const applicationSlice = createSlice({
         state.isLoading = false;
       })
 
+      // STUDENT: CANCEL
       .addCase(cancelStudentApplication.fulfilled, (state, action) => {
         state.studentApplications = state.studentApplications.filter(
           (app) => app._id !== action.payload
         );
       })
 
+      // COMPANY: FETCH APPLICANTS
       .addCase(fetchApplicants.pending, (state) => {
         state.isLoading = true;
       })
@@ -89,6 +91,7 @@ const applicationSlice = createSlice({
         state.isLoading = false;
       })
 
+      // COMPANY: UPDATE STATUS
       .addCase(updateApplicantStatus.fulfilled, (state, action) => {
         const updated = action.payload;
         const index = state.applicants.findIndex((a) => a._id === updated._id);
