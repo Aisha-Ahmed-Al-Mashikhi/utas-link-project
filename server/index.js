@@ -24,7 +24,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ------------------- CORS (أسلوب الدكتورة) -------------------
+// ------------------- CORS -------------------
 const corsOptions = {
   origin: ENV.CLIENT_URL,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -199,6 +199,8 @@ app.post("/jobs", async (req, res) => {
 /*───────────────────────────────────────────────
  ░░ APPLICATIONS
 ───────────────────────────────────────────────*/
+
+// ---- STUDENT APPLICATIONS ----
 app.post("/apply", async (req, res) => {
   try {
     const exist = await ApplicationModel.findOne({
@@ -227,6 +229,19 @@ app.get("/applications/:email", async (req, res) => {
   }).sort({ createdAt: -1 });
 
   res.send(apps);
+});
+
+// ---- COMPANY APPLICATIONS (FIX ADDED) ----
+app.get("/applications/job/:jobId", async (req, res) => {
+  try {
+    const apps = await ApplicationModel.find({
+      jobId: req.params.jobId,
+    }).sort({ appliedAt: -1 });
+
+    res.send(apps);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load applicants" });
+  }
 });
 
 /*───────────────────────────────────────────────
