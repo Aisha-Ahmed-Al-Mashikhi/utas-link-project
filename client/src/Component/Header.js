@@ -99,6 +99,10 @@ const Header = () => {
           ======================= */}
           {role === "student" && (
             <>
+            <Link to="/" onClick={() => setOpen(false)}>
+                <FiHome className="icon" /> Home
+              </Link>
+            
               <Link to="/student-profile" onClick={() => setOpen(false)}>
                 <FiUser className="icon" /> Profile
               </Link>
@@ -133,6 +137,10 @@ const Header = () => {
           ======================= */}
           {role === "company" && (
             <>
+            <Link to="/" onClick={() => setOpen(false)}>
+                <FiHome className="icon" /> Home
+              </Link>
+            
               <Link to="/company-profile" onClick={() => setOpen(false)}>
                 <FiUser className="icon" /> Company Profile
               </Link>
