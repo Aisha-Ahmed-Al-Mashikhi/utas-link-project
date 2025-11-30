@@ -1,78 +1,108 @@
-import { useDispatch, useSelector } from "react-redux"; // Redux: dispatch actions + read user state
-import { Link, useNavigate } from "react-router-dom"; // Routing: navigation + links
-import { logout } from "../Features/UserSlice"; // Redux action: clears user data on logout
-import "../Styles/Header.css"; // Component styling
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../Features/UserSlice";
+import { useState } from "react";
+import "../Styles/Header.css";
 
 const Header = () => {
-  // Used to run Redux actions (logout)
   const dispatch = useDispatch();
-
-  // Used for redirecting after logout
   const navigate = useNavigate();
 
-  // Read full user data + role from Redux
   const { user, role: reduxRole } = useSelector((state) => state.users);
-
-  // Final role comes from Redux first, then localStorage
   const role = reduxRole || user?.role || localStorage.getItem("role");
 
-  // Handle logout
   const handleLogout = () => {
-    // Clear saved login data
     localStorage.removeItem("loggedUser");
     localStorage.removeItem("role");
-
-    // Reset Redux user state
     dispatch(logout());
-
-    // Redirect to the Home page
     navigate("/", { replace: true });
   };
 
+  // Drawer state
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="header">
-      {/* -------- Website Branding (Logo + Title) -------- */}
-      <div className="brand">
-        <div className="logo-circle">UL</div>
-        <div className="brand-text">
-          <span className="brand-main">UTAS</span>
-          <span className="brand-accent">Link</span>
+    <>
+      {/* ====== TOP HEADER ====== */}
+      <header className="header">
+        <div className="brand">
+          <div className="logo-circle">UL</div>
+          <div className="brand-text">
+            <span className="brand-main">UTAS</span>
+            <span className="brand-accent">Link</span>
+          </div>
         </div>
+
+        <button className="menu-btn" onClick={() => setOpen(true)}>
+          ☰
+        </button>
+      </header>
+
+      {/* ====== OVERLAY ====== */}
+      {open && <div className="overlay" onClick={() => setOpen(false)}></div>}
+
+      {/* ====== DRAWER ====== */}
+      <div className={`drawer ${open ? "drawer-open" : ""}`}>
+        <button className="close-btn" onClick={() => setOpen(false)}>
+          ×
+        </button>
+
+        <nav className="drawer-links">
+          {/* STUDENT */}
+          {role === "student" && (
+            <>
+              <Link to="/student-profile" onClick={() => setOpen(false)}>
+                Profile
+              </Link>
+              <Link to="/find-job" onClick={() => setOpen(false)}>
+                Find Job
+              </Link>
+              <Link
+                to="/student-applications"
+                onClick={() => setOpen(false)}
+              >
+                My Applications
+              </Link>
+              <Link to="/student-chats" onClick={() => setOpen(false)}>
+                Chats
+              </Link>
+              <Link to="/create-post" onClick={() => setOpen(false)}>
+                Create Post
+              </Link>
+
+              <button className="drawer-logout" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          )}
+
+          {/* COMPANY */}
+          {role === "company" && (
+            <>
+              <Link to="/company-profile" onClick={() => setOpen(false)}>
+                Company Profile
+              </Link>
+              <Link to="/post-job" onClick={() => setOpen(false)}>
+                Post Job
+              </Link>
+              <Link to="/company-jobs" onClick={() => setOpen(false)}>
+                My Jobs
+              </Link>
+              <Link to="/company-chats" onClick={() => setOpen(false)}>
+                Chats
+              </Link>
+              <Link to="/create-post" onClick={() => setOpen(false)}>
+                Create Post
+              </Link>
+
+              <button className="drawer-logout" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          )}
+        </nav>
       </div>
-
-      {/* -------- Navigation Links Based on Role -------- */}
-      <nav className="nav-links">
-        {/* ---------- STUDENT NAVIGATION ---------- */}
-        {role === "student" && (
-          <>
-            <Link to="/student-profile">Profile</Link>
-            <Link to="/find-job">Find Job</Link>
-            <Link to="/student-applications">My Applications</Link>
-            <Link to="/student-chats">Chats</Link>
-            <Link to="/create-post">Create Post</Link>
-
-            <button onClick={handleLogout} className="logout-btn">
-              Logout
-            </button>
-          </>
-        )}
-
-        {/* ---------- COMPANY NAVIGATION ---------- */}
-        {role === "company" && (
-          <>
-            <Link to="/company-profile">Company Profile</Link>
-            <Link to="/post-job">Post Job</Link>
-            <Link to="/company-jobs">My Jobs</Link>
-            <Link to="/company-chats">Chats</Link>
-            <Link to="/create-post">Create Post</Link>
-
-            <button onClick={handleLogout} className="logout-btn">
-              Logout
-            </button>
-          </>
-        )}
-      </nav>
-    </header>
+    </>
   );
 };
 
