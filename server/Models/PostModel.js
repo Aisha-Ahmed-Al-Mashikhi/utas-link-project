@@ -2,8 +2,16 @@ import mongoose from "mongoose";
 
 const PostSchema = new mongoose.Schema(
   {
-    email: String,
-    postMsg: String,
+    // WHO POSTED
+    name: { type: String, required: true },        // ← مهم !!
+    email: { type: String, required: true },       // ← مهم !!
+    role: { type: String, default: "student" },    // student / company
+
+    // MESSAGE
+    postMsg: { type: String, required: true },
+
+    // PROFILE IMAGE (OPTIONAL)
+    profileImage: { type: String, default: "" },
 
     // LOCATION DATA
     location: {
@@ -11,13 +19,13 @@ const PostSchema = new mongoose.Schema(
       region: { type: String, default: "" },
     },
 
-    // LIKE
+    // LIKE SYSTEM
     likes: {
       count: { type: Number, default: 0 },
-      users: [{ type: String }],
+      users: [{ type: String }], // array of emails
     },
 
-    // DISLIKE
+    // DISLIKE SYSTEM
     dislikes: {
       count: { type: Number, default: 0 },
       users: [{ type: String }],
