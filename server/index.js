@@ -214,7 +214,7 @@ app.get("/jobs", async (req, res) => {
  ░░ APPLICATIONS
 ───────────────────────────────────────────────*/
 
-// APPLY TO A JOB
+// APPLY TO JOB
 app.post("/apply", async (req, res) => {
   try {
     const exist = await ApplicationModel.findOne({
@@ -260,7 +260,7 @@ app.delete("/applications/:applicationId", async (req, res) => {
   }
 });
 
-// FETCH APPLICANTS FOR A JOB (Company)
+// FETCH APPLICANTS FOR A JOB
 app.get("/applications/job/:jobId", async (req, res) => {
   try {
     const applicants = await ApplicationModel.find({
@@ -273,7 +273,25 @@ app.get("/applications/job/:jobId", async (req, res) => {
   }
 });
 
-// UPDATE APPLICANT STATUS
+// ⭐⭐⭐ COMPANY — FETCH ALL APPLICATIONS BY COMPANY EMAIL (ADDED)
+app.get("/applications/company/:email", async (req, res) => {
+  try {
+    const decodedEmail = decodeURIComponent(req.params.email);
+
+    const jobs = await JobModel.find({ email: decodedEmail }); // all jobs of company
+    const jobIds = jobs.map((j) => j._id);
+
+    const applications = await ApplicationModel.find({
+      jobId: { $in: jobIds },
+    }).sort({ appliedAt: -1 });
+
+    res.send(applications);
+  } catch (err) {
+    res.status(500).json({ error: "Failed loading company applications" });
+  }
+});
+
+// UPDATE STATUS
 app.put("/applications/update/:applicationId", async (req, res) => {
   try {
     const updated = await ApplicationModel.findByIdAndUpdate(
