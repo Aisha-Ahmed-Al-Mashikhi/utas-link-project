@@ -23,7 +23,7 @@ const Header = () => {
 
   const { user, role: reduxRole } = useSelector((state) => state.users);
 
-  // get role
+  // Final role
   const role = reduxRole || user?.role || localStorage.getItem("role");
 
   const handleLogout = () => {
@@ -62,20 +62,22 @@ const Header = () => {
           ×
         </button>
 
-        {/* ===== WELCOME USER ===== */}
-        <div className="welcome-box">
-          <p className="welcome-title">Welcome,</p>
-          <p className="welcome-name">
-            {user?.fullName ||
-              user?.name ||
-              user?.companyName ||
-              "User"}
-          </p>
-        </div>
+        {/* ===== WELCOME—ONLY IF LOGGED IN ===== */}
+        {role && (
+          <div className="welcome-box">
+            <p className="welcome-title">Welcome,</p>
+            <p className="welcome-name">
+              {user?.fullName || user?.name || user?.companyName || "User"}
+            </p>
+          </div>
+        )}
 
-        {/* ===== LINKS ===== */}
+        {/* ===== NAVIGATION ===== */}
         <nav className="drawer-links">
-          {/* GUEST */}
+
+          {/* =======================
+              NOT LOGGED IN (GUEST)
+          ======================= */}
           {!role && (
             <>
               <Link to="/" onClick={() => setOpen(false)}>
@@ -92,7 +94,9 @@ const Header = () => {
             </>
           )}
 
-          {/* STUDENT */}
+          {/* =======================
+                STUDENT
+          ======================= */}
           {role === "student" && (
             <>
               <Link to="/student-profile" onClick={() => setOpen(false)}>
@@ -124,7 +128,9 @@ const Header = () => {
             </>
           )}
 
-          {/* COMPANY */}
+          {/* =======================
+                COMPANY
+          ======================= */}
           {role === "company" && (
             <>
               <Link to="/company-profile" onClick={() => setOpen(false)}>
@@ -152,6 +158,7 @@ const Header = () => {
               </button>
             </>
           )}
+
         </nav>
       </div>
     </>
