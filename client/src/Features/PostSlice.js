@@ -11,13 +11,13 @@ const getIP = async () => {
 };
 
 /*───────────────────────────────────────────────
- ░░ INTERNAL — GET GEO LOCATION (HTTPS SAFE)
+ ░░ INTERNAL — GET GEO LOCATION
 ───────────────────────────────────────────────*/
 const getGeo = async (ip) => {
-  const res = await axios.get(`https://ipapi.co/${ip}/json/`);
+  const res = await axios.get(`https://ip-api.com/json/${ip}`);
   return {
-    country: res.data.country_name || "",
-    region: res.data.region || "",
+    country: res.data.country || "",
+    region: res.data.regionName || res.data.region || "",
   };
 };
 
@@ -30,7 +30,7 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 });
 
 /*───────────────────────────────────────────────
- ░░ ADD NEW POST (WITH LOCATION)
+ ░░ ADD NEW POST (with location)
 ───────────────────────────────────────────────*/
 export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
   const ip = await getIP();
@@ -46,7 +46,31 @@ export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
 });
 
 /*───────────────────────────────────────────────
- ░░ FETCH USER POSTS
+ ░░ LIKE POST
+───────────────────────────────────────────────*/
+export const likePost = createAsyncThunk(
+  "posts/likePost",
+  async ({ postId, userId }) => {
+    const res = await axios.put(`${SERVER_URL}/likePost/${postId}`, { userId });
+    return res.data.post;
+  }
+);
+
+/*───────────────────────────────────────────────
+ ░░ DISLIKE POST
+───────────────────────────────────────────────*/
+export const dislikePost = createAsyncThunk(
+  "posts/dislikePost",
+  async ({ postId, userId }) => {
+    const res = await axios.put(`${SERVER_URL}/dislikePost/${postId}`, {
+      userId,
+    });
+    return res.data.post;
+  }
+);
+
+/*───────────────────────────────────────────────
+ ░░ FETCH USER POSTS (My Posts)
 ───────────────────────────────────────────────*/
 export const fetchUserPosts = createAsyncThunk(
   "posts/fetchUserPosts",
@@ -92,36 +116,41 @@ const postSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      /* FETCH ALL POSTS */
+      /* FETCH ALL */
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.posts = action.payload;
       })
 
-      /* ADD POST — Add to both all posts + my posts */
+      /* ADD POST */
       .addCase(addPost.fulfilled, (state, action) => {
         state.posts.unshift(action.payload);
         state.myPosts.unshift(action.payload);
       })
 
-      /* FETCH USER POSTS */
+      /* LIKE */
+      .addCase(likePost.fulfilled, (state, action) => {
+        const idx = state.posts.findIndex((p) => p._id === action.payload._id);
+        if (idx !== -1) state.posts[idx] = action.payload;
+      })
+
+      /* DISLIKE */
+      .addCase(dislikePost.fulfilled, (state, action) => {
+        const idx = state.posts.findIndex((p) => p._id === action.payload._id);
+        if (idx !== -1) state.posts[idx] = action.payload;
+      })
+
+      /* FETCH MY POSTS */
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
         state.myPosts = action.payload;
       })
 
-      /* UPDATE POST */
+      /* UPDATE */
       .addCase(updatePost.fulfilled, (state, action) => {
-        const idx = state.myPosts.findIndex(
-          (p) => p._id === action.payload._id
-        );
+        const idx = state.myPosts.findIndex((p) => p._id === action.payload._id);
         if (idx !== -1) state.myPosts[idx] = action.payload;
-
-        const all = state.posts.findIndex(
-          (p) => p._id === action.payload._id
-        );
-        if (all !== -1) state.posts[all] = action.payload;
       })
 
-      /* DELETE POST */
+      /* DELETE */
       .addCase(deletePost.fulfilled, (state, action) => {
         state.myPosts = state.myPosts.filter((p) => p._id !== action.payload);
         state.posts = state.posts.filter((p) => p._id !== action.payload);
