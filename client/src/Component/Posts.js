@@ -13,20 +13,30 @@ const Posts = () => {
   const carouselRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // ⭐ Fetch posts (رجّعناها)
+  // Fetch posts
   useEffect(() => {
     dispatch(fetchPosts());
   }, [dispatch]);
 
+  // Like handler
   const handleLike = (id) => {
+    if (!user) {
+      alert("Please login to like this post.");
+      return;
+    }
     dispatch(likePost({ postId: id, userId: user?.email }));
   };
 
+  // Dislike handler
   const handleDislike = (id) => {
+    if (!user) {
+      alert("Please login to dislike this post.");
+      return;
+    }
     dispatch(dislikePost({ postId: id, userId: user?.email }));
   };
 
-  // ⭐ Auto slider
+  // Auto slider
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev === posts.length - 1 ? 0 : prev + 1));
@@ -37,7 +47,7 @@ const Posts = () => {
 
   return (
     <div className="carousel-wrapper">
-      {/* TRACK */}
+      {/* SLIDER TRACK */}
       <div
         className="carousel-track"
         ref={carouselRef}
@@ -62,7 +72,10 @@ const Posts = () => {
                   <img src={profileImg} className="profile-img" alt="dp" />
 
                   <div>
-                    <p className="profile-name">{post.name}</p>
+                    <p className="profile-name">
+                      {post.name ? post.name : "Anonymous"}
+                    </p>
+
                     <p className="post-time">
                       {moment(post.createdAt).fromNow()}
                     </p>
@@ -73,20 +86,29 @@ const Posts = () => {
               {/* MESSAGE */}
               <p className="message">{post.postMsg}</p>
 
-              {/* LOCATION */}
-              <p className="location">
-                📍 {post.location.country} – {post.location.region}
-              </p>
+              {/* LOCATION (ONLY IF BOTH EXIST) */}
+              {post.location?.country && post.location?.region ? (
+                <p className="location">
+                  📍 {post.location.country}, {post.location.region}
+                </p>
+              ) : (
+                <p className="location" style={{ visibility: "hidden" }}>.</p>
+              )}
 
               {/* LIKE / DISLIKE */}
               <div className="actions">
-                <span onClick={() => handleLike(post._id)} className="act-btn">
+                {/* LIKE */}
+                <span
+                  className="act-btn"
+                  onClick={() => handleLike(post._id)}
+                >
                   <FaThumbsUp /> ({post.likes.count})
                 </span>
 
+                {/* DISLIKE */}
                 <span
-                  onClick={() => handleDislike(post._id)}
                   className="act-btn"
+                  onClick={() => handleDislike(post._id)}
                 >
                   <FaThumbsDown /> ({post.dislikes.count})
                 </span>
