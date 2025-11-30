@@ -1,66 +1,88 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, fetchPosts, fetchUserPosts } from "../Features/PostSlice";
-import "../Styles/CreatePost.css";
+import { likePost, dislikePost, fetchPosts } from "../Features/PostSlice";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import "../Styles/PostsGrid.css";
 
-const CreatePost = () => {
+const Posts = () => {
   const dispatch = useDispatch();
+  const { posts } = useSelector((state) => state.posts);
   const { user } = useSelector((state) => state.users);
 
-  const [postMsg, setPostMsg] = useState("");
+  const carouselRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
-    if (!user) {
-      alert("Please login first.");
-      return;
-    }
+  const handleLike = (id) => {
+    if (!user) return alert("Please login first.");
+    dispatch(likePost({ postId: id, userId: user.email }));
+  };
 
-    if (postMsg.trim().length === 0) {
-      alert("Write something first.");
-      return;
-    }
-
-    // Prepare post data
-    const newPost = {
-      name: user.name,
-      email: user.email,
-      postMsg,
-      role: user.role,
-    };
-
-    try {
-      await dispatch(addPost(newPost)).unwrap(); // Wait until added
-
-      setPostMsg(""); // clear field
-
-      // Refresh posts (global)
-      dispatch(fetchPosts());
-
-      // Refresh MY posts
-      dispatch(fetchUserPosts(user.email));
-    } catch (err) {
-      console.log("Error posting:", err);
-    }
+  const handleDislike = (id) => {
+    if (!user) return alert("Please login first.");
+    dispatch(dislikePost({ postId: id, userId: user.email }));
   };
 
   return (
-    <div className="create-post-container">
-      <h3 className="title">What's on your mind?</h3>
+    <div className="carousel-wrapper">
+      <div
+        className="carousel-track"
+        ref={carouselRef}
+        style={{
+          transform: `translateX(-${activeIndex * 100}%)`,
+        }}
+      >
+        {posts.map((post) => {
+          const profileImg =
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-      <textarea
-        className="post-input"
-        placeholder="Write something..."
-        value={postMsg}
-        onChange={(e) => setPostMsg(e.target.value)}
-      ></textarea>
+          return (
+            <div className="post-card" key={post._id}>
+              <div className="post-header">
+                <div className="profile-box">
+                  <img src={profileImg} className="profile-img" alt="dp" />
+                  <div>
+                    <p className="profile-name">
+                      {post.name ? post.name : "Anonymous"}
+                    </p>
+                    <p className="post-time">
+                      {moment(post.createdAt).fromNow()}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-      <button className="post-btn" onClick={handleSubmit}>
-        Post
-      </button>
+              <p className="message">{post.postMsg}</p>
+
+              <div className="actions">
+                <span className="act-btn" onClick={() => handleLike(post._id)}>
+                  <FaThumbsUp /> ({post.likes.count})
+                </span>
+
+                <span className="act-btn" onClick={() => handleDislike(post._id)}>
+                  <FaThumbsDown /> ({post.dislikes.count})
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="carousel-dots">
+        {posts.map((_, idx) => (
+          <span
+            key={idx}
+            className={idx === activeIndex ? "active" : ""}
+            onClick={() => setActiveIndex(idx)}
+          ></span>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default CreatePost;
+export default Posts;
