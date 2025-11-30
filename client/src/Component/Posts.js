@@ -13,32 +13,22 @@ const Posts = () => {
   const carouselRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Fetch posts
   useEffect(() => {
     dispatch(fetchPosts());
   }, [dispatch]);
 
-  // LIKE
   const handleLike = (id) => {
-    if (!user) {
-      alert("Please login to like this post.");
-      return;
-    }
+    if (!user) return alert("Please login first.");
     dispatch(likePost({ postId: id, userId: user.email }));
   };
 
-  // DISLIKE
   const handleDislike = (id) => {
-    if (!user) {
-      alert("Please login to dislike this post.");
-      return;
-    }
+    if (!user) return alert("Please login first.");
     dispatch(dislikePost({ postId: id, userId: user.email }));
   };
 
   return (
     <div className="carousel-wrapper">
-      {/* TRACK */}
       <div
         className="carousel-track"
         ref={carouselRef}
@@ -47,26 +37,18 @@ const Posts = () => {
         }}
       >
         {posts.map((post) => {
-          const isCompany = post.role === "company";
-
-          const profileImg = post.profileImage
-            ? post.profileImage
-            : isCompany
-            ? "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
-            : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+          const profileImg =
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
           return (
             <div className="post-card" key={post._id}>
-              {/* HEADER */}
               <div className="post-header">
                 <div className="profile-box">
                   <img src={profileImg} className="profile-img" alt="dp" />
-
                   <div>
                     <p className="profile-name">
                       {post.name ? post.name : "Anonymous"}
                     </p>
-
                     <p className="post-time">
                       {moment(post.createdAt).fromNow()}
                     </p>
@@ -74,11 +56,10 @@ const Posts = () => {
                 </div>
               </div>
 
-              {/* MESSAGE */}
               <p className="message">{post.postMsg}</p>
 
               {/* LOCATION */}
-              {post.location?.country && post.location?.region ? (
+              {post.location?.country ? (
                 <p className="location">
                   📍 {post.location.country}, {post.location.region}
                 </p>
@@ -86,7 +67,6 @@ const Posts = () => {
                 <p className="location" style={{ visibility: "hidden" }}>.</p>
               )}
 
-              {/* LIKE / DISLIKE */}
               <div className="actions">
                 <span className="act-btn" onClick={() => handleLike(post._id)}>
                   <FaThumbsUp /> ({post.likes.count})
