@@ -27,23 +27,25 @@ export const cancelStudentApplication = createAsyncThunk(
 
 // ======================================
 // 3) COMPANY — FETCH APPLICANTS FOR A JOB
+// (FIXED — THIS IS THE CORRECT API)
 // ======================================
 export const fetchApplicants = createAsyncThunk(
   "applications/fetchApplicants",
   async (jobId) => {
-    const res = await axios.get(`${ENV.SERVER_URL}/applicants?jobId=${jobId}`);
-    return res.data;
+    const res = await axios.get(`${ENV.SERVER_URL}/applications/job/${jobId}`);
+    return res.data; // array of applicants
   }
 );
 
 // ======================================
 // 4) COMPANY — UPDATE APPLICANT STATUS
+// (FIXED — NOW MATCHES THE BACKEND)
 // ======================================
 export const updateApplicantStatus = createAsyncThunk(
   "applications/updateApplicantStatus",
   async ({ applicationId, status }) => {
     const res = await axios.put(
-      `${ENV.SERVER_URL}/applicants/update/${applicationId}`,
+      `${ENV.SERVER_URL}/applications/update/${applicationId}`,
       { status }
     );
     return res.data; // updated application
