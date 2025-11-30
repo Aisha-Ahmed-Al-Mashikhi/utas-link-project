@@ -18,31 +18,27 @@ const Posts = () => {
     dispatch(fetchPosts());
   }, [dispatch]);
 
-  // Like handler
+  // LIKE
   const handleLike = (id) => {
     if (!user) {
       alert("Please login to like this post.");
       return;
     }
-    dispatch(likePost({ postId: id, userId: user?.email }));
+    dispatch(likePost({ postId: id, userId: user.email }));
   };
 
-  // Dislike handler
+  // DISLIKE
   const handleDislike = (id) => {
     if (!user) {
       alert("Please login to dislike this post.");
       return;
     }
-    dispatch(dislikePost({ postId: id, userId: user?.email }));
+    dispatch(dislikePost({ postId: id, userId: user.email }));
   };
-
-
-    return () => clearInterval(interval);
-  }, [posts.length]);
 
   return (
     <div className="carousel-wrapper">
-      {/* SLIDER TRACK */}
+      {/* TRACK */}
       <div
         className="carousel-track"
         ref={carouselRef}
@@ -81,7 +77,7 @@ const Posts = () => {
               {/* MESSAGE */}
               <p className="message">{post.postMsg}</p>
 
-              {/* LOCATION (ONLY IF BOTH EXIST) */}
+              {/* LOCATION */}
               {post.location?.country && post.location?.region ? (
                 <p className="location">
                   📍 {post.location.country}, {post.location.region}
@@ -92,15 +88,10 @@ const Posts = () => {
 
               {/* LIKE / DISLIKE */}
               <div className="actions">
-                {/* LIKE */}
-                <span
-                  className="act-btn"
-                  onClick={() => handleLike(post._id)}
-                >
+                <span className="act-btn" onClick={() => handleLike(post._id)}>
                   <FaThumbsUp /> ({post.likes.count})
                 </span>
 
-                {/* DISLIKE */}
                 <span
                   className="act-btn"
                   onClick={() => handleDislike(post._id)}
@@ -115,14 +106,14 @@ const Posts = () => {
 
       {/* DOTS */}
       <div className="carousel-dots">
-  {posts.map((_, idx) => (
-    <span
-      key={idx}
-      className={idx === activeIndex ? "active" : ""}
-      onClick={() => setActiveIndex(idx)}
-    ></span>
-  ))}
-</div>
+        {posts.map((_, idx) => (
+          <span
+            key={idx}
+            className={idx === activeIndex ? "active" : ""}
+            onClick={() => setActiveIndex(idx)}
+          ></span>
+        ))}
+      </div>
     </div>
   );
 };
