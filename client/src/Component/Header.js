@@ -65,7 +65,7 @@ const Header = () => {
                 <FiLogIn className="icon" /> Login
               </Link>
 
-              <Link to="/register" onClick={() => setOpen(false)}>
+              <Link to="/student-register" onClick={() => setOpen(false)}>
                 <FiUserPlus className="icon" /> Register
               </Link>
             </>
