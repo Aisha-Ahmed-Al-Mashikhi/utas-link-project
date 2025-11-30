@@ -2,30 +2,25 @@ import mongoose from "mongoose";
 
 const PostSchema = new mongoose.Schema(
   {
-    // WHO POSTED
-    name: { type: String, required: true },        // ← مهم !!
-    email: { type: String, required: true },       // ← مهم !!
-    role: { type: String, default: "student" },    // student / company
+    name: { type: String, required: false },      // ✔ يظهر اسم المستخدم
+    email: { type: String, required: true },
+    role: { type: String, default: "student" },   // ✔ لو طالب أو شركة
 
-    // MESSAGE
     postMsg: { type: String, required: true },
 
-    // PROFILE IMAGE (OPTIONAL)
-    profileImage: { type: String, default: "" },
-
-    // LOCATION DATA
+    // LOCATION
     location: {
       country: { type: String, default: "" },
       region: { type: String, default: "" },
     },
 
-    // LIKE SYSTEM
+    // LIKE
     likes: {
       count: { type: Number, default: 0 },
-      users: [{ type: String }], // array of emails
+      users: [{ type: String }],
     },
 
-    // DISLIKE SYSTEM
+    // DISLIKE
     dislikes: {
       count: { type: Number, default: 0 },
       users: [{ type: String }],
