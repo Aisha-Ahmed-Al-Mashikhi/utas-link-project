@@ -201,12 +201,13 @@ app.get("/jobs", async (req, res) => {
   res.send(jobs);
 });
 
-// ⭐⭐ COMPANY: FETCH JOBS THEY POSTED ⭐⭐
+// ⭐⭐ FIXED — FETCH COMPANY JOBS ⭐⭐
 app.get("/jobs/company/:email", async (req, res) => {
   try {
     const email = decodeURIComponent(req.params.email);
 
-    const jobs = await JobModel.find({ companyEmail: email }).sort({
+    // THIS IS THE CORRECT FIELD IN DATABASE
+    const jobs = await JobModel.find({ postedBy: email }).sort({
       createdAt: -1,
     });
 
@@ -279,12 +280,12 @@ app.get("/applications/job/:jobId", async (req, res) => {
   }
 });
 
-// FETCH ALL APPLICATIONS OF COMPANY (ALL JOBS)
+// FETCH ALL COMPANY APPLICATIONS FROM ALL JOBS
 app.get("/applications/company/:email", async (req, res) => {
   try {
     const email = decodeURIComponent(req.params.email);
 
-    const jobs = await JobModel.find({ companyEmail: email });
+    const jobs = await JobModel.find({ postedBy: email });
     const jobIds = jobs.map((j) => j._id);
 
     const applications = await ApplicationModel.find({
