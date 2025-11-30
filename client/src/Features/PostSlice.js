@@ -3,7 +3,7 @@ import axios from "axios";
 import { SERVER_URL } from "../config";
 
 /*───────────────────────────────────────────────
- ░░ INTERNAL — GET USER IP (HTTPS ONLY)
+ ░░ INTERNAL — GET USER IP (HTTPS)
 ───────────────────────────────────────────────*/
 const getIP = async () => {
   const res = await axios.get("https://api.ipify.org?format=json");
@@ -11,16 +11,15 @@ const getIP = async () => {
 };
 
 /*───────────────────────────────────────────────
- ░░ INTERNAL — GET GEO LOCATION (USES HTTPS API)
+ ░░ INTERNAL — GET GEO LOCATION (HTTPS + TOKEN)
 ───────────────────────────────────────────────*/
-const getGeo = async (ip) => {
-  // Free API that works over HTTPS
-  const url = `https://ipapi.co/${ip}/json/`;
-
-  const res = await axios.get(url);
+const getGeo = async () => {
+  const res = await axios.get(
+    `https://ipinfo.io/json?token=384ae3842ac4c9`
+  );
 
   return {
-    country: res.data.country_name || "",
+    country: res.data.country || "",
     region: res.data.region || "",
   };
 };
@@ -34,19 +33,11 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 });
 
 /*───────────────────────────────────────────────
- ░░ ADD NEW POST (WITH LOCATION)
+ ░░ ADD NEW POST WITH LOCATION
 ───────────────────────────────────────────────*/
 export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
-  // 1) Get IP
-  let ip = "";
-  let geo = { country: "", region: "" };
-
-  try {
-    ip = await getIP();
-    geo = await getGeo(ip);
-  } catch (err) {
-    console.log("Location error → continuing without location");
-  }
+  const ip = await getIP();
+  const geo = await getGeo(ip);
 
   const finalPost = {
     ...postData,
@@ -56,32 +47,6 @@ export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
   const res = await axios.post(`${SERVER_URL}/addPost`, finalPost);
   return res.data;
 });
-
-/*───────────────────────────────────────────────
- ░░ LIKE POST
-───────────────────────────────────────────────*/
-export const likePost = createAsyncThunk(
-  "posts/likePost",
-  async ({ postId, userId }) => {
-    const res = await axios.put(`${SERVER_URL}/likePost/${postId}`, {
-      userId,
-    });
-    return res.data.post;
-  }
-);
-
-/*───────────────────────────────────────────────
- ░░ DISLIKE POST
-───────────────────────────────────────────────*/
-export const dislikePost = createAsyncThunk(
-  "posts/dislikePost",
-  async ({ postId, userId }) => {
-    const res = await axios.put(`${SERVER_URL}/dislikePost/${postId}`, {
-      userId,
-    });
-    return res.data.post;
-  }
-);
 
 /*───────────────────────────────────────────────
  ░░ FETCH USER POSTS
@@ -121,8 +86,6 @@ const postSlice = createSlice({
   initialState: {
     posts: [],
     myPosts: [],
-    status: "idle",
-    error: null,
   },
 
   reducers: {},
@@ -130,39 +93,19 @@ const postSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      /* ALL POSTS */
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.posts = action.payload;
       })
 
-      /* ADD POST */
       .addCase(addPost.fulfilled, (state, action) => {
         state.posts.unshift(action.payload);
         state.myPosts.unshift(action.payload);
       })
 
-      /* LIKE */
-      .addCase(likePost.fulfilled, (state, action) => {
-        const index = state.posts.findIndex(
-          (p) => p._id === action.payload._id
-        );
-        if (index !== -1) state.posts[index] = action.payload;
-      })
-
-      /* DISLIKE */
-      .addCase(dislikePost.fulfilled, (state, action) => {
-        const index = state.posts.findIndex(
-          (p) => p._id === action.payload._id
-        );
-        if (index !== -1) state.posts[index] = action.payload;
-      })
-
-      /* MY POSTS */
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
         state.myPosts = action.payload;
       })
 
-      /* UPDATE */
       .addCase(updatePost.fulfilled, (state, action) => {
         const index = state.myPosts.findIndex(
           (p) => p._id === action.payload._id
@@ -170,7 +113,6 @@ const postSlice = createSlice({
         if (index !== -1) state.myPosts[index] = action.payload;
       })
 
-      /* DELETE */
       .addCase(deletePost.fulfilled, (state, action) => {
         state.myPosts = state.myPosts.filter((p) => p._id !== action.payload);
         state.posts = state.posts.filter((p) => p._id !== action.payload);
