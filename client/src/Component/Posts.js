@@ -36,11 +36,6 @@ const Posts = () => {
     dispatch(dislikePost({ postId: id, userId: user?.email }));
   };
 
-  // Auto slider
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev === posts.length - 1 ? 0 : prev + 1));
-    }, 3500);
 
     return () => clearInterval(interval);
   }, [posts.length]);
@@ -120,13 +115,14 @@ const Posts = () => {
 
       {/* DOTS */}
       <div className="carousel-dots">
-        {posts.map((_, idx) => (
-          <span
-            key={idx}
-            className={idx === activeIndex ? "active" : ""}
-          ></span>
-        ))}
-      </div>
+  {posts.map((_, idx) => (
+    <span
+      key={idx}
+      className={idx === activeIndex ? "active" : ""}
+      onClick={() => setActiveIndex(idx)}
+    ></span>
+  ))}
+</div>
     </div>
   );
 };
