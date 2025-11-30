@@ -67,7 +67,8 @@ app.post("/registerUser", async (req, res) => {
     const { name, email, password, major, age } = req.body;
 
     const exist = await UserModel.findOne({ email });
-    if (exist) return res.status(400).json({ error: "Email already registered" });
+    if (exist)
+      return res.status(400).json({ error: "Email already registered" });
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -96,7 +97,8 @@ app.post("/registerCompany", async (req, res) => {
       req.body;
 
     const exist = await CompanyModel.findOne({ email });
-    if (exist) return res.status(400).json({ error: "Email already registered" });
+    if (exist)
+      return res.status(400).json({ error: "Email already registered" });
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -191,13 +193,9 @@ app.put("/deleteCV", async (req, res) => {
       }
     }
 
-    await UserModel.findOneAndUpdate(
-      { email },
-      { cvLink: null }
-    );
+    await UserModel.findOneAndUpdate({ email }, { cvLink: null });
 
     res.send({ msg: "CV deleted successfully" });
-
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Error deleting CV" });
@@ -215,6 +213,8 @@ app.get("/jobs", async (req, res) => {
 /*───────────────────────────────────────────────
  ░░ APPLICATIONS
 ───────────────────────────────────────────────*/
+
+// APPLY TO A JOB
 app.post("/apply", async (req, res) => {
   try {
     const exist = await ApplicationModel.findOne({
@@ -234,6 +234,57 @@ app.post("/apply", async (req, res) => {
     res.send(newApp);
   } catch {
     res.status(500).json({ error: "Apply failed" });
+  }
+});
+
+// FETCH STUDENT APPLICATIONS
+app.get("/applications/:email", async (req, res) => {
+  try {
+    const apps = await ApplicationModel.find({
+      applicantEmail: req.params.email,
+    }).sort({ appliedAt: -1 });
+
+    res.send(apps);
+  } catch {
+    res.status(500).json({ error: "Failed loading applications" });
+  }
+});
+
+// CANCEL APPLICATION
+app.delete("/applications/:applicationId", async (req, res) => {
+  try {
+    await ApplicationModel.findByIdAndDelete(req.params.applicationId);
+    res.send({ msg: "Application canceled" });
+  } catch {
+    res.status(500).json({ error: "Error canceling application" });
+  }
+});
+
+// FETCH APPLICANTS FOR A JOB (Company)
+app.get("/applications/job/:jobId", async (req, res) => {
+  try {
+    const applicants = await ApplicationModel.find({
+      jobId: req.params.jobId,
+    }).sort({ appliedAt: -1 });
+
+    res.send(applicants);
+  } catch {
+    res.status(500).json({ error: "Failed loading applicants" });
+  }
+});
+
+// UPDATE APPLICANT STATUS
+app.put("/applications/update/:applicationId", async (req, res) => {
+  try {
+    const updated = await ApplicationModel.findByIdAndUpdate(
+      req.params.applicationId,
+      { status: req.body.status },
+      { new: true }
+    );
+
+    res.send(updated);
+  } catch {
+    res.status(500).json({ error: "Error updating status" });
   }
 });
 
