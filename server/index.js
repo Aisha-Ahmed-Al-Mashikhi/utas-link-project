@@ -172,6 +172,7 @@ app.post("/uploadCV", upload.single("cv"), async (req, res) => {
     res.status(500).json({ error: "CV upload failed" });
   }
 });
+
 /*───────────────────────────────────────────────
  ░░ DELETE CV
 ───────────────────────────────────────────────*/
@@ -182,7 +183,6 @@ app.put("/deleteCV", async (req, res) => {
     const user = await UserModel.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // لو فيه CV سابق → نحذفه من مجلد uploads
     if (user.cvLink) {
       const filePath = path.join(process.cwd(), user.cvLink);
 
@@ -191,7 +191,6 @@ app.put("/deleteCV", async (req, res) => {
       }
     }
 
-    // نحذف الرابط من قاعدة البيانات
     await UserModel.findOneAndUpdate(
       { email },
       { cvLink: null }
@@ -213,26 +212,9 @@ app.get("/jobs", async (req, res) => {
   res.send(jobs);
 });
 
-app.get("/jobs/company/:email", async (req, res) => {
-  const jobs = await JobModel.find({ postedBy: req.params.email });
-  res.send(jobs);
-});
-
-app.post("/jobs", async (req, res) => {
-  try {
-    const job = new JobModel(req.body);
-    await job.save();
-    res.send(job);
-  } catch {
-    res.status(500).json({ error: "Job creation failed" });
-  }
-});
-
 /*───────────────────────────────────────────────
  ░░ APPLICATIONS
 ───────────────────────────────────────────────*/
-
-// ---- STUDENT APPLICATIONS ----
 app.post("/apply", async (req, res) => {
   try {
     const exist = await ApplicationModel.findOne({
@@ -255,32 +237,9 @@ app.post("/apply", async (req, res) => {
   }
 });
 
-app.get("/applications/:email", async (req, res) => {
-  const apps = await ApplicationModel.find({
-    applicantEmail: req.params.email,
-  }).sort({ createdAt: -1 });
-
-  res.send(apps);
-});
-
-// ---- COMPANY APPLICATIONS (FIX ADDED) ----
-app.get("/applications/job/:jobId", async (req, res) => {
-  try {
-    const apps = await ApplicationModel.find({
-      jobId: req.params.jobId,
-    }).sort({ appliedAt: -1 });
-
-    res.send(apps);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to load applicants" });
-  }
-});
-
 /*───────────────────────────────────────────────
- ░░ CHAT (GET + POST)
+ ░░ CHAT
 ───────────────────────────────────────────────*/
-
-// GET all messages for application
 app.get("/chat/:applicationId", async (req, res) => {
   try {
     const msgs = await ChatModel.find({
@@ -293,12 +252,10 @@ app.get("/chat/:applicationId", async (req, res) => {
   }
 });
 
-// POST new message
 app.post("/chat", async (req, res) => {
   try {
     const newMsg = new ChatModel(req.body);
     await newMsg.save();
-
     res.send(newMsg);
   } catch (err) {
     res.status(500).json({ error: "Failed to send message" });
@@ -320,6 +277,126 @@ app.post("/addPost", async (req, res) => {
 app.get("/posts", async (req, res) => {
   const posts = await PostModel.find().sort({ createdAt: -1 });
   res.send(posts);
+});
+
+/*───────────────────────────────────────────────
+ ░░ LIKE / DISLIKE POSTS
+───────────────────────────────────────────────*/
+app.put("/likePost/:postId", async (req, res) => {
+  try {
+    const post = await PostModel.findOne({ _id: req.params.postId });
+    const userId = req.body.userId;
+
+    if (!post) return res.status(404).json({ msg: "Post not found" });
+
+    const index = post.likes.users.indexOf(userId);
+
+    if (index !== -1) {
+      const updated = await PostModel.findOneAndUpdate(
+        { _id: req.params.postId },
+        {
+          $inc: { "likes.count": -1 },
+          $pull: { "likes.users": userId },
+        },
+        { new: true }
+      );
+
+      res.json({ post: updated, msg: "Post unliked." });
+    } else {
+      const updated = await PostModel.findOneAndUpdate(
+        { _id: req.params.postId },
+        {
+          $inc: { "likes.count": 1 },
+          $addToSet: { "likes.users": userId },
+        },
+        { new: true }
+      );
+
+      res.json({ post: updated, msg: "Post liked." });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Error liking post" });
+  }
+});
+
+app.put("/dislikePost/:postId", async (req, res) => {
+  try {
+    const post = await PostModel.findOne({ _id: req.params.postId });
+    const userId = req.body.userId;
+
+    if (!post) return res.status(404).json({ msg: "Post not found" });
+
+    const index = post.dislikes.users.indexOf(userId);
+
+    if (index !== -1) {
+      const updated = await PostModel.findOneAndUpdate(
+        { _id: req.params.postId },
+        {
+          $inc: { "dislikes.count": -1 },
+          $pull: { "dislikes.users": userId },
+        },
+        { new: true }
+      );
+
+      res.json({ post: updated, msg: "Post undisliked." });
+    } else {
+      const updated = await PostModel.findOneAndUpdate(
+        { _id: req.params.postId },
+        {
+          $inc: { "dislikes.count": 1 },
+          $addToSet: { "dislikes.users": userId },
+        },
+        { new: true }
+      );
+
+      res.json({ post: updated, msg: "Post disliked." });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Error disliking post" });
+  }
+});
+
+/*───────────────────────────────────────────────
+ ░░ USER POSTS (My Posts)
+───────────────────────────────────────────────*/
+app.get("/posts/user/:email", async (req, res) => {
+  try {
+    const posts = await PostModel.find({
+      email: req.params.email,
+    }).sort({ createdAt: -1 });
+    res.send(posts);
+  } catch {
+    res.status(500).json({ error: "Error loading user posts" });
+  }
+});
+
+/*───────────────────────────────────────────────
+ ░░ UPDATE POST
+───────────────────────────────────────────────*/
+app.put("/updatePost/:id", async (req, res) => {
+  try {
+    const updated = await PostModel.findByIdAndUpdate(
+      req.params.id,
+      { postMsg: req.body.postMsg },
+      { new: true }
+    );
+
+    res.send(updated);
+  } catch {
+    res.status(500).json({ error: "Error updating post" });
+  }
+});
+
+/*───────────────────────────────────────────────
+ ░░ DELETE POST
+───────────────────────────────────────────────*/
+app.delete("/deletePost/:id", async (req, res) => {
+  try {
+    await PostModel.findByIdAndDelete(req.params.id);
+    res.send({ msg: "Post deleted" });
+  } catch {
+    res.status(500).json({ error: "Error deleting post" });
+  }
 });
 
 /*───────────────────────────────────────────────
