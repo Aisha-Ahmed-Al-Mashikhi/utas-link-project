@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, fetchUserPosts, updatePost, deletePost } from "../Features/PostSlice";
 
@@ -11,38 +11,44 @@ const CreatePost = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  // Load user's posts when page opens
+  // Load My Posts
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchUserPosts(user.email));
     }
   }, [user, dispatch]);
 
-  // Add OR Update Post
+  // ADD — UPDATE
   const handleSubmit = () => {
     if (!postMsg.trim()) return;
 
     if (editMode) {
       dispatch(updatePost({ id: editId, postMsg }));
+      alert("تم تعديل المنشور بنجاح ✔");
       setEditMode(false);
       setEditId(null);
     } else {
-      dispatch(addPost({ 
-        postMsg,
-        email: user.email,
-        name: user.name
-      }));
+      dispatch(
+        addPost({
+          postMsg,
+          email: user.email,
+          name: user.name,
+        })
+      );
     }
 
     setPostMsg("");
   };
 
-  // Delete
+  // DELETE with confirmation
   const handleDelete = (id) => {
-    dispatch(deletePost(id));
+    if (window.confirm("هل أنت متأكد أنك تريد حذف هذا المنشور؟")) {
+      dispatch(deletePost(id));
+      alert("تم حذف المنشور بنجاح ❌");
+    }
   };
 
-  // Edit
+  // EDIT
   const handleEdit = (post) => {
     setEditMode(true);
     setEditId(post._id);
@@ -51,7 +57,6 @@ const CreatePost = () => {
 
   return (
     <div style={{ width: "100%", marginTop: "30px" }}>
-      
       {/* INPUT */}
       <textarea
         placeholder="Write something..."
@@ -82,7 +87,7 @@ const CreatePost = () => {
 
       <hr style={{ margin: "30px 0" }} />
 
-      {/* USER POSTS BELOW */}
+      {/* MY POSTS SECTION */}
       <h3>My Posts</h3>
 
       {myPosts.length === 0 && <p>No posts yet.</p>}
