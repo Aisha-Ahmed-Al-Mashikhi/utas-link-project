@@ -5,13 +5,25 @@ import { useState } from "react";
 import "../Styles/Header.css";
 
 /* ====== IMPORT ICONS ====== */
-import { FiHome, FiLogIn, FiUserPlus, FiUser, FiBriefcase, FiBookOpen, FiMessageCircle, FiPlusCircle, FiLogOut } from "react-icons/fi";
+import {
+  FiHome,
+  FiLogIn,
+  FiUserPlus,
+  FiUser,
+  FiBriefcase,
+  FiBookOpen,
+  FiMessageCircle,
+  FiPlusCircle,
+  FiLogOut,
+} from "react-icons/fi";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { user, role: reduxRole } = useSelector((state) => state.users);
+
+  // get role
   const role = reduxRole || user?.role || localStorage.getItem("role");
 
   const handleLogout = () => {
@@ -50,11 +62,20 @@ const Header = () => {
           ×
         </button>
 
-        <nav className="drawer-links">
+        {/* ===== WELCOME USER ===== */}
+        <div className="welcome-box">
+          <p className="welcome-title">Welcome,</p>
+          <p className="welcome-name">
+            {user?.fullName ||
+              user?.name ||
+              user?.companyName ||
+              "User"}
+          </p>
+        </div>
 
-          {/* ======================================
-                NOT LOGGED IN — GUEST
-          ====================================== */}
+        {/* ===== LINKS ===== */}
+        <nav className="drawer-links">
+          {/* GUEST */}
           {!role && (
             <>
               <Link to="/" onClick={() => setOpen(false)}>
@@ -65,15 +86,13 @@ const Header = () => {
                 <FiLogIn className="icon" /> Login
               </Link>
 
-              <Link to="/student-register" onClick={() => setOpen(false)}>
+              <Link to="/register" onClick={() => setOpen(false)}>
                 <FiUserPlus className="icon" /> Register
               </Link>
             </>
           )}
 
-          {/* ======================================
-                STUDENT
-          ====================================== */}
+          {/* STUDENT */}
           {role === "student" && (
             <>
               <Link to="/student-profile" onClick={() => setOpen(false)}>
@@ -84,7 +103,10 @@ const Header = () => {
                 <FiBriefcase className="icon" /> Find Job
               </Link>
 
-              <Link to="/student-applications" onClick={() => setOpen(false)}>
+              <Link
+                to="/student-applications"
+                onClick={() => setOpen(false)}
+              >
                 <FiBookOpen className="icon" /> My Applications
               </Link>
 
@@ -102,9 +124,7 @@ const Header = () => {
             </>
           )}
 
-          {/* ======================================
-                COMPANY
-          ====================================== */}
+          {/* COMPANY */}
           {role === "company" && (
             <>
               <Link to="/company-profile" onClick={() => setOpen(false)}>
@@ -132,7 +152,6 @@ const Header = () => {
               </button>
             </>
           )}
-
         </nav>
       </div>
     </>
