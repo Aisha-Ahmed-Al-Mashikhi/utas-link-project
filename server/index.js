@@ -172,6 +172,38 @@ app.post("/uploadCV", upload.single("cv"), async (req, res) => {
     res.status(500).json({ error: "CV upload failed" });
   }
 });
+/*───────────────────────────────────────────────
+ ░░ DELETE CV
+───────────────────────────────────────────────*/
+app.put("/deleteCV", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await UserModel.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // لو فيه CV سابق → نحذفه من مجلد uploads
+    if (user.cvLink) {
+      const filePath = path.join(process.cwd(), user.cvLink);
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    // نحذف الرابط من قاعدة البيانات
+    await UserModel.findOneAndUpdate(
+      { email },
+      { cvLink: null }
+    );
+
+    res.send({ msg: "CV deleted successfully" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Error deleting CV" });
+  }
+});
 
 /*───────────────────────────────────────────────
  ░░ JOBS
