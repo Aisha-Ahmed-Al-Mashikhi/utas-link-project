@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, fetchUserPosts, updatePost, deletePost } from "../Features/PostSlice";
+import moment from "moment";
 
 const CreatePost = () => {
   const dispatch = useDispatch();
@@ -11,20 +12,20 @@ const CreatePost = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  // Load My Posts
+  // Fetch user's posts
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchUserPosts(user.email));
     }
   }, [user, dispatch]);
 
-  // ADD — UPDATE
+  // Add or Update post
   const handleSubmit = () => {
     if (!postMsg.trim()) return;
 
     if (editMode) {
       dispatch(updatePost({ id: editId, postMsg }));
-      alert("تم تعديل المنشور بنجاح ✔");
+      alert("Post updated successfully!");
       setEditMode(false);
       setEditId(null);
     } else {
@@ -40,15 +41,15 @@ const CreatePost = () => {
     setPostMsg("");
   };
 
-  // DELETE with confirmation
+  // Delete post with confirmation
   const handleDelete = (id) => {
-    if (window.confirm("هل أنت متأكد أنك تريد حذف هذا المنشور؟")) {
+    if (window.confirm("Are you sure you want to delete this post?")) {
       dispatch(deletePost(id));
-      alert("تم حذف المنشور بنجاح ❌");
+      alert("Post deleted successfully.");
     }
   };
 
-  // EDIT
+  // Edit post
   const handleEdit = (post) => {
     setEditMode(true);
     setEditId(post._id);
@@ -80,6 +81,7 @@ const CreatePost = () => {
           color: "#fff",
           border: "none",
           borderRadius: "5px",
+          cursor: "pointer",
         }}
       >
         {editMode ? "Update" : "Post"}
@@ -87,7 +89,7 @@ const CreatePost = () => {
 
       <hr style={{ margin: "30px 0" }} />
 
-      {/* MY POSTS SECTION */}
+      {/* USER POSTS LIST */}
       <h3>My Posts</h3>
 
       {myPosts.length === 0 && <p>No posts yet.</p>}
@@ -104,6 +106,10 @@ const CreatePost = () => {
           }}
         >
           <p style={{ fontWeight: "bold" }}>{user.name}</p>
+          <p style={{ fontSize: "13px", color: "#666" }}>
+            {moment(post.createdAt).fromNow()}
+          </p>
+
           <p>{post.postMsg}</p>
 
           <button
