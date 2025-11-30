@@ -30,7 +30,6 @@ const corsOptions = {
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 
 // ------------------- DATABASE CONNECTION -------------------
@@ -46,7 +45,6 @@ mongoose
 
 // ------------------- FILE UPLOAD (CV) -------------------
 const uploadFolder = path.join(process.cwd(), "uploads");
-
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
 
 const storage = multer.diskStorage({
@@ -54,7 +52,6 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, "_")),
 });
-
 const upload = multer({ storage });
 
 app.use("/uploads", express.static(uploadFolder));
@@ -67,8 +64,7 @@ app.post("/registerUser", async (req, res) => {
     const { name, email, password, major, age } = req.body;
 
     const exist = await UserModel.findOne({ email });
-    if (exist)
-      return res.status(400).json({ error: "Email already registered" });
+    if (exist) return res.status(400).json({ error: "Email already registered" });
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -97,8 +93,7 @@ app.post("/registerCompany", async (req, res) => {
       req.body;
 
     const exist = await CompanyModel.findOne({ email });
-    if (exist)
-      return res.status(400).json({ error: "Email already registered" });
+    if (exist) return res.status(400).json({ error: "Email already registered" });
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -187,17 +182,13 @@ app.put("/deleteCV", async (req, res) => {
 
     if (user.cvLink) {
       const filePath = path.join(process.cwd(), user.cvLink);
-
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
 
     await UserModel.findOneAndUpdate({ email }, { cvLink: null });
 
     res.send({ msg: "CV deleted successfully" });
-  } catch (err) {
-    console.log(err);
+  } catch {
     res.status(500).json({ error: "Error deleting CV" });
   }
 });
@@ -208,6 +199,21 @@ app.put("/deleteCV", async (req, res) => {
 app.get("/jobs", async (req, res) => {
   const jobs = await JobModel.find().sort({ createdAt: -1 });
   res.send(jobs);
+});
+
+// ⭐⭐ COMPANY: FETCH JOBS THEY POSTED ⭐⭐
+app.get("/jobs/company/:email", async (req, res) => {
+  try {
+    const email = decodeURIComponent(req.params.email);
+
+    const jobs = await JobModel.find({ companyEmail: email }).sort({
+      createdAt: -1,
+    });
+
+    res.send(jobs);
+  } catch {
+    res.status(500).json({ error: "Failed loading company jobs" });
+  }
 });
 
 /*───────────────────────────────────────────────
@@ -273,12 +279,12 @@ app.get("/applications/job/:jobId", async (req, res) => {
   }
 });
 
-// ⭐⭐⭐ COMPANY — FETCH ALL APPLICATIONS BY COMPANY EMAIL (ADDED)
+// FETCH ALL APPLICATIONS OF COMPANY (ALL JOBS)
 app.get("/applications/company/:email", async (req, res) => {
   try {
-    const decodedEmail = decodeURIComponent(req.params.email);
+    const email = decodeURIComponent(req.params.email);
 
-    const jobs = await JobModel.find({ email: decodedEmail }); // all jobs of company
+    const jobs = await JobModel.find({ companyEmail: email });
     const jobIds = jobs.map((j) => j._id);
 
     const applications = await ApplicationModel.find({
@@ -286,7 +292,7 @@ app.get("/applications/company/:email", async (req, res) => {
     }).sort({ appliedAt: -1 });
 
     res.send(applications);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Failed loading company applications" });
   }
 });
@@ -426,7 +432,7 @@ app.put("/dislikePost/:postId", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░ USER POSTS (My Posts)
+ ░░ USER POSTS
 ───────────────────────────────────────────────*/
 app.get("/posts/user/:email", async (req, res) => {
   try {
