@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../Features/PostSlice";
-import "../Styles/CreatePost.css"; // <-- مهم
+import "../Styles/CreatePost.css";
 
 const CreatePost = () => {
   const [postMsg, setPostMsg] = useState("");
@@ -36,6 +36,7 @@ const CreatePost = () => {
 
     const postData = {
       email: user.email,
+      name: user.name || user.companyName,  // ⭐ مهم جداً
       postMsg,
       location: {
         country: geo?.country,
