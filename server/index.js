@@ -36,14 +36,11 @@ app.use(cors(corsOptions));
 const connectString = `mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=${ENV.APPNAME}`;
 
 mongoose
-  .connect(connectString, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(connectString)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log("DB Error:", err));
 
-// ------------------- FILE UPLOAD (CV) -------------------
+// ------------------- FILE UPLOAD -------------------
 const uploadFolder = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
 
@@ -79,7 +76,7 @@ app.post("/registerUser", async (req, res) => {
 
     await user.save();
     res.send({ user, msg: "Added" });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Error registering user" });
   }
 });
@@ -134,13 +131,13 @@ app.post("/login", async (req, res) => {
     if (!match) return res.status(401).json({ error: "Wrong password" });
 
     res.send({ user, role, message: "Success" });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Login error" });
   }
 });
 
 /*───────────────────────────────────────────────
- ░░ LOAD PROFILES
+ ░░ GET PROFILES
 ───────────────────────────────────────────────*/
 app.get("/user/:email", async (req, res) => {
   const data = await UserModel.findOne({ email: req.params.email });
@@ -194,21 +191,51 @@ app.put("/deleteCV", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░ JOBS
+ ░░ ADD JOB  (NEW + LOCATION)
+───────────────────────────────────────────────*/
+app.post("/jobs", async (req, res) => {
+  try {
+    const job = new JobModel({
+      jobTitle: req.body.jobTitle,
+      sector: req.body.sector,
+      category: req.body.category,
+      description: req.body.description,
+      skills: req.body.skills,
+      rate: req.body.rate,
+      rateType: req.body.rateType,
+      payout: req.body.payout,
+      postedBy: req.body.postedBy,
+      postedAt: new Date(),
+
+      // ⭐ Location added from JobSlice
+      location: req.body.location || "Not specified",
+    });
+
+    await job.save();
+    res.send(job);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Error saving job" });
+  }
+});
+
+/*───────────────────────────────────────────────
+ ░░ FETCH JOBS
 ───────────────────────────────────────────────*/
 app.get("/jobs", async (req, res) => {
-  const jobs = await JobModel.find().sort({ createdAt: -1 });
+  const jobs = await JobModel.find().sort({ postedAt: -1 });
   res.send(jobs);
 });
 
-// ⭐⭐ FIXED — FETCH COMPANY JOBS ⭐⭐
+/*───────────────────────────────────────────────
+ ░░ COMPANY JOBS
+───────────────────────────────────────────────*/
 app.get("/jobs/company/:email", async (req, res) => {
   try {
     const email = decodeURIComponent(req.params.email);
 
-    // THIS IS THE CORRECT FIELD IN DATABASE
     const jobs = await JobModel.find({ postedBy: email }).sort({
-      createdAt: -1,
+      postedAt: -1,
     });
 
     res.send(jobs);
@@ -218,10 +245,8 @@ app.get("/jobs/company/:email", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░ APPLICATIONS
+ ░░ APPLY TO JOB
 ───────────────────────────────────────────────*/
-
-// APPLY TO JOB
 app.post("/apply", async (req, res) => {
   try {
     const exist = await ApplicationModel.findOne({
@@ -244,7 +269,9 @@ app.post("/apply", async (req, res) => {
   }
 });
 
-// FETCH STUDENT APPLICATIONS
+/*───────────────────────────────────────────────
+ ░░ STUDENT APPLICATIONS
+───────────────────────────────────────────────*/
 app.get("/applications/:email", async (req, res) => {
   try {
     const apps = await ApplicationModel.find({
@@ -257,7 +284,9 @@ app.get("/applications/:email", async (req, res) => {
   }
 });
 
-// CANCEL APPLICATION
+/*───────────────────────────────────────────────
+ ░░ DELETE APPLICATION
+───────────────────────────────────────────────*/
 app.delete("/applications/:applicationId", async (req, res) => {
   try {
     await ApplicationModel.findByIdAndDelete(req.params.applicationId);
@@ -267,7 +296,9 @@ app.delete("/applications/:applicationId", async (req, res) => {
   }
 });
 
-// FETCH APPLICANTS FOR A JOB
+/*───────────────────────────────────────────────
+ ░░ APPLICANTS FOR A JOB
+───────────────────────────────────────────────*/
 app.get("/applications/job/:jobId", async (req, res) => {
   try {
     const applicants = await ApplicationModel.find({
@@ -280,7 +311,9 @@ app.get("/applications/job/:jobId", async (req, res) => {
   }
 });
 
-// FETCH ALL COMPANY APPLICATIONS FROM ALL JOBS
+/*───────────────────────────────────────────────
+ ░░ ALL APPLICATIONS FOR COMPANY
+───────────────────────────────────────────────*/
 app.get("/applications/company/:email", async (req, res) => {
   try {
     const email = decodeURIComponent(req.params.email);
@@ -298,7 +331,9 @@ app.get("/applications/company/:email", async (req, res) => {
   }
 });
 
-// UPDATE STATUS
+/*───────────────────────────────────────────────
+ ░░ UPDATE APPLICATION STATUS
+───────────────────────────────────────────────*/
 app.put("/applications/update/:applicationId", async (req, res) => {
   try {
     const updated = await ApplicationModel.findByIdAndUpdate(
@@ -314,7 +349,7 @@ app.put("/applications/update/:applicationId", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░ CHAT
+ ░░ CHAT SYSTEM
 ───────────────────────────────────────────────*/
 app.get("/chat/:applicationId", async (req, res) => {
   try {
@@ -323,7 +358,7 @@ app.get("/chat/:applicationId", async (req, res) => {
     }).sort({ "message.sentAt": 1 });
 
     res.send(msgs);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Failed to load messages" });
   }
 });
@@ -333,13 +368,13 @@ app.post("/chat", async (req, res) => {
     const newMsg = new ChatModel(req.body);
     await newMsg.save();
     res.send(newMsg);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Failed to send message" });
   }
 });
 
 /*───────────────────────────────────────────────
- ░░ POSTS
+ ░░ POSTS SYSTEM
 ───────────────────────────────────────────────*/
 app.post("/addPost", async (req, res) => {
   try {
@@ -355,9 +390,7 @@ app.get("/posts", async (req, res) => {
   res.send(posts);
 });
 
-/*───────────────────────────────────────────────
- ░░ LIKE / DISLIKE POSTS
-───────────────────────────────────────────────*/
+/* LIKE */
 app.put("/likePost/:postId", async (req, res) => {
   try {
     const post = await PostModel.findOne({ _id: req.params.postId });
@@ -390,11 +423,12 @@ app.put("/likePost/:postId", async (req, res) => {
 
       res.json({ post: updated, msg: "Post liked." });
     }
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Error liking post" });
   }
 });
 
+/* DISLIKE */
 app.put("/dislikePost/:postId", async (req, res) => {
   try {
     const post = await PostModel.findOne({ _id: req.params.postId });
@@ -427,14 +461,12 @@ app.put("/dislikePost/:postId", async (req, res) => {
 
       res.json({ post: updated, msg: "Post disliked." });
     }
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Error disliking post" });
   }
 });
 
-/*───────────────────────────────────────────────
- ░░ USER POSTS
-───────────────────────────────────────────────*/
+/* USER POSTS */
 app.get("/posts/user/:email", async (req, res) => {
   try {
     const posts = await PostModel.find({
@@ -446,9 +478,7 @@ app.get("/posts/user/:email", async (req, res) => {
   }
 });
 
-/*───────────────────────────────────────────────
- ░░ UPDATE POST
-───────────────────────────────────────────────*/
+/* UPDATE POST */
 app.put("/updatePost/:id", async (req, res) => {
   try {
     const updated = await PostModel.findByIdAndUpdate(
@@ -463,9 +493,7 @@ app.put("/updatePost/:id", async (req, res) => {
   }
 });
 
-/*───────────────────────────────────────────────
- ░░ DELETE POST
-───────────────────────────────────────────────*/
+/* DELETE POST */
 app.delete("/deletePost/:id", async (req, res) => {
   try {
     await PostModel.findByIdAndDelete(req.params.id);
