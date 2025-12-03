@@ -15,12 +15,9 @@ const CompanyJobs = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
 
-  /* =====================================================
-      Load company jobs using localStorage ONLY
-  ====================================================== */
+  // Load company jobs
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
-
     if (savedUser?.email) {
       dispatch(fetchCompanyJobs(savedUser.email));
     }
@@ -57,10 +54,23 @@ const CompanyJobs = () => {
           <div className="job-card" key={job._id}>
             <h3>{job.jobTitle}</h3>
 
+            {/* Company */}
             <p className="org">{job.organization}</p>
 
-            {/* ⭐ NEW — Location */}
-            <p className="location">📍 {job.location}</p>
+            {/* 🔥 Location */}
+            <p className="job-location">
+              📍 {job.location || "Not specified"}
+            </p>
+
+            {/* 🔥 Posted Date */}
+            <p className="postedAt">
+              📅 Posted:{" "}
+              {new Date(job.postedAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+            </p>
 
             <div className="tags">
               <span className="tag">{job.category}</span>
@@ -82,10 +92,7 @@ const CompanyJobs = () => {
                 Edit
               </button>
 
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(job._id)}
-              >
+              <button className="delete-btn" onClick={() => handleDelete(job._id)}>
                 Delete
               </button>
 
@@ -100,7 +107,7 @@ const CompanyJobs = () => {
         ))
       )}
 
-      {/* =============== EDIT MODAL =============== */}
+      {/* ===== EDIT MODAL ===== */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -127,6 +134,8 @@ const CompanyJobs = () => {
               <option>Business / Finance</option>
               <option>Education / Training</option>
               <option>Logistics / Operations</option>
+              <option>Hospitality / Coffee Shops</option>
+              <option>Customer Service</option>
             </select>
 
             <label>Sector</label>
@@ -193,11 +202,20 @@ const CompanyJobs = () => {
               }
             />
 
-            <label>Payout Terms (optional)</label>
+            <label>Payout Terms</label>
             <input
               value={editedJob.payout}
               onChange={(e) =>
                 setEditedJob({ ...editedJob, payout: e.target.value })
+              }
+            />
+
+            {/* 🔥 Location edit field */}
+            <label>Location</label>
+            <input
+              value={editedJob.location || ""}
+              onChange={(e) =>
+                setEditedJob({ ...editedJob, location: e.target.value })
               }
             />
 
