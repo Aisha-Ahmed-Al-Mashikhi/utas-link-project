@@ -1,3 +1,7 @@
+// =====================================================
+// FindJob.jsx (With Location + Posted Date Added)
+// =====================================================
+
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -25,12 +29,10 @@ const FindJob = () => {
   // Load user
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (loggedUser?.email) {
-      dispatch(fetchUser(loggedUser.email));
-    }
+    if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
   }, [dispatch]);
 
-  // Filter jobs
+  // Search filter
   const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -40,8 +42,8 @@ const FindJob = () => {
     );
   });
 
-  // APPLY
-  const handleApply = (job) => {
+  // APPLY JOB
+  const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
     if (!user?.cvLink) {
@@ -64,9 +66,7 @@ const FindJob = () => {
       .catch(() => alert("You already applied."));
   };
 
-  if (isLoading && jobList.length === 0) {
-    return <p>Loading jobs...</p>;
-  }
+  if (isLoading && jobList.length === 0) return <p>Loading jobs...</p>;
 
   return (
     <div className="findjob-page">
@@ -88,13 +88,15 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* JOB CARDS */}
+      {/* Job List */}
       <div className="job-list">
         {filteredJobs.length === 0 ? (
           <p className="no-jobs">No jobs found.</p>
         ) : (
           filteredJobs.map((job) => (
             <div key={job._id} className="job-card">
+              
+              {/* Header */}
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
                 <span className="rate">
@@ -102,20 +104,38 @@ const FindJob = () => {
                 </span>
               </div>
 
-              <p className="org-name">{job.organization || job.postedBy}</p>
+              {/* Company */}
+              <p className="org-name">{job.organization}</p>
 
-              {/* ⭐ LOCATION HERE */}
-              <p className="job-location">📍 {job.location}</p>
+              {/* 🔥 Location */}
+              <p className="job-location">
+                📍 {job.location || "Not specified"}
+              </p>
 
+              {/* 🔥 Posted Date */}
+              <p className="postedAt">
+                📅 Posted:{" "}
+                {new Date(job.postedAt).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </p>
+
+              {/* Tags */}
               <div className="tags">
                 <span className="tag">{job.sector}</span>
                 <span className="tag">{job.category}</span>
                 {job.payout && <span className="tag">{job.payout}</span>}
               </div>
 
+              {/* Description */}
               <p className="desc">{job.description}</p>
+
+              {/* Skills */}
               <p className="skills">Skills: {job.skills}</p>
 
+              {/* APPLY BUTTON */}
               <div className="job-actions">
                 <button className="btn-apply" onClick={() => handleApply(job)}>
                   Apply ➜
