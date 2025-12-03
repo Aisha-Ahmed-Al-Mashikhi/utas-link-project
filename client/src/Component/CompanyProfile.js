@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../Styles/UserProfile.css";
 import {
   fetchCompany,
-  uploadProfile,
   uploadLicense,
   deleteLicense,
 } from "../Features/CompanySlice";
@@ -16,8 +15,6 @@ const CompanyProfile = () => {
 
   const { company } = useSelector((state) => state.companies);
 
-  const [preview, setPreview] = useState(null);
-
   // LOAD LOGGED COMPANY
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
@@ -25,14 +22,6 @@ const CompanyProfile = () => {
 
     dispatch(fetchCompany(saved.email));
   }, [dispatch, navigate]);
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    dispatch(uploadProfile({ email: company.email, file }));
-    setPreview(URL.createObjectURL(file));
-  };
 
   const handleLicenseUpload = (e) => {
     const f = e.target.files[0];
@@ -56,29 +45,17 @@ const CompanyProfile = () => {
           <div className="profile-img-container">
             <img
               src={
-                preview ||
                 company.profileImage ||
                 "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
               }
               className="profile-img"
-            />
-
-            <label htmlFor="companyImg" className="upload-circle-C">
-              📷
-            </label>
-
-            <input
-              type="file"
-              id="companyImg"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageUpload}
             />
           </div>
 
           <div>
             <h2 className="profile-name">{company.companyName}</h2>
             <p className="profile-email">{company.email}</p>
+
             <p className="profile-detail">
               {company.industry} • {company.location}
             </p>
@@ -95,7 +72,6 @@ const CompanyProfile = () => {
             <p className="cv-success">License Uploaded Successfully</p>
 
             <div className="cv-actions">
-
               {/* VIEW */}
               <a
                 href={`${ENV.SERVER_URL}${company.tradeLicense}`}
