@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "../Styles/PostJob.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
 import { SERVER_URL } from "../config";
-
+import { useDispatch } from "react-redux";
+import { addJob } from "../Features/JobSlice";
 
 const PostJob = () => {
+  const dispatch = useDispatch();
+
   // STATES (طريقة الأستاذة)
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -18,7 +20,7 @@ const PostJob = () => {
   const [description, setDescription] = useState("");
   const [payout, setPayout] = useState("");
 
-  // RHF (للتحقق فقط)
+  // RHF
   const {
     register,
     handleSubmit,
@@ -29,15 +31,13 @@ const PostJob = () => {
     mode: "onChange",
   });
 
-   // OPTIONS
+  // OPTIONS
   const CATEGORIES = [
     "Design / Marketing",
     "Technology / IT",
     "Business / Finance",
     "Education / Training",
     "Logistics / Operations",
-
-    // ⭐ Added new categories
     "Hospitality / Coffee Shops",
     "Food & Beverage",
     "Customer Service",
@@ -55,7 +55,7 @@ const PostJob = () => {
       const company = JSON.parse(localStorage.getItem("loggedUser"));
       if (!company) return alert("Please log in first.");
 
-      await axios.post(`${SERVER_URL}/jobs`, {
+      const jobData = {
         jobTitle,
         category,
         sector,
@@ -64,13 +64,14 @@ const PostJob = () => {
         skills,
         description,
         payout,
-        organization: company.companyName,
         postedBy: company.email,
-      });
+        organization: company.companyName,
+      };
+
+      dispatch(addJob(jobData));
 
       alert("Job posted successfully!");
 
-      // CLEAR
       reset();
       setJobTitle("");
       setCategory("");
