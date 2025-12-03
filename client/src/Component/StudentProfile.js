@@ -4,14 +4,9 @@ import {
   fetchUser,
   uploadCv,
   deleteCvThunk,
-  updateBankCardThunk,
-  deleteBankCardThunk,
 } from "../Features/UserSlice";
 import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { bankCardSchema } from "../Validations/BankCardValidation";
 import * as ENV from "../config";
 
 const StudentProfile = () => {
@@ -21,17 +16,6 @@ const StudentProfile = () => {
   const { user } = useSelector((state) => state.users);
 
   const [preview, setPreview] = useState(null);
-  const [showCardModal, setShowCardModal] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(bankCardSchema),
-  });
 
   // Load logged user
   useEffect(() => {
@@ -40,19 +24,6 @@ const StudentProfile = () => {
 
     dispatch(fetchUser(saved.email));
   }, [dispatch, navigate]);
-
-  // Prefill card modal when opened
-  useEffect(() => {
-    if (showCardModal && user) {
-      reset({
-        selectedBank: user.bankName || "",
-        cardNumber: user.cardNumber || "",
-        cardName: user.cardName || "",
-        expiry: user.expiry || "",
-        cvv: user.cvv || "",
-      });
-    }
-  }, [showCardModal, user, reset]);
 
   if (!user) return <p>Loading...</p>;
 
@@ -64,11 +35,6 @@ const StudentProfile = () => {
   const handleImageChange = (e) => {
     const f = e.target.files[0];
     if (f) setPreview(URL.createObjectURL(f));
-  };
-
-  const onSaveCard = (data) => {
-    dispatch(updateBankCardThunk({ email: user.email, ...data }));
-    setShowCardModal(false);
   };
 
   return (
@@ -103,9 +69,6 @@ const StudentProfile = () => {
           <div>
             <h2 className="profile-name">{user.name}</h2>
             <p className="profile-email">{user.email}</p>
-            <p className="profile-detail">
-              {user.major} {user.age ? `• Age ${user.age}` : ""}
-            </p>
           </div>
         </div>
       </div>
@@ -124,7 +87,8 @@ const StudentProfile = () => {
           <strong>Role:</strong> {user.role}
         </p>
         <p>
-          <strong>Status:</strong> <span className="status active">Active</span>
+          <strong>Status:</strong>{" "}
+          <span className="status active">Active</span>
         </p>
       </div>
 
@@ -138,7 +102,7 @@ const StudentProfile = () => {
 
             <div className="cv-actions">
 
-              {/* ---- VIEW CV ---- */}
+              {/* VIEW CV */}
               <a
                 href={`${ENV.SERVER_URL}${user.cvLink}`}
                 target="_blank"
@@ -147,7 +111,7 @@ const StudentProfile = () => {
                 View
               </a>
 
-              {/* Hidden input for replace */}
+              {/* Replace CV */}
               <input
                 type="file"
                 id="cvReplaceInput"
@@ -158,7 +122,6 @@ const StudentProfile = () => {
                 }
               />
 
-              {/* Replace button */}
               <button
                 className="cv-btn replace"
                 onClick={() =>
@@ -168,7 +131,7 @@ const StudentProfile = () => {
                 Replace
               </button>
 
-              {/* Delete button */}
+              {/* Delete CV */}
               <button
                 className="cv-btn delete"
                 onClick={() => dispatch(deleteCvThunk(user.email))}
@@ -194,125 +157,6 @@ const StudentProfile = () => {
           </>
         )}
       </div>
-
-      {/* ------------ BANK CARD SECTION ------------ */}
-      <div className="payment-box">
-        <h3>Bank / Benefit Card</h3>
-
-        <div className="card-preview">
-          <div className="bank-card teal-card">
-            <div className="bank-chip"></div>
-
-            <p className="card-number">
-              {user.cardNumber || "XXXX XXXX XXXX XXXX"}
-            </p>
-            <p className="card-holder">{user.cardName || "Card Holder"}</p>
-            <p className="bank-name-preview">
-              {user.bankName || "No Bank Selected"}
-            </p>
-          </div>
-        </div>
-
-        <div className="card-buttons">
-          {!user.cardNumber ? (
-            <button
-              className="add-card-btn"
-              onClick={() => setShowCardModal(true)}
-            >
-              + Add Card
-            </button>
-          ) : (
-            <>
-              <button
-                className="edit-card-btn"
-                onClick={() => setShowCardModal(true)}
-              >
-                Edit
-              </button>
-
-              <button
-                className="delete-card-btn"
-                onClick={() => dispatch(deleteBankCardThunk(user.email))}
-              >
-                Delete
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* ------------ BANK MODAL ------------ */}
-      {showCardModal && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <div className="modal-header">
-              <h3>Add Card</h3>
-              <button
-                className="close-btn"
-                onClick={() => setShowCardModal(false)}
-              >
-                ×
-              </button>
-            </div>
-
-            {/* BANK OPTIONS */}
-            <label>Select Bank</label>
-            <div className="bank-radio-row">
-              {["Bank Muscat", "Bank Dhofar", "NBO"].map((bank) => (
-                <label key={bank}>
-                  <input type="radio" value={bank} {...register("selectedBank")} />
-                  {bank}
-                </label>
-              ))}
-            </div>
-            <p className="error">{errors.selectedBank?.message}</p>
-
-            {/* CARD NUMBER */}
-            <label>Card Number</label>
-            <input
-              className="modal-input"
-              {...register("cardNumber", {
-                onChange: (e) => {
-                  let v = e.target.value.replace(/\D/g, "");
-                  v = v.match(/.{1,4}/g)?.join(" ") || v;
-                  setValue("cardNumber", v);
-                },
-              })}
-            />
-            <p className="error">{errors.cardNumber?.message}</p>
-
-            {/* NAME */}
-            <label>Cardholder Name</label>
-            <input className="modal-input" {...register("cardName")} />
-            <p className="error">{errors.cardName?.message}</p>
-
-            {/* EXPIRY */}
-            <label>Expiration Date</label>
-            <input type="month" className="modal-input" {...register("expiry")} />
-            <p className="error">{errors.expiry?.message}</p>
-
-            {/* CVV */}
-            <label>CVV</label>
-            <input
-              type="password"
-              maxLength="4"
-              className="modal-input"
-              {...register("cvv")}
-            />
-            <p className="error">{errors.cvv?.message}</p>
-
-            {/* BUTTONS */}
-            <div className="modal-buttons">
-              <button className="save-btn" onClick={handleSubmit(onSaveCard)}>
-                Save
-              </button>
-              <button className="clear-btn" onClick={() => reset()}>
-                Clear
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );
