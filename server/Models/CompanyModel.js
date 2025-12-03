@@ -9,13 +9,6 @@ const CompanySchema = new mongoose.Schema(
     location: String, // City or region
     foundedDate: String, // Established date
 
-    // BANK FIELDS
-    bankName: String,
-    cardNumber: String,
-    cardName: String,
-    expiry: String,
-    cvv: String,
-
     // FILES
     tradeLicense: String, // Optional license document
     profileImage: String, // Company profile image
