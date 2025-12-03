@@ -10,7 +10,6 @@ const CompanyJobs = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // نجيب الوظائف من الـ Redux
   const { companyJobs, isLoading } = useSelector((state) => state.jobs);
 
   const [showModal, setShowModal] = useState(false);
@@ -18,7 +17,7 @@ const CompanyJobs = () => {
 
   /* =====================================================
       Load company jobs using localStorage ONLY
-  ===================================================== */
+  ====================================================== */
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
@@ -60,12 +59,16 @@ const CompanyJobs = () => {
 
             <p className="org">{job.organization}</p>
 
+            {/* ⭐ NEW — Location */}
+            <p className="location">📍 {job.location}</p>
+
             <div className="tags">
               <span className="tag">{job.category}</span>
               <span className="tag">{job.sector}</span>
             </div>
 
             <p className="desc">{job.description}</p>
+
             <p className="skills">
               <strong>Skills:</strong> {job.skills}
             </p>
