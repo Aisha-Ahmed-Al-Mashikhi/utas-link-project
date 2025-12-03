@@ -3,7 +3,7 @@ import axios from "axios";
 import * as ENV from "../config";
 
 /* ------------------------------------
-   INTERNAL: Get User IP 
+   INTERNAL: Get User IP (HTTPS)
 ------------------------------------ */
 const getIP = async () => {
   const res = await axios.get("https://api.ipify.org?format=json");
@@ -11,14 +11,17 @@ const getIP = async () => {
 };
 
 /* ------------------------------------
-   INTERNAL: Get Geo Location by IP
+   INTERNAL: Get Geo Location (HTTPS)
 ------------------------------------ */
-const getGeoLocation = async (ip) => {
-  const res = await axios.get(`http://ip-api.com/json/${ip}`);
+const getGeoLocation = async () => {
+  const res = await axios.get(
+    "https://ipinfo.io/json?token=384ae3842ac4c9"
+  );
+
   return {
     country: res.data.country || "",
     city: res.data.city || "",
-    region: res.data.regionName || "",
+    region: res.data.region || "",
   };
 };
 
@@ -36,7 +39,9 @@ export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async () => {
 export const fetchCompanyJobs = createAsyncThunk(
   "jobs/fetchCompanyJobs",
   async (companyEmail) => {
-    const res = await axios.get(`${ENV.SERVER_URL}/jobs/company/${companyEmail}`);
+    const res = await axios.get(
+      `${ENV.SERVER_URL}/jobs/company/${companyEmail}`
+    );
     return res.data;
   }
 );
@@ -44,22 +49,24 @@ export const fetchCompanyJobs = createAsyncThunk(
 /* ====================================================
    ADD JOB (with LOCATION)
 ==================================================== */
-export const addJob = createAsyncThunk("jobs/addJob", async (jobData) => {
-  // 1) Get IP
-  const ip = await getIP();
+export const addJob = createAsyncThunk("jobs/addJob", async (jobData, thunkAPI) => {
+  try {
+    // 1) Get location via HTTPS (No IP needed)
+    const geo = await getGeoLocation();
 
-  // 2) Get location by IP
-  const geo = await getGeoLocation(ip);
+    // 2) Build final data
+    const finalJob = {
+      ...jobData,
+      location: `${geo.city}, ${geo.region}, ${geo.country}`,
+    };
 
-  // 3) Add to job data
-  const finalJob = {
-    ...jobData,
-    location: `${geo.city}, ${geo.region}, ${geo.country}`,
-  };
+    // 3) Post to server
+    const res = await axios.post(`${ENV.SERVER_URL}/jobs`, finalJob);
 
-  // 4) Send to server
-  const res = await axios.post(`${ENV.SERVER_URL}/jobs`, finalJob);
-  return res.data;
+    return res.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue("Failed to add job");
+  }
 });
 
 /* ====================================================
@@ -109,22 +116,22 @@ const jobSlice = createSlice({
         state.jobList = action.payload;
         state.isLoading = false;
       })
-
       .addCase(fetchCompanyJobs.fulfilled, (state, action) => {
         state.companyJobs = action.payload;
       })
-
       .addCase(addJob.fulfilled, (state, action) => {
         state.companyJobs.push(action.payload);
       })
-
       .addCase(updateJob.fulfilled, (state, action) => {
-        const i = state.companyJobs.findIndex((j) => j._id === action.payload._id);
+        const i = state.companyJobs.findIndex(
+          (j) => j._id === action.payload._id
+        );
         if (i !== -1) state.companyJobs[i] = action.payload;
       })
-
       .addCase(deleteJob.fulfilled, (state, action) => {
-        state.companyJobs = state.companyJobs.filter((j) => j._id !== action.payload);
+        state.companyJobs = state.companyJobs.filter(
+          (j) => j._id !== action.payload
+        );
       });
   },
 });
