@@ -44,45 +44,6 @@ export const fetchCompany = createAsyncThunk(
 );
 
 /* =============================
-    UPDATE BANK INFO
-============================= */
-export const updateBankInfo = createAsyncThunk(
-  "companies/updateBankInfo",
-  async ({ email, bankData }, thunkAPI) => {
-    try {
-      const res = await axios.put(`${ENV.SERVER_URL}/company/updateBank`, {
-        email,
-        ...bankData,
-      });
-      return res.data.company;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data || "Failed to update bank info"
-      );
-    }
-  }
-);
-
-/* =============================
-    DELETE BANK CARD
-============================= */
-export const deleteBankCard = createAsyncThunk(
-  "companies/deleteBankCard",
-  async (email, thunkAPI) => {
-    try {
-      const res = await axios.put(`${ENV.SERVER_URL}/company/deleteBankCard`, {
-        email,
-      });
-      return res.data.company;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data || "Failed to delete bank"
-      );
-    }
-  }
-);
-
-/* =============================
     UPLOAD PROFILE PICTURE
 ============================= */
 export const uploadProfile = createAsyncThunk(
@@ -195,16 +156,6 @@ const companySlice = createSlice({
 
       /* FETCH COMPANY */
       .addCase(fetchCompany.fulfilled, (state, action) => {
-        state.company = action.payload;
-      })
-
-      /* UPDATE BANK INFO */
-      .addCase(updateBankInfo.fulfilled, (state, action) => {
-        state.company = action.payload;
-      })
-
-      /* DELETE BANK */
-      .addCase(deleteBankCard.fulfilled, (state, action) => {
         state.company = action.payload;
       })
 
