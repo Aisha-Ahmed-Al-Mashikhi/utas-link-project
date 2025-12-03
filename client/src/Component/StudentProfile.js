@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUser,
@@ -15,8 +15,6 @@ const StudentProfile = () => {
 
   const { user } = useSelector((state) => state.users);
 
-  const [preview, setPreview] = useState(null);
-
   // Load logged user
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
@@ -32,11 +30,6 @@ const StudentProfile = () => {
     dispatch(uploadCv({ file: e.target.files[0], email: user.email }));
   };
 
-  const handleImageChange = (e) => {
-    const f = e.target.files[0];
-    if (f) setPreview(URL.createObjectURL(f));
-  };
-
   return (
     <div className="profile-page">
 
@@ -46,29 +39,19 @@ const StudentProfile = () => {
           <div className="profile-img-container">
             <img
               src={
-                preview ||
                 user.profileImage ||
                 "https://cdn-icons-png.flaticon.com/512/149/149071.png"
               }
               className="profile-img"
-            />
-
-            <label htmlFor="imageUpload" className="upload-circle-C">
-              📷
-            </label>
-
-            <input
-              type="file"
-              id="imageUpload"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
             />
           </div>
 
           <div>
             <h2 className="profile-name">{user.name}</h2>
             <p className="profile-email">{user.email}</p>
+            <p className="profile-detail">
+              {user.major} {user.age ? `• Age ${user.age}` : ""}
+            </p>
           </div>
         </div>
       </div>
