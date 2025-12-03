@@ -1,63 +1,86 @@
-// src/Features/JobSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
 
-// ====================================================
-// 1) FETCH ALL JOBS (Student sees jobs)
-// ====================================================
+/* ------------------------------------
+   INTERNAL: Get User IP 
+------------------------------------ */
+const getIP = async () => {
+  const res = await axios.get("https://api.ipify.org?format=json");
+  return res.data.ip;
+};
+
+/* ------------------------------------
+   INTERNAL: Get Geo Location by IP
+------------------------------------ */
+const getGeoLocation = async (ip) => {
+  const res = await axios.get(`http://ip-api.com/json/${ip}`);
+  return {
+    country: res.data.country || "",
+    city: res.data.city || "",
+    region: res.data.regionName || "",
+  };
+};
+
+/* ====================================================
+   FETCH ALL JOBS
+==================================================== */
 export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async () => {
   const res = await axios.get(`${ENV.SERVER_URL}/jobs`);
   return res.data;
 });
 
-// ====================================================
-// 2) FETCH COMPANY JOBS (Only jobs posted by company)
-// ====================================================
+/* ====================================================
+   FETCH COMPANY JOBS
+==================================================== */
 export const fetchCompanyJobs = createAsyncThunk(
   "jobs/fetchCompanyJobs",
   async (companyEmail) => {
-    const res = await axios.get(
-      `${ENV.SERVER_URL}/jobs/company/${companyEmail}`
-    );
+    const res = await axios.get(`${ENV.SERVER_URL}/jobs/company/${companyEmail}`);
     return res.data;
   }
 );
 
-// ====================================================
-// 3) ADD NEW JOB (Company posts a job)
-// ====================================================
+/* ====================================================
+   ADD JOB (with LOCATION)
+==================================================== */
 export const addJob = createAsyncThunk("jobs/addJob", async (jobData) => {
-  const res = await axios.post(`${ENV.SERVER_URL}/jobs`, jobData);
+  // 1) Get IP
+  const ip = await getIP();
+
+  // 2) Get location by IP
+  const geo = await getGeoLocation(ip);
+
+  // 3) Add to job data
+  const finalJob = {
+    ...jobData,
+    location: `${geo.city}, ${geo.region}, ${geo.country}`,
+  };
+
+  // 4) Send to server
+  const res = await axios.post(`${ENV.SERVER_URL}/jobs`, finalJob);
   return res.data;
 });
 
-// ====================================================
-// 4) UPDATE JOB (Company edits a job)
-// ====================================================
-export const updateJob = createAsyncThunk(
-  "jobs/updateJob",
-  async (job, thunkAPI) => {
-    try {
-      const res = await axios.put(`${ENV.SERVER_URL}/jobs/${job._id}`, job);
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Update failed");
-    }
-  }
-);
+/* ====================================================
+   UPDATE JOB
+==================================================== */
+export const updateJob = createAsyncThunk("jobs/updateJob", async (jobData) => {
+  const res = await axios.put(`${ENV.SERVER_URL}/jobs/${jobData._id}`, jobData);
+  return res.data;
+});
 
-// ====================================================
-// 5) DELETE JOB
-// ====================================================
+/* ====================================================
+   DELETE JOB
+==================================================== */
 export const deleteJob = createAsyncThunk("jobs/deleteJob", async (jobId) => {
   await axios.delete(`${ENV.SERVER_URL}/jobs/${jobId}`);
   return jobId;
 });
 
-// ====================================================
-// 6) STUDENT APPLY FOR JOB
-// ====================================================
+/* ====================================================
+   APPLY FOR JOB
+==================================================== */
 export const applyForJob = createAsyncThunk(
   "jobs/applyForJob",
   async (applicationData) => {
@@ -66,9 +89,9 @@ export const applyForJob = createAsyncThunk(
   }
 );
 
-// ====================================================
-// SLICE
-// ====================================================
+/* ====================================================
+   SLICE
+==================================================== */
 const jobSlice = createSlice({
   name: "jobs",
   initialState: {
@@ -77,12 +100,8 @@ const jobSlice = createSlice({
     isLoading: false,
   },
   reducers: {},
-
   extraReducers: (builder) => {
     builder
-      // =========================
-      // FETCH ALL JOBS
-      // =========================
       .addCase(fetchJobs.pending, (state) => {
         state.isLoading = true;
       })
@@ -91,45 +110,21 @@ const jobSlice = createSlice({
         state.isLoading = false;
       })
 
-      // =========================
-      // FETCH COMPANY JOBS
-      // =========================
       .addCase(fetchCompanyJobs.fulfilled, (state, action) => {
         state.companyJobs = action.payload;
       })
 
-      // =========================
-      // ADD JOB
-      // =========================
       .addCase(addJob.fulfilled, (state, action) => {
         state.companyJobs.push(action.payload);
       })
 
-      // =========================
-      // UPDATE JOB
-      // =========================
       .addCase(updateJob.fulfilled, (state, action) => {
-        const updated = action.payload;
-        const index = state.companyJobs.findIndex((j) => j._id === updated._id);
-        if (index !== -1) {
-          state.companyJobs[index] = updated;
-        }
+        const i = state.companyJobs.findIndex((j) => j._id === action.payload._id);
+        if (i !== -1) state.companyJobs[i] = action.payload;
       })
 
-      // =========================
-      // DELETE JOB
-      // =========================
       .addCase(deleteJob.fulfilled, (state, action) => {
-        state.companyJobs = state.companyJobs.filter(
-          (job) => job._id !== action.payload
-        );
-      })
-
-      // =========================
-      // APPLY FOR JOB (Student)
-      // =========================
-      .addCase(applyForJob.fulfilled, () => {
-        // No state change needed
+        state.companyJobs = state.companyJobs.filter((j) => j._id !== action.payload);
       });
   },
 });
