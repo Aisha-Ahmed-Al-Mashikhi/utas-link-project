@@ -3,14 +3,12 @@ import "../Styles/PostJob.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
-import { SERVER_URL } from "../config";
 import { useDispatch } from "react-redux";
 import { addJob } from "../Features/JobSlice";
 
 const PostJob = () => {
   const dispatch = useDispatch();
 
-  // STATES (طريقة الأستاذة)
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
   const [sector, setSector] = useState("");
@@ -20,7 +18,6 @@ const PostJob = () => {
   const [description, setDescription] = useState("");
   const [payout, setPayout] = useState("");
 
-  // RHF
   const {
     register,
     handleSubmit,
@@ -31,7 +28,6 @@ const PostJob = () => {
     mode: "onChange",
   });
 
-  // OPTIONS
   const CATEGORIES = [
     "Design / Marketing",
     "Technology / IT",
@@ -46,16 +42,14 @@ const PostJob = () => {
   ];
 
   const SECTORS = ["Private Company", "Government"];
-
   const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
 
-  // SUBMIT
-  const onSubmit = async () => {
-    try {
-      const company = JSON.parse(localStorage.getItem("loggedUser"));
-      if (!company) return alert("Please log in first.");
+  const onSubmit = () => {
+    const company = JSON.parse(localStorage.getItem("loggedUser"));
+    if (!company) return alert("Please log in first.");
 
-      const jobData = {
+    dispatch(
+      addJob({
         jobTitle,
         category,
         sector,
@@ -64,27 +58,24 @@ const PostJob = () => {
         skills,
         description,
         payout,
-        postedBy: company.email,
         organization: company.companyName,
-      };
-
-      dispatch(addJob(jobData));
-
-      alert("Job posted successfully!");
-
-      reset();
-      setJobTitle("");
-      setCategory("");
-      setSector("");
-      setRate("");
-      setRateType("");
-      setSkills("");
-      setDescription("");
-      setPayout("");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to post job.");
-    }
+        postedBy: company.email,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        alert("Job posted successfully!");
+        reset();
+        setJobTitle("");
+        setCategory("");
+        setSector("");
+        setRate("");
+        setRateType("");
+        setSkills("");
+        setDescription("");
+        setPayout("");
+      })
+      .catch(() => alert("Failed to post job"));
   };
 
   return (
@@ -102,15 +93,14 @@ const PostJob = () => {
           <input
             type="text"
             value={jobTitle}
-            placeholder="Graphic Designer"
             {...register("jobTitle", {
               onChange: (e) => setJobTitle(e.target.value),
             })}
           />
           <p className="error">{errors.jobTitle?.message}</p>
 
+          {/* Category & Sector */}
           <div className="row-flex">
-            {/* Category */}
             <div className="col-half">
               <label>Category</label>
               <select
@@ -121,20 +111,16 @@ const PostJob = () => {
               >
                 <option value="">Select category</option>
                 {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
+                  <option key={c}>{c}</option>
                 ))}
               </select>
-              <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector */}
             <div className="col-half">
               <label>Sector</label>
               <div className="sector-inline">
                 {SECTORS.map((s) => (
-                  <label key={s} className="sector-box-inline">
+                  <label key={s}>
                     <input
                       type="radio"
                       value={s}
@@ -143,30 +129,25 @@ const PostJob = () => {
                         onChange: (e) => setSector(e.target.value),
                       })}
                     />
-                    <span>{s}</span>
+                    {s}
                   </label>
                 ))}
               </div>
-              <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
 
           <div className="row-flex">
-            {/* Rate */}
             <div className="col-half">
               <label>Rate (OMR)</label>
               <input
                 type="number"
                 value={rate}
-                placeholder="10"
                 {...register("rate", {
                   onChange: (e) => setRate(e.target.value),
                 })}
               />
-              <p className="error">{errors.rate?.message}</p>
             </div>
 
-            {/* Rate Type */}
             <div className="col-half">
               <label>Rate Type</label>
               <select
@@ -177,12 +158,9 @@ const PostJob = () => {
               >
                 <option value="">Select type</option>
                 {RATE_TYPES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
+                  <option key={r}>{r}</option>
                 ))}
               </select>
-              <p className="error">{errors.rateType?.message}</p>
             </div>
           </div>
 
@@ -191,60 +169,33 @@ const PostJob = () => {
           <input
             type="text"
             value={skills}
-            placeholder="Photoshop, Canva, Social Media"
             {...register("skills", {
               onChange: (e) => setSkills(e.target.value),
             })}
           />
-          <p className="error">{errors.skills?.message}</p>
 
           {/* Description */}
           <label>Description</label>
           <textarea
             value={description}
-            placeholder="Explain job responsibilities and requirements"
             {...register("description", {
               onChange: (e) => setDescription(e.target.value),
             })}
           />
-          <p className="error">{errors.description?.message}</p>
 
           {/* Payout */}
           <label>Payout (optional)</label>
           <input
             type="text"
             value={payout}
-            placeholder="e.g. After project completion"
             {...register("payout", {
               onChange: (e) => setPayout(e.target.value),
             })}
           />
-          <p className="error">{errors.payout?.message}</p>
 
-          {/* Buttons */}
-          <div className="actions">
-            <button type="submit" className="btn-primary">
-              Post Job
-            </button>
-
-            <button
-              type="button"
-              className="btn-ghost"
-              onClick={() => {
-                reset();
-                setJobTitle("");
-                setCategory("");
-                setSector("");
-                setRate("");
-                setRateType("");
-                setSkills("");
-                setDescription("");
-                setPayout("");
-              }}
-            >
-              Clear
-            </button>
-          </div>
+          <button className="btn-primary" type="submit">
+            Post Job
+          </button>
         </form>
       </div>
     </div>
