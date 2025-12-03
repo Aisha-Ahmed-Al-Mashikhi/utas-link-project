@@ -9,13 +9,18 @@ const jobSchema = new mongoose.Schema({
   rate: Number,
   rateType: String,
   payout: String,
-  postedBy: String,
-  postedAt: { type: Date, default: Date.now },
-  location: {
-  type: String,
-  required: true,
-},
 
-});
+  postedBy: String,          // Email
+  organization: String,      // Company Name
+
+  postedAt: { type: Date, default: Date.now },
+
+  // ⭐ Location added — required ✔
+  location: {
+    type: String,
+    required: true,
+  },
+
+}, { timestamps: true });
 
 export default mongoose.model("Job", jobSchema);
