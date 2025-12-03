@@ -1,7 +1,5 @@
 // =====================================================
-// FindJob.jsx (Final FIXED Version)
-// Uses Redux for jobs + user profile
-// Applies only CV + Bank validation
+// FindJob.jsx (Clean Version - No Bank Required)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -28,7 +26,7 @@ const FindJob = () => {
     dispatch(fetchJobs());
   }, [dispatch]);
 
-  // Load full user profile
+  // Load user
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
     if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
@@ -54,13 +52,8 @@ const FindJob = () => {
       return navigate("/student-profile");
     }
 
-    // Bank check
-    if (!user?.bankName) {
-      alert("Please add your bank card before applying.");
-      return navigate("/student-profile");
-    }
+    // 🔥 Bank removed – no need to check anything else
 
-    // FIX: correct organization value
     const appData = {
       jobId: job._id,
       jobTitle: job.jobTitle,
@@ -70,15 +63,12 @@ const FindJob = () => {
       cvLink: user.cvLink,
     };
 
-    console.log("APP DATA:", appData);
-
     dispatch(applyForJob(appData))
       .unwrap()
       .then(() => alert("Job applied successfully!"))
       .catch(() => alert("You already applied."));
   };
 
-  // Loading
   if (isLoading && jobList.length === 0) return <p>Loading jobs...</p>;
 
   return (
@@ -101,7 +91,7 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* Job Cards */}
+      {/* Job List */}
       <div className="job-list">
         {filteredJobs.length === 0 ? (
           <p className="no-jobs">No jobs found.</p>
