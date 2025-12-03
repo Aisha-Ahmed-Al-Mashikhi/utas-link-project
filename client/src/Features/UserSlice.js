@@ -91,31 +91,6 @@ export const deleteCvThunk = createAsyncThunk(
   }
 );
 
-// ===================== UPDATE BANK CARD =====================
-export const updateBankCardThunk = createAsyncThunk(
-  "users/updateBankCard",
-  async (data, thunkAPI) => {
-    try {
-      const res = await axios.put(`${ENV.SERVER_URL}/updateBankCard`, data);
-      return res.data.user;
-    } catch {
-      return thunkAPI.rejectWithValue("Bank update failed");
-    }
-  }
-);
-
-// ===================== DELETE BANK CARD =====================
-export const deleteBankCardThunk = createAsyncThunk(
-  "users/deleteBankCard",
-  async (email, thunkAPI) => {
-    try {
-      const res = await axios.put(`${ENV.SERVER_URL}/deleteBankCard`, { email });
-      return res.data.user;
-    } catch {
-      return thunkAPI.rejectWithValue("Delete bank failed");
-    }
-  }
-);
 
 // ===================== SLICE =====================
 const userSlice = createSlice({
@@ -180,23 +155,16 @@ const userSlice = createSlice({
 
       // UPLOAD CV
       .addCase(uploadCv.fulfilled, (state, action) => {
-        state.user.cvLink = action.payload;
-      })
+  if (state.user) {
+    state.user.cvLink = action.payload;
+  }
+})
+
 
       // DELETE CV
       .addCase(deleteCvThunk.fulfilled, (state) => {
         state.user.cvLink = null;
       })
-
-      // UPDATE BANK
-      .addCase(updateBankCardThunk.fulfilled, (state, action) => {
-        state.user = action.payload;
-      })
-
-      // DELETE BANK
-      .addCase(deleteBankCardThunk.fulfilled, (state, action) => {
-        state.user = action.payload;
-      });
   },
 });
 
