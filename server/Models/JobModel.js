@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema({
   jobTitle: String,
-  organization: String,
   sector: String,
   category: String,
   description: String,
@@ -12,6 +11,11 @@ const jobSchema = new mongoose.Schema({
   payout: String,
   postedBy: String,
   postedAt: { type: Date, default: Date.now },
+  location: {
+  type: String,
+  required: true,
+},
+
 });
 
 export default mongoose.model("Job", jobSchema);
