@@ -1,7 +1,3 @@
-// =====================================================
-// FindJob.jsx (Clean Version - No Bank Required)
-// =====================================================
-
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -29,10 +25,12 @@ const FindJob = () => {
   // Load user
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
+    if (loggedUser?.email) {
+      dispatch(fetchUser(loggedUser.email));
+    }
   }, [dispatch]);
 
-  // Search filter
+  // Filter jobs
   const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -42,17 +40,14 @@ const FindJob = () => {
     );
   });
 
-  // APPLY JOB
-  const handleApply = async (job) => {
+  // APPLY
+  const handleApply = (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-    // CV check
     if (!user?.cvLink) {
       alert("Please upload your CV before applying.");
       return navigate("/student-profile");
     }
-
-    // 🔥 Bank removed – no need to check anything else
 
     const appData = {
       jobId: job._id,
@@ -69,7 +64,9 @@ const FindJob = () => {
       .catch(() => alert("You already applied."));
   };
 
-  if (isLoading && jobList.length === 0) return <p>Loading jobs...</p>;
+  if (isLoading && jobList.length === 0) {
+    return <p>Loading jobs...</p>;
+  }
 
   return (
     <div className="findjob-page">
@@ -91,7 +88,7 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* Job List */}
+      {/* JOB CARDS */}
       <div className="job-list">
         {filteredJobs.length === 0 ? (
           <p className="no-jobs">No jobs found.</p>
@@ -106,6 +103,9 @@ const FindJob = () => {
               </div>
 
               <p className="org-name">{job.organization || job.postedBy}</p>
+
+              {/* ⭐ LOCATION HERE */}
+              <p className="job-location">📍 {job.location}</p>
 
               <div className="tags">
                 <span className="tag">{job.sector}</span>
