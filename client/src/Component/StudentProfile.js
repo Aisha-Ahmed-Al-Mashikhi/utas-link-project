@@ -49,9 +49,6 @@ const StudentProfile = () => {
           <div>
             <h2 className="profile-name">{user.name}</h2>
             <p className="profile-email">{user.email}</p>
-            <p className="profile-detail">
-              {user.major} {user.age ? `• Age ${user.age}` : ""}
-            </p>
           </div>
         </div>
       </div>
