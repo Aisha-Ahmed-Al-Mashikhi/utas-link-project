@@ -206,8 +206,6 @@ app.post("/jobs", async (req, res) => {
       payout: req.body.payout,
       postedBy: req.body.postedBy,
       postedAt: new Date(),
-
-      // ⭐ Location added from JobSlice
       location: req.body.location || "Not specified",
     });
 
@@ -225,6 +223,23 @@ app.post("/jobs", async (req, res) => {
 app.get("/jobs", async (req, res) => {
   const jobs = await JobModel.find().sort({ postedAt: -1 });
   res.send(jobs);
+});
+
+/*───────────────────────────────────────────────
+ ░░ DELETE JOB  ✔ Added
+───────────────────────────────────────────────*/
+app.delete("/jobs/:id", async (req, res) => {
+  try {
+    const deleted = await JobModel.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    res.send({ msg: "Job deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Error deleting job" });
+  }
 });
 
 /*───────────────────────────────────────────────
