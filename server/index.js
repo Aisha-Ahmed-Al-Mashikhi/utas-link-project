@@ -287,13 +287,27 @@ app.post("/apply", async (req, res) => {
 /*───────────────────────────────────────────────
  ░░ STUDENT APPLICATIONS
 ───────────────────────────────────────────────*/
+/*───────────────────────────────────────────────
+ ░░ STUDENT APPLICATIONS  (With jobDeleted flag)
+───────────────────────────────────────────────*/
 app.get("/applications/:email", async (req, res) => {
   try {
     const apps = await ApplicationModel.find({
       applicantEmail: req.params.email,
     }).sort({ appliedAt: -1 });
 
-    res.send(apps);
+    // 🔥 إضافة check إن الوظيفة محذوفة
+    const finalApps = await Promise.all(
+      apps.map(async (app) => {
+        const jobExists = await JobModel.findById(app.jobId);
+        return {
+          ...app._doc,
+          jobDeleted: !jobExists, // 🔥 هذا هو كل المطلوب
+        };
+      })
+    );
+
+    res.send(finalApps);
   } catch {
     res.status(500).json({ error: "Failed loading applications" });
   }
