@@ -52,7 +52,7 @@ const Posts = () => {
                   <img src={profileImg} className="profile-img" alt="dp" />
                   <div>
                     <p className="profile-name">
-                      {post.name ? post.name : "Anonymous"}
+                      {post.authorName ? post.authorName : "Anonymous"}
                     </p>
                     <p className="post-time">
                       {moment(post.createdAt).fromNow()}
