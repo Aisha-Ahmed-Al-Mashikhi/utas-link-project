@@ -15,23 +15,28 @@ const StudentApplications = () => {
 
   const { user } = useSelector((state) => state.users);
 
+  // نستخدم studentApplications بدال applications
   const { studentApplications, isLoading } = useSelector(
     (state) => state.applications
   );
 
-  // Load student applications
+  // ----------------------------------------------------------
+  // LOAD STUDENT APPLICATIONS
+  // ----------------------------------------------------------
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchStudentApplications(user.email));
     }
   }, [dispatch, user]);
 
-  // Cancel Application OR Remove if job deleted
+  // ----------------------------------------------------------
+  // CANCEL APPLICATION
+  // ----------------------------------------------------------
   const handleCancel = (id) => {
     dispatch(cancelStudentApplication(id))
       .unwrap()
       .then(() => alert("Application removed successfully."))
-      .catch(() => alert("Error removing application."));
+      .catch(() => alert("Error deleting application."));
   };
 
   if (isLoading && studentApplications.length === 0) {
@@ -70,17 +75,15 @@ const StudentApplications = () => {
                   <p className="company">Company: {app.organization}</p>
                   <p className="details">Email: {app.applicantEmail}</p>
 
-                  {/* 🔥 If job deleted */}
+                  {/* status badge */}
+                  <p className={`status-badge ${app.status?.toLowerCase()}`}>
+                    {app.status || "Pending Review"}
+                  </p>
+
+                  {/* If job deleted by company */}
                   {app.jobDeleted && (
                     <p className="deleted-warning">
-                      ⚠️ This job is no longer available.
-                    </p>
-                  )}
-
-                  {/* Status badge */}
-                  {!app.jobDeleted && (
-                    <p className={`status-badge ${app.status?.toLowerCase()}`}>
-                      {app.status || "Pending Review"}
+                      This job is no longer available.
                     </p>
                   )}
                 </div>
@@ -88,39 +91,23 @@ const StudentApplications = () => {
 
               {/* ACTIONS */}
               <div className="app-actions">
-                {/* If job was deleted */}
-                {app.jobDeleted ? (
+                {/* CHAT BUTTON — يظهر بس إذا الوظيفة موجودة */}
+                {!app.jobDeleted && (
                   <button
-                    className="remove-btn"
-                    onClick={() => handleCancel(app._id)}
+                    className="chat-btn"
+                    onClick={() => navigate(`/student-chat/${app._id}`)}
                   >
-                    Remove
+                    Chat 💬
                   </button>
-                ) : (
-                  <>
-                    {/* CHAT BUTTON */}
-                    <button
-                      className="chat-btn"
-                      onClick={() => navigate(`/student-chat/${app._id}`)}
-                    >
-                      Chat 💬
-                    </button>
-
-                    {/* CANCEL / STATUS */}
-                    {app.status === "Pending Review" ? (
-                      <button
-                        className="withdraw-btn"
-                        onClick={() => handleCancel(app._id)}
-                      >
-                        Cancel
-                      </button>
-                    ) : app.status === "Accepted" ? (
-                      <span className="accepted-label">Accepted</span>
-                    ) : app.status === "Rejected" ? (
-                      <span className="rejected-label">Rejected</span>
-                    ) : null}
-                  </>
                 )}
+
+                {/* CANCEL BUTTON — يظهر دائمًا */}
+                <button
+                  className="withdraw-btn"
+                  onClick={() => handleCancel(app._id)}
+                >
+                  Remove
+                </button>
               </div>
             </div>
           ))
