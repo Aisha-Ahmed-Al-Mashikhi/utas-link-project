@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx (With Location + Posted Date Added)
+// FindJob.jsx (With Job Tabs + Location + Posted Date)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -21,6 +21,9 @@ const FindJob = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  // ⭐ NEW: Active Tab
+  const [activeTab, setActiveTab] = useState("latest");
+
   // Load jobs
   useEffect(() => {
     dispatch(fetchJobs());
@@ -32,15 +35,26 @@ const FindJob = () => {
     if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
   }, [dispatch]);
 
-  // Search filter
-  const filteredJobs = jobList.filter((job) => {
-    const term = searchTerm.toLowerCase();
-    return (
-      job.jobTitle.toLowerCase().includes(term) ||
-      (job.organization || "").toLowerCase().includes(term) ||
-      (job.skills || "").toString().toLowerCase().includes(term)
-    );
-  });
+  // ⭐ FILTER BASED ON TAB + SEARCH
+  const filteredJobs = jobList
+    .filter((job) => {
+      const term = searchTerm.toLowerCase();
+      return (
+        job.jobTitle.toLowerCase().includes(term) ||
+        (job.organization || "").toLowerCase().includes(term) ||
+        (job.skills || "").toString().toLowerCase().includes(term)
+      );
+    })
+    .filter((job) => {
+      if (activeTab === "latest") return true;
+      if (activeTab === "trending") return job.views >= 20;
+      if (activeTab === "highsalary") return job.rate >= 50;
+      if (activeTab === "parttime")
+        return job.category?.toLowerCase().includes("part");
+      if (activeTab === "remote")
+        return job.location?.toLowerCase().includes("remote");
+      return true;
+    });
 
   // APPLY JOB
   const handleApply = async (job) => {
@@ -88,6 +102,44 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
+      {/* ⭐ JOB FILTER TABS */}
+      <div className="job-tabs">
+        <button
+          className={activeTab === "latest" ? "active" : ""}
+          onClick={() => setActiveTab("latest")}
+        >
+          Latest Jobs
+        </button>
+
+        <button
+          className={activeTab === "trending" ? "active" : ""}
+          onClick={() => setActiveTab("trending")}
+        >
+          Trending
+        </button>
+
+        <button
+          className={activeTab === "highsalary" ? "active" : ""}
+          onClick={() => setActiveTab("highsalary")}
+        >
+          High Salary
+        </button>
+
+        <button
+          className={activeTab === "parttime" ? "active" : ""}
+          onClick={() => setActiveTab("parttime")}
+        >
+          Part-time
+        </button>
+
+        <button
+          className={activeTab === "remote" ? "active" : ""}
+          onClick={() => setActiveTab("remote")}
+        >
+          Remote
+        </button>
+      </div>
+
       {/* Job List */}
       <div className="job-list">
         {filteredJobs.length === 0 ? (
@@ -95,7 +147,6 @@ const FindJob = () => {
         ) : (
           filteredJobs.map((job) => (
             <div key={job._id} className="job-card">
-              
               {/* Header */}
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
@@ -104,15 +155,12 @@ const FindJob = () => {
                 </span>
               </div>
 
-              {/* Company */}
               <p className="org-name">{job.organization}</p>
 
-              {/* 🔥 Location */}
-              <p className="job-location">
-                📍 {job.location || "Not specified"}
-              </p>
+              {/* Location */}
+              <p className="job-location">📍 {job.location || "Not specified"}</p>
 
-              {/* 🔥 Posted Date */}
+              {/* Posted Date */}
               <p className="postedAt">
                 📅 Posted:{" "}
                 {new Date(job.postedAt).toLocaleDateString("en-GB", {
@@ -135,7 +183,6 @@ const FindJob = () => {
               {/* Skills */}
               <p className="skills">Skills: {job.skills}</p>
 
-              {/* APPLY BUTTON */}
               <div className="job-actions">
                 <button className="btn-apply" onClick={() => handleApply(job)}>
                   Apply ➜
