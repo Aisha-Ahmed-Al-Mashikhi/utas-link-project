@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="main-footer">
       <div className="footer-row">
-        {/* LEFT SIDE (Brand + description) */}
+        {/* LEFT SIDE */}
         <div className="footer-left">
           <div className="footer-brand">
             <span className="brand-main">UTAS</span>
@@ -18,7 +18,7 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* RIGHT SIDE (Contact Info) */}
+        {/* RIGHT SIDE */}
         <div className="footer-right">
           <p className="contact-title">Get in touch</p>
           <p>utas.link@gmail.com</p>
@@ -26,7 +26,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* COPYRIGHT (SMALL TEXT) */}
+      {/* COPYRIGHT LINE — MUST BE INSIDE A DIV */}
       <div className="footer-copy">
         © 2025 UTASLink — Developed by Aisha Al-Mashikhi. All rights reserved.
       </div>
