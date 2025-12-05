@@ -30,13 +30,10 @@ const Home = () => {
         <h2 className="section-title">Recent Posts</h2>
         <Posts />
       </section>
-  {/* ===============================
-      PLATFORM FEATURES SECTION
-================================= */}
-<section className="features-section">
+  <section className="features-section">
   <h2 className="features-title">Why Choose UTASLink?</h2>
 
-  <div className="features-grid">
+  <div className="features-grid">   {/* ← مهمة جداً */}
 
     <div className="feature-card">
       <div className="feature-icon">💼</div>
@@ -64,6 +61,7 @@ const Home = () => {
 
   </div>
 </section>
+
 
     </div>
   );
