@@ -420,9 +420,26 @@ app.post("/chat", async (req, res) => {
 ───────────────────────────────────────────────*/
 app.post("/addPost", async (req, res) => {
   try {
-    const p = await PostModel.create(req.body);
-    res.send(p);
-  } catch {
+    let authorName = "Anonymous";
+
+    if (req.body.email) {
+      // check if student
+      const user = await UserModel.findOne({ email: req.body.email });
+      if (user) authorName = user.name;
+
+      // check if company
+      const company = await CompanyModel.findOne({ email: req.body.email });
+      if (company) authorName = company.companyName;
+    }
+
+    const post = await PostModel.create({
+      ...req.body,
+      authorName, // اسم المستخدم أو الشركة
+    });
+
+    res.send(post);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ msg: "Error adding post" });
   }
 });
