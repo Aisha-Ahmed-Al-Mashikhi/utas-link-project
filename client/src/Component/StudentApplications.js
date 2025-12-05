@@ -15,23 +15,16 @@ const StudentApplications = () => {
 
   const { user } = useSelector((state) => state.users);
 
-  // نستخدم studentApplications بدال applications
   const { studentApplications, isLoading } = useSelector(
     (state) => state.applications
   );
 
-  // ----------------------------------------------------------
-  // LOAD STUDENT APPLICATIONS
-  // ----------------------------------------------------------
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchStudentApplications(user.email));
     }
   }, [dispatch, user]);
 
-  // ----------------------------------------------------------
-  // CANCEL APPLICATION
-  // ----------------------------------------------------------
   const handleCancel = (id) => {
     dispatch(cancelStudentApplication(id))
       .unwrap()
@@ -74,16 +67,19 @@ const StudentApplications = () => {
                   <h3 className="job-title">{app.jobTitle}</h3>
                   <p className="company">Company: {app.organization}</p>
                   <p className="details">Email: {app.applicantEmail}</p>
-                  <p className="details">
-  Applied on: {new Date(app.appliedAt).toLocaleString()}
-</p>
 
-                  {/* status badge */}
+                  {/* Applied Date */}
+                  <p className="details">
+                    Applied on:{" "}
+                    {new Date(app.appliedAt).toLocaleString()}
+                  </p>
+
+                  {/* Status badge */}
                   <p className={`status-badge ${app.status?.toLowerCase()}`}>
                     {app.status || "Pending Review"}
                   </p>
 
-                  {/* If job deleted by company */}
+                  {/* Job deleted message */}
                   {app.jobDeleted && (
                     <p className="deleted-warning">
                       This job is no longer available.
@@ -92,9 +88,7 @@ const StudentApplications = () => {
                 </div>
               </div>
 
-              {/* ACTIONS */}
               <div className="app-actions">
-                {/* CHAT BUTTON — يظهر بس إذا الوظيفة موجودة */}
                 {!app.jobDeleted && (
                   <button
                     className="chat-btn"
@@ -104,7 +98,6 @@ const StudentApplications = () => {
                   </button>
                 )}
 
-                {/* CANCEL BUTTON — يظهر دائمًا */}
                 <button
                   className="withdraw-btn"
                   onClick={() => handleCancel(app._id)}
