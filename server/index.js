@@ -452,36 +452,31 @@ app.get("/posts", async (req, res) => {
 /* LIKE */
 app.put("/likePost/:postId", async (req, res) => {
   try {
-    const post = await PostModel.findOne({ _id: req.params.postId });
+    const post = await PostModel.findById(req.params.postId);
     const userId = req.body.userId;
 
     if (!post) return res.status(404).json({ msg: "Post not found" });
 
-    const index = post.likes.users.indexOf(userId);
+    const hasLiked = post.likes.users.includes(userId);
+    const hasDisliked = post.dislikes.users.includes(userId);
 
-    if (index !== -1) {
-      const updated = await PostModel.findOneAndUpdate(
-        { _id: req.params.postId },
-        {
-          $inc: { "likes.count": -1 },
-          $pull: { "likes.users": userId },
-        },
-        { new: true }
-      );
-
-      res.json({ post: updated, msg: "Post unliked." });
-    } else {
-      const updated = await PostModel.findOneAndUpdate(
-        { _id: req.params.postId },
-        {
-          $inc: { "likes.count": 1 },
-          $addToSet: { "likes.users": userId },
-        },
-        { new: true }
-      );
-
-      res.json({ post: updated, msg: "Post liked." });
+    // إذا كان عامل ديسلايك → نحذفه أولاً
+    if (hasDisliked) {
+      post.dislikes.count -= 1;
+      post.dislikes.users = post.dislikes.users.filter((u) => u !== userId);
     }
+
+    // Toggle like
+    if (hasLiked) {
+      post.likes.count -= 1;
+      post.likes.users = post.likes.users.filter((u) => u !== userId);
+    } else {
+      post.likes.count += 1;
+      post.likes.users.push(userId);
+    }
+
+    await post.save();
+    res.json({ post, msg: "Like updated" });
   } catch {
     res.status(500).json({ error: "Error liking post" });
   }
@@ -490,36 +485,31 @@ app.put("/likePost/:postId", async (req, res) => {
 /* DISLIKE */
 app.put("/dislikePost/:postId", async (req, res) => {
   try {
-    const post = await PostModel.findOne({ _id: req.params.postId });
+    const post = await PostModel.findById(req.params.postId);
     const userId = req.body.userId;
 
     if (!post) return res.status(404).json({ msg: "Post not found" });
 
-    const index = post.dislikes.users.indexOf(userId);
+    const hasLiked = post.likes.users.includes(userId);
+    const hasDisliked = post.dislikes.users.includes(userId);
 
-    if (index !== -1) {
-      const updated = await PostModel.findOneAndUpdate(
-        { _id: req.params.postId },
-        {
-          $inc: { "dislikes.count": -1 },
-          $pull: { "dislikes.users": userId },
-        },
-        { new: true }
-      );
-
-      res.json({ post: updated, msg: "Post undisliked." });
-    } else {
-      const updated = await PostModel.findOneAndUpdate(
-        { _id: req.params.postId },
-        {
-          $inc: { "dislikes.count": 1 },
-          $addToSet: { "dislikes.users": userId },
-        },
-        { new: true }
-      );
-
-      res.json({ post: updated, msg: "Post disliked." });
+    // إذا كان عامل لايك → نحذفه أولاً
+    if (hasLiked) {
+      post.likes.count -= 1;
+      post.likes.users = post.likes.users.filter((u) => u !== userId);
     }
+
+    // Toggle dislike
+    if (hasDisliked) {
+      post.dislikes.count -= 1;
+      post.dislikes.users = post.dislikes.users.filter((u) => u !== userId);
+    } else {
+      post.dislikes.count += 1;
+      post.dislikes.users.push(userId);
+    }
+
+    await post.save();
+    res.json({ post, msg: "Dislike updated" });
   } catch {
     res.status(500).json({ error: "Error disliking post" });
   }
