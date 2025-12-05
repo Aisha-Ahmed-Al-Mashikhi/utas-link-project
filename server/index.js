@@ -260,10 +260,11 @@ app.get("/jobs/company/:email", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
- ░░ APPLY TO JOB
+ ░░ APPLY TO JOB  (UPDATED → Saves real company name)
 ───────────────────────────────────────────────*/
 app.post("/apply", async (req, res) => {
   try {
+    // Check duplicate application
     const exist = await ApplicationModel.findOne({
       jobId: req.body.jobId,
       applicantEmail: req.body.applicantEmail,
@@ -271,15 +272,25 @@ app.post("/apply", async (req, res) => {
 
     if (exist) return res.status(400).json({ error: "Already applied" });
 
+    // Fetch job details
+    const job = await JobModel.findById(req.body.jobId);
+    if (!job) return res.status(404).json({ error: "Job not found" });
+
+    // Fetch company name for organization field
+    const company = await CompanyModel.findOne({ email: job.postedBy });
+
     const newApp = new ApplicationModel({
       ...req.body,
+      organization: company?.companyName || "Unknown Company",
       status: "Pending",
       appliedAt: new Date(),
     });
 
     await newApp.save();
     res.send(newApp);
-  } catch {
+
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Apply failed" });
   }
 });
