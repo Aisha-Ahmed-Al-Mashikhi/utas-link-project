@@ -23,6 +23,8 @@ import ApplicantsJob from "./Component/ApplicantsJob"; // Applicants for a speci
 // Public Pages
 import Home from "./Component/Home"; // Landing page
 import About from "./Component/About"; // About the platform
+import Developers from "./Component/Developers";
+
 
 // Chat Pages
 import ChatListStudent from "./Component/ChatListStudent";
@@ -44,6 +46,8 @@ function App() {
         {/* ---------------- PUBLIC ROUTES ---------------- */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/developers" element={<Developers />} />
+
 
         {/* ---------------- STUDENT ROUTES ---------------- */}
         <Route path="/login" element={<Login />} />
