@@ -151,3 +151,24 @@
   color: #e53935;
   font-weight: 700;
 }
+.deleted-warning {
+  color: #d9534f;
+  font-weight: 600;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.remove-btn {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background: #b73e39;
+}
+
