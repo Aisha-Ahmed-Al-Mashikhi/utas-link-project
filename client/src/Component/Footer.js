@@ -22,7 +22,7 @@ const Footer = () => {
         <div className="footer-right">
           <p className="contact-title">Get in touch</p>
           <p>utas.link@gmail.com</p>
-          <p>+968 9000 9111</p>
+          <p>+968 9xxx xxxx</p>
         </div>
       </div>
 
