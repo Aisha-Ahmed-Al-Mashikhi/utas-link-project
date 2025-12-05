@@ -91,6 +91,11 @@ const Header = () => {
               <Link to="/student-register" onClick={() => setOpen(false)}>
                 <FiUserPlus className="icon" /> Register
               </Link>
+
+            <Link to="/developers" onClick={() => setOpen(false)}>
+  <FiUser className="icon" /> About Developer
+</Link>
+
             </>
           )}
 
@@ -125,6 +130,9 @@ const Header = () => {
               <Link to="/create-post" onClick={() => setOpen(false)}>
                 <FiPlusCircle className="icon" /> Create Post
               </Link>
+              <Link to="/developers" onClick={() => setOpen(false)}>
+  <FiUser className="icon" /> About Developer
+</Link>
 
               <button className="drawer-logout" onClick={handleLogout}>
                 <FiLogOut className="icon" /> Logout
@@ -160,6 +168,9 @@ const Header = () => {
               <Link to="/create-post" onClick={() => setOpen(false)}>
                 <FiPlusCircle className="icon" /> Create Post
               </Link>
+             <Link to="/developers" onClick={() => setOpen(false)}>
+  <FiUser className="icon" /> About Developer
+</Link>
 
               <button className="drawer-logout" onClick={handleLogout}>
                 <FiLogOut className="icon" /> Logout
