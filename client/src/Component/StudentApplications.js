@@ -74,6 +74,9 @@ const StudentApplications = () => {
                   <h3 className="job-title">{app.jobTitle}</h3>
                   <p className="company">Company: {app.organization}</p>
                   <p className="details">Email: {app.applicantEmail}</p>
+                  <p className="details">
+  Applied on: {new Date(app.appliedAt).toLocaleString()}
+</p>
 
                   {/* status badge */}
                   <p className={`status-badge ${app.status?.toLowerCase()}`}>
