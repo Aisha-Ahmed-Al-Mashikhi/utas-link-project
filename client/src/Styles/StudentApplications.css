@@ -161,8 +161,9 @@
   text-align: center;
   box-shadow: 0 4px 25px rgba(0,0,0,0.05);
   border: 1px solid #e8e8e8;
-  max-width: 500px;
-  margin: 40px auto;
+  max-width: 420px;
+  margin-top: 30px;   
+  margin-left: 0;     
 }
 
 .empty-state p {
