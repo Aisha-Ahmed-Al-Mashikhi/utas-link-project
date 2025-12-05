@@ -279,12 +279,14 @@ app.post("/apply", async (req, res) => {
     // Fetch company name for organization field
     const company = await CompanyModel.findOne({ email: job.postedBy });
 
-    const newApp = new ApplicationModel({
-      ...req.body,
-      organization: company?.companyName || "Unknown Company",
-      status: "Pending",
-      appliedAt: new Date(),
-    });
+   const newApp = new ApplicationModel({
+  ...req.body,
+  organization: company?.companyName || "Unknown Company",
+  companyEmail: job.postedBy,   // ⭐ إضافة بريد الشركة
+  status: "Pending",
+  appliedAt: new Date(),
+});
+
 
     await newApp.save();
     res.send(newApp);
