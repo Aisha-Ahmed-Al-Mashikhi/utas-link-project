@@ -2,11 +2,10 @@ import mongoose from "mongoose";
 
 const PostSchema = new mongoose.Schema(
   {
-    name: { type: String, required: false },      // ✔ يظهر اسم المستخدم
-    email: { type: String, required: true },
-    role: { type: String, default: "student" },   // ✔ لو طالب أو شركة
-
     postMsg: { type: String, required: true },
+  email: { type: String, required: true },
+  authorName: { type: String, required: true }, // ⭐ جديد
+  createdAt: { type: Date, default: Date.now },
 
     // LOCATION
     location: {
