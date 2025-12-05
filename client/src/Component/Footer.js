@@ -21,7 +21,7 @@ const Footer = () => {
         {/* RIGHT SIDE */}
         <div className="footer-right">
           <p className="contact-title">Get in touch</p>
-          <p>utas.link@gmail.com</p>
+          <p>Utas.Link@gmail.com</p>
           <p>+968 9xxx xxxx</p>
         </div>
       </div>
