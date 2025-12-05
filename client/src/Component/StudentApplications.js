@@ -15,28 +15,23 @@ const StudentApplications = () => {
 
   const { user } = useSelector((state) => state.users);
 
-  // نستخدم studentApplications بدال applications
   const { studentApplications, isLoading } = useSelector(
     (state) => state.applications
   );
 
-  // ----------------------------------------------------------
-  // LOAD STUDENT APPLICATIONS
-  // ----------------------------------------------------------
+  // Load student applications
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchStudentApplications(user.email));
     }
   }, [dispatch, user]);
 
-  // ----------------------------------------------------------
-  // CANCEL APPLICATION
-  // ----------------------------------------------------------
+  // Cancel Application OR Remove if job deleted
   const handleCancel = (id) => {
     dispatch(cancelStudentApplication(id))
       .unwrap()
-      .then(() => alert("Application canceled successfully."))
-      .catch(() => alert("Error canceling application."));
+      .then(() => alert("Application removed successfully."))
+      .catch(() => alert("Error removing application."));
   };
 
   if (isLoading && studentApplications.length === 0) {
@@ -75,36 +70,57 @@ const StudentApplications = () => {
                   <p className="company">Company: {app.organization}</p>
                   <p className="details">Email: {app.applicantEmail}</p>
 
+                  {/* 🔥 If job deleted */}
+                  {app.jobDeleted && (
+                    <p className="deleted-warning">
+                      ⚠️ This job is no longer available.
+                    </p>
+                  )}
+
                   {/* Status badge */}
-                  <p className={`status-badge ${app.status?.toLowerCase()}`}>
-                    {app.status || "Pending Review"}
-                  </p>
+                  {!app.jobDeleted && (
+                    <p className={`status-badge ${app.status?.toLowerCase()}`}>
+                      {app.status || "Pending Review"}
+                    </p>
+                  )}
                 </div>
               </div>
 
               {/* ACTIONS */}
               <div className="app-actions">
-                {/* CHAT BUTTON */}
-                <button
-                  className="chat-btn"
-                  onClick={() => navigate(`/student-chat/${app._id}`)}
-                >
-                  Chat 💬
-                </button>
-
-                {/* CANCEL / STATUS */}
-                {app.status === "Pending Review" ? (
+                {/* If job was deleted */}
+                {app.jobDeleted ? (
                   <button
-                    className="withdraw-btn"
+                    className="remove-btn"
                     onClick={() => handleCancel(app._id)}
                   >
-                    Cancel
+                    Remove
                   </button>
-                ) : app.status === "Accepted" ? (
-                  <span className="accepted-label">Accepted</span>
-                ) : app.status === "Rejected" ? (
-                  <span className="rejected-label">Rejected</span>
-                ) : null}
+                ) : (
+                  <>
+                    {/* CHAT BUTTON */}
+                    <button
+                      className="chat-btn"
+                      onClick={() => navigate(`/student-chat/${app._id}`)}
+                    >
+                      Chat 💬
+                    </button>
+
+                    {/* CANCEL / STATUS */}
+                    {app.status === "Pending Review" ? (
+                      <button
+                        className="withdraw-btn"
+                        onClick={() => handleCancel(app._id)}
+                      >
+                        Cancel
+                      </button>
+                    ) : app.status === "Accepted" ? (
+                      <span className="accepted-label">Accepted</span>
+                    ) : app.status === "Rejected" ? (
+                      <span className="rejected-label">Rejected</span>
+                    ) : null}
+                  </>
+                )}
               </div>
             </div>
           ))
