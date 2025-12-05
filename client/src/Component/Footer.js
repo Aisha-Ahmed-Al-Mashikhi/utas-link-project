@@ -24,8 +24,13 @@ const Footer = () => {
           <p>utas.link@gmail.com</p>
           <p>+968 9000 9111</p>
         </div>
-      </div> © 2025 UTASLink — Developed by Aisha Al-Mashikhi. All rights reserved.
-   </footer>
+      </div>
+
+      {/* COPYRIGHT (SMALL TEXT) */}
+      <div className="footer-copy">
+        © 2025 UTASLink — Developed by Aisha Al-Mashikhi. All rights reserved.
+      </div>
+    </footer>
   );
 };
 
