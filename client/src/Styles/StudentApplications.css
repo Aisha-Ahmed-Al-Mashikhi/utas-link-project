@@ -159,16 +159,18 @@
 }
 
 .remove-btn {
-  background: #d9534f;
+  background-color: #ff4d4d;
   color: white;
   border: none;
-  padding: 8px 18px;
+  padding: 7px 16px;
   border-radius: 8px;
-  font-weight: 600;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s ease;
 }
 
 .remove-btn:hover {
-  background: #b73e39;
+  background-color: #d93636;
 }
 
