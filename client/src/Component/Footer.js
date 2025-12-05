@@ -21,13 +21,11 @@ const Footer = () => {
         {/* RIGHT SIDE (Contact Info) */}
         <div className="footer-right">
           <p className="contact-title">Get in touch</p>
-          <p>hello@UTASlink.om</p>
-          <p>+968 9xx xxx xx</p>
+          <p>utas.link@gmail.com</p>
+          <p>+968 9000 9111</p>
         </div>
-      </div>
-
-      <div className="footer-copy">© 2025 UTASLink. All rights reserved.</div>
-    </footer>
+      </div> © 2025 UTASLink — Developed by Aisha Al-Mashikhi. All rights reserved.
+   </footer>
   );
 };
 
