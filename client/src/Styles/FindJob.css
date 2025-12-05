@@ -16,7 +16,9 @@
   color: #009688;
 }
 
-/* Search */
+/* ===========================
+       SEARCH
+=========================== */
 .search-container {
   display: flex;
   justify-content: center;
@@ -74,7 +76,42 @@
   background-color: #007d73;
 }
 
-/* JOB LIST — AUTO GRID */
+/* ===========================
+       JOB TABS (FILTER)
+=========================== */
+.job-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 0 auto 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.job-tabs button {
+  background: #e8f6f4;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #009688;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.job-tabs button:hover {
+  background: #cfeeea;
+}
+
+.job-tabs .active {
+  background-color: #009688;
+  color: white;
+  box-shadow: 0 3px 8px rgba(0, 150, 136, 0.3);
+}
+
+/* ===========================
+       JOB LIST GRID
+=========================== */
 .job-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
@@ -82,8 +119,9 @@
   width: 100%;
 }
 
-
-/* Job Card */
+/* ===========================
+       JOB CARD
+=========================== */
 .job-card {
   background: white;
   border-radius: 16px;
@@ -121,7 +159,9 @@
   margin-bottom: 10px;
 }
 
-/* Tags */
+/* ===========================
+       TAGS
+=========================== */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -138,7 +178,9 @@
   font-weight: 600;
 }
 
-/* Description — Collapsible */
+/* ===========================
+     DESCRIPTION COLLAPSE
+=========================== */
 .desc {
   color: #333;
   font-size: 14px;
@@ -152,13 +194,6 @@
   max-height: 500px;
 }
 
-.skills {
-  color: #555;
-  font-size: 13.5px;
-  margin: 10px 0;
-}
-
-/* Show More Button */
 .show-more {
   background: none;
   border: none;
@@ -169,7 +204,18 @@
   margin-bottom: 6px;
 }
 
-/* Apply Button */
+/* ===========================
+      SKILLS
+=========================== */
+.skills {
+  color: #555;
+  font-size: 13.5px;
+  margin: 10px 0;
+}
+
+/* ===========================
+      APPLY BUTTON
+=========================== */
 .job-actions {
   display: flex;
   justify-content: flex-end;
