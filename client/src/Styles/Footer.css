@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
 * {
   font-family: "Poppins", sans-serif;
 }
@@ -32,6 +33,7 @@
 .brand-main {
   color: #111;
 }
+
 .brand-accent {
   color: #009688;
 }
@@ -53,9 +55,9 @@
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;   /* ← يجعل الإيميل والرقم يبدأان من نفس السطر */
-  gap: 4px;
-  text-align: left;          /* ← يسحب كل النصوص لبداية الخط */
+  align-items: flex-start;   /* ← المحاذاة من بداية السطر */
+  text-align: left;
+  gap: 6px;
 }
 
 .footer-right p {
@@ -65,7 +67,7 @@
 
 .contact-title {
   font-weight: 600;
-  margin-bottom: 6px !important;
+  margin-bottom: 2px !important;
 }
 
 /* ================================
@@ -86,12 +88,12 @@
 @media (max-width: 700px) {
   .footer-row {
     flex-direction: column;
-    text-align: center;
     gap: 18px;
+    text-align: center;
   }
 
   .footer-right {
-    align-items: center;   /* يصبح النص في المنتصف على الهاتف */
+    align-items: center;   /* ← يصبح النص وسط في الموبايل */
     text-align: center;
   }
 }
