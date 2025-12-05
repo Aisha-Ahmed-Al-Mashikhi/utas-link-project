@@ -173,4 +173,10 @@
 .remove-btn:hover {
   background-color: #d93636;
 }
+.details {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 3px;
+}
+
 
