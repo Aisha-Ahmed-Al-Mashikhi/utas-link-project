@@ -67,6 +67,10 @@
   padding: 25px;
   transition: 0.3s ease-in-out;
   z-index: 1000;
+
+  /* ⭐⭐ أهم سطرين لحل مشكلتك ⭐⭐ */
+  overflow-y: auto;
+  padding-bottom: 40px; /* عشان آخر عنصر ما يختفي */
 }
 
 .drawer-open {
