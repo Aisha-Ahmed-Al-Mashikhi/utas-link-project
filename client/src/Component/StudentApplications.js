@@ -68,11 +68,13 @@ const StudentApplications = () => {
                   <p className="company">Company: {app.organization}</p>
                   <p className="details">Email: {app.applicantEmail}</p>
 
-                  {/* Applied Date */}
-                  <p className="details">
-                    Applied on:{" "}
-                    {new Date(app.appliedAt).toLocaleString()}
-                  </p>
+<p className="details">
+  Applied on: 
+  {app.createdAt 
+    ? new Date(app.createdAt).toLocaleString()
+    : "Not Available"}
+</p>
+
 
                   {/* Status badge */}
                   <p className={`status-badge ${app.status?.toLowerCase()}`}>
