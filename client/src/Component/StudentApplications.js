@@ -66,7 +66,7 @@ const StudentApplications = () => {
                 <div>
                   <h3 className="job-title">{app.jobTitle}</h3>
                   <p className="company">Company: {app.organization}</p>
-                  <p className="details">Email: {app.applicantEmail}</p>
+                  <p className="details">Company Email: {app.companyEmail}</p>
 
 <p className="details">
   Applied on: 
