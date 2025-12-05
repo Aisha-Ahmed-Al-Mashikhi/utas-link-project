@@ -1,10 +1,19 @@
+/* ============================
+   General Page Style
+============================ */
 .findjob-page {
   background: #f9fcfb;
-  min-height: 90vh;
+  min-height: 100vh;
   padding: 40px 70px;
   font-family: "Quicksand", sans-serif;
+
+  /* Scrollbar inside page */
+  overflow-y: auto;
 }
 
+/* ============================
+   Title
+============================ */
 .findjob-title {
   font-size: 34px;
   font-weight: 800;
@@ -16,16 +25,15 @@
   color: #009688;
 }
 
-/* ===========================
-       SEARCH
-=========================== */
+/* ============================
+   Search Bar
+============================ */
 .search-container {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto 35px;
   width: 70%;
-  position: relative;
 }
 
 .search-wrapper {
@@ -76,42 +84,9 @@
   background-color: #007d73;
 }
 
-/* ===========================
-       JOB TABS (FILTER)
-=========================== */
-.job-tabs {
-  display: flex;
-  gap: 12px;
-  margin: 0 auto 25px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.job-tabs button {
-  background: #e8f6f4;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 30px;
-  font-size: 14px;
-  cursor: pointer;
-  color: #009688;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.job-tabs button:hover {
-  background: #cfeeea;
-}
-
-.job-tabs .active {
-  background-color: #009688;
-  color: white;
-  box-shadow: 0 3px 8px rgba(0, 150, 136, 0.3);
-}
-
-/* ===========================
-       JOB LIST GRID
-=========================== */
+/* ============================
+   Job List — Auto Fit Grid
+============================ */
 .job-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
@@ -119,9 +94,9 @@
   width: 100%;
 }
 
-/* ===========================
-       JOB CARD
-=========================== */
+/* ============================
+   Job Card
+============================ */
 .job-card {
   background: white;
   border-radius: 16px;
@@ -136,6 +111,7 @@
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
 }
 
+/* Header */
 .job-header {
   display: flex;
   justify-content: space-between;
@@ -159,9 +135,9 @@
   margin-bottom: 10px;
 }
 
-/* ===========================
-       TAGS
-=========================== */
+/* ============================
+   Tags
+============================ */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -178,9 +154,9 @@
   font-weight: 600;
 }
 
-/* ===========================
-     DESCRIPTION COLLAPSE
-=========================== */
+/* ============================
+   Description (Collapsible)
+============================ */
 .desc {
   color: #333;
   font-size: 14px;
@@ -194,6 +170,13 @@
   max-height: 500px;
 }
 
+.skills {
+  color: #555;
+  font-size: 13.5px;
+  margin: 10px 0;
+}
+
+/* Show More Button */
 .show-more {
   background: none;
   border: none;
@@ -204,18 +187,9 @@
   margin-bottom: 6px;
 }
 
-/* ===========================
-      SKILLS
-=========================== */
-.skills {
-  color: #555;
-  font-size: 13.5px;
-  margin: 10px 0;
-}
-
-/* ===========================
-      APPLY BUTTON
-=========================== */
+/* ============================
+   Apply Button
+============================ */
 .job-actions {
   display: flex;
   justify-content: flex-end;
@@ -234,4 +208,34 @@
 
 .btn-apply:hover {
   background-color: #007a6a;
+}
+
+/* ============================
+   Custom Scrollbar (FindJob Only)
+============================ */
+.findjob-page::-webkit-scrollbar {
+  width: 6px;
+}
+
+.findjob-page::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.findjob-page::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 10px;
+}
+
+.findjob-page::-webkit-scrollbar-thumb:hover {
+  background: #009688;
+}
+
+/* ============================
+   Responsive
+============================ */
+@media (max-width: 900px) {
+  .job-list {
+    grid-template-columns: 1fr;
+  }
 }
