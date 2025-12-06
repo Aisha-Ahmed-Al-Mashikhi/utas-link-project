@@ -5,7 +5,7 @@ import {
   uploadLicense,
   deleteLicense,
 } from "../Features/CompanySlice";
-import "../Styles/UserProfile.css";
+import "../Styles/CompanyProfile.css";
 import * as ENV from "../config";
 import { useNavigate } from "react-router-dom";
 
@@ -36,51 +36,58 @@ const CompanyProfile = () => {
   if (!company) return <p>Loading...</p>;
 
   return (
-    <div className="profile-wrapper">
+    <div className="company-page">
 
-      {/* FULL WHITE CARD */}
+      {/* MAIN CARD */}
       <div className="company-card">
 
-        {/* IMAGE */}
-        <div className="profile-img-container">
-          <img
-            src={
-              company.profileImage ||
-              "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-            }
-            className="profile-img"
-            alt="company"
-          />
+        {/* TOP SECTION */}
+        <div className="top-section">
+          <div className="profile-img-box">
+            <img
+              src={company.profileImage || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}
+              className="profile-img"
+              alt="company"
+            />
+          </div>
+
+          <div className="info-box">
+            <h2 className="company-name">{company.companyName}</h2>
+            <p className="company-email">{company.email}</p>
+            <p className="company-meta">{company.industry} • {company.location}</p>
+          </div>
         </div>
 
-        {/* TEXT INFO */}
-        <h2 className="profile-name">{company.companyName}</h2>
-        <p className="profile-email">{company.email}</p>
+        {/* ABOUT SECTION */}
+        <div className="about-section">
+          <h1 className="hello-title">Hello</h1>
+          <p className="welcome-title">Welcome, dear company</p>
 
-        <div className="profile-line"></div>
-
-        <p className="profile-role">
-          {company.industry} — {company.location}
-        </p>
-
-        {/* BUSINESS LICENSE LABEL */}
-        <h3 className="license-title">Business License</h3>
+          <p className="about-text">
+            With every job post you publish on our platform, you will find talented,
+            well-qualified students applying instantly. We help you reach the perfect
+            candidates quickly, easily, and with high efficiency — ensuring you always
+            connect with the right skills at the right time.
+          </p>
+        </div>
 
         {/* LICENSE SECTION */}
-        {company.businessLicense ? (
-          <>
-            <div className="upload-actions">
+        <div className="license-section">
+          <h3 className="license-title">Business License</h3>
+
+          {company.businessLicense ? (
+            <div className="license-actions">
 
               <a
                 href={`${ENV.SERVER_URL}${company.businessLicense}`}
                 target="_blank"
-                className="action-btn view"
+                className="btn view"
               >
                 View
               </a>
 
               <input
-                id="licenseInput"
+                id="licenseUpload"
                 type="file"
                 accept=".pdf"
                 style={{ display: "none" }}
@@ -88,54 +95,36 @@ const CompanyProfile = () => {
               />
 
               <button
-                className="action-btn replace"
-                onClick={() =>
-                  document.getElementById("licenseInput").click()
-                }
+                className="btn replace"
+                onClick={() => document.getElementById("licenseUpload").click()}
               >
                 Replace
               </button>
 
               <button
-                className="action-btn delete"
+                className="btn delete"
                 onClick={handleDeleteLicense}
               >
                 Delete
               </button>
-
             </div>
-          </>
-        ) : (
-          <>
-            <input
-              id="licenseInput"
-              type="file"
-              accept=".pdf"
-              style={{ display: "none" }}
-              onChange={handleLicenseUpload}
-            />
-            <label htmlFor="licenseInput" className="upload-label">
-              Upload License (PDF)
-            </label>
-          </>
-        )}
+          ) : (
+            <>
+              <input
+                id="licenseUpload"
+                type="file"
+                accept=".pdf"
+                style={{ display: "none" }}
+                onChange={handleLicenseUpload}
+              />
+              <label htmlFor="licenseUpload" className="upload-btn">
+                Upload License (PDF)
+              </label>
+            </>
+          )}
 
+        </div>
       </div>
-
-      {/* RIGHT SECTION (TEXT ONLY) */}
-      <div className="profile-right">
-        <h1 className="profile-title">Hello</h1>
-
-        <p className="profile-sub">Welcome, dear company</p>
-
-        <p className="profile-text">
-          With every job post you publish on our platform, you will find talented,
-          well-qualified students applying instantly. We help you reach the perfect
-          candidates quickly, easily, and with high efficiency — ensuring you
-          always connect with the right skills at the right time.
-        </p>
-      </div>
-
     </div>
   );
 };
