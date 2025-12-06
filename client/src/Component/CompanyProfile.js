@@ -1,11 +1,14 @@
+// =============================
+//     COMPANY PROFILE PAGE
+// =============================
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "../Styles/UserProfile.css";
 import {
   fetchCompany,
   uploadLicense,
   deleteLicense,
 } from "../Features/CompanySlice";
+import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 import { useNavigate } from "react-router-dom";
 
@@ -24,14 +27,16 @@ const CompanyProfile = () => {
   }, [dispatch, navigate]);
 
   const handleLicenseUpload = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-    dispatch(uploadLicense({ email: company.email, file: f }));
+    const file = e.target.files[0];
+    if (!file) return;
+
+    dispatch(uploadLicense({ email: company.email, file }));
   };
 
   const handleDeleteLicense = () => {
-    if (!window.confirm("Delete license?")) return;
-    dispatch(deleteLicense(company.email));
+    if (window.confirm("Delete license?")) {
+      dispatch(deleteLicense(company.email));
+    }
   };
 
   if (!company) return <p>Loading...</p>;
@@ -39,9 +44,10 @@ const CompanyProfile = () => {
   return (
     <div className="profile-page">
 
-      {/* ===== PROFILE CARD ===== */}
+      {/* ===================== PROFILE CARD ===================== */}
       <div className="profile-card">
         <div className="profile-left">
+
           <div className="profile-img-container">
             <img
               src={
@@ -49,58 +55,62 @@ const CompanyProfile = () => {
                 "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
               }
               className="profile-img"
+              alt="company"
             />
           </div>
 
           <div>
             <h2 className="profile-name">{company.companyName}</h2>
             <p className="profile-email">{company.email}</p>
-
             <p className="profile-detail">
               {company.industry} • {company.location}
             </p>
           </div>
+
         </div>
       </div>
 
-      {/* ===== LICENSE SECTION ===== */}
+      {/* ===================== LICENSE CARD ===================== */}
       <div className="payment-box">
         <h3>Business License</h3>
 
         {company.businessLicense ? (
-          <div className="cv-section">
-            <p className="cv-success">License Uploaded Successfully</p>
+          <div className="license-section">
+            <p>License Uploaded Successfully</p>
 
-            <div className="cv-actions">
+            <div className="license-actions">
 
               {/* VIEW */}
               <a
                 href={`${ENV.SERVER_URL}${company.businessLicense}`}
+                className="action-btn view"
                 target="_blank"
-                className="cv-btn view"
               >
                 View
               </a>
 
               {/* HIDDEN INPUT */}
               <input
-                id="licenseUP"
+                id="licenseInput"
                 type="file"
-                accept=".pdf"
+                accept="application/pdf"
                 style={{ display: "none" }}
                 onChange={handleLicenseUpload}
               />
 
               {/* REPLACE */}
               <button
-                className="cv-btn replace"
-                onClick={() => document.getElementById("licenseUP").click()}
+                className="action-btn replace"
+                onClick={() => document.getElementById("licenseInput").click()}
               >
                 Replace
               </button>
 
               {/* DELETE */}
-              <button className="cv-btn delete" onClick={handleDeleteLicense}>
+              <button
+                className="action-btn delete"
+                onClick={handleDeleteLicense}
+              >
                 Delete
               </button>
             </div>
@@ -108,20 +118,18 @@ const CompanyProfile = () => {
         ) : (
           <>
             <input
-              id="licenseUP"
+              id="licenseInput"
               type="file"
-              accept=".pdf"
+              accept="application/pdf"
               style={{ display: "none" }}
               onChange={handleLicenseUpload}
             />
-
-            <label htmlFor="licenseUP" className="upload-cv-btn">
+            <label htmlFor="licenseInput" className="upload-btn">
               Upload License (PDF)
             </label>
           </>
         )}
       </div>
-
     </div>
   );
 };
