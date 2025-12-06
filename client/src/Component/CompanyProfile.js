@@ -5,7 +5,7 @@ import {
   uploadLicense,
   deleteLicense,
 } from "../Features/CompanySlice";
-import "../Styles/CompanyProfile.css";
+import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 import { useNavigate } from "react-router-dom";
 
@@ -15,116 +15,114 @@ const CompanyProfile = () => {
 
   const { company } = useSelector((state) => state.companies);
 
+  // LOAD LOGGED COMPANY
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
+
     dispatch(fetchCompany(saved.email));
   }, [dispatch, navigate]);
 
   const handleLicenseUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      dispatch(uploadLicense({ email: company.email, file }));
-    }
+    const f = e.target.files[0];
+    if (!f) return;
+    dispatch(uploadLicense({ email: company.email, file: f }));
   };
 
   const handleDeleteLicense = () => {
-    if (window.confirm("Delete License?"))
-      dispatch(deleteLicense(company.email));
+    if (!window.confirm("Delete license?")) return;
+    dispatch(deleteLicense(company.email));
   };
 
   if (!company) return <p>Loading...</p>;
 
   return (
-    <div className="company-page">
+    <div className="profile-page">
 
-      {/* MAIN CARD */}
-      <div className="company-card">
-
-        {/* TOP SECTION */}
-        <div className="top-section">
-          <div className="profile-img-box">
+      {/* ===== PROFILE CARD ===== */}
+      <div className="profile-card">
+        <div className="profile-left">
+          <div className="profile-img-container">
             <img
-              src={company.profileImage || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}
+              src={
+                company.profileImage ||
+                "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
+              }
               className="profile-img"
-              alt="company"
             />
           </div>
 
-          <div className="info-box">
-            <h2 className="company-name">{company.companyName}</h2>
-            <p className="company-email">{company.email}</p>
-            <p className="company-meta">{company.industry} • {company.location}</p>
+          <div>
+            <h2 className="profile-name">{company.companyName}</h2>
+            <p className="profile-email">{company.email}</p>
+
+            <p className="profile-detail">
+              {company.industry} • {company.location}
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* ABOUT SECTION */}
-        <div className="about-section">
-          <h1 className="hello-title">Hello</h1>
-          <p className="welcome-title">Welcome, dear company</p>
+      {/* ===== LICENSE SECTION ===== */}
+      <div className="payment-box">
+        <h3>Business License</h3>
 
-          <p className="about-text">
-            With every job post you publish on our platform, you will find talented,
-            well-qualified students applying instantly. We help you reach the perfect
-            candidates quickly, easily, and with high efficiency — ensuring you always
-            connect with the right skills at the right time.
-          </p>
-        </div>
+        {company.tradeLicense ? (
+          <div className="cv-section">
+            <p className="cv-success">License Uploaded Successfully</p>
 
-        {/* LICENSE SECTION */}
-        <div className="license-section">
-          <h3 className="license-title">Business License</h3>
-
-          {company.businessLicense ? (
-            <div className="license-actions">
-
+            <div className="cv-actions">
+              {/* VIEW */}
               <a
-                href={`${ENV.SERVER_URL}${company.businessLicense}`}
+                href={`${ENV.SERVER_URL}${company.tradeLicense}`}
                 target="_blank"
-                className="btn view"
+                className="cv-btn view"
               >
                 View
               </a>
 
+              {/* HIDDEN INPUT */}
               <input
-                id="licenseUpload"
+                id="licenseUP"
                 type="file"
                 accept=".pdf"
                 style={{ display: "none" }}
                 onChange={handleLicenseUpload}
               />
 
+              {/* REPLACE */}
               <button
-                className="btn replace"
-                onClick={() => document.getElementById("licenseUpload").click()}
+                className="cv-btn replace"
+                onClick={() =>
+                  document.getElementById("licenseUP").click()
+                }
               >
                 Replace
               </button>
 
-              <button
-                className="btn delete"
-                onClick={handleDeleteLicense}
-              >
+              {/* DELETE */}
+              <button className="cv-btn delete" onClick={handleDeleteLicense}>
                 Delete
               </button>
             </div>
-          ) : (
-            <>
-              <input
-                id="licenseUpload"
-                type="file"
-                accept=".pdf"
-                style={{ display: "none" }}
-                onChange={handleLicenseUpload}
-              />
-              <label htmlFor="licenseUpload" className="upload-btn">
-                Upload License (PDF)
-              </label>
-            </>
-          )}
+          </div>
+        ) : (
+          <>
+            <input
+              id="licenseUP"
+              type="file"
+              accept=".pdf"
+              style={{ display: "none" }}
+              onChange={handleLicenseUpload}
+            />
 
-        </div>
+            <label htmlFor="licenseUP" className="upload-cv-btn">
+              Upload License (PDF)
+            </label>
+          </>
+        )}
       </div>
+
     </div>
   );
 };
