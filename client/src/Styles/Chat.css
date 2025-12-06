@@ -1,0 +1,114 @@
+/* MAIN WRAPPER */
+.chat-wrapper {
+  padding: 20px;
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  min-height: 75vh;
+}
+
+/* HEADER */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chat-header h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.accent {
+  color: #009688;
+}
+
+.close-chat {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  font-size: 20px;
+  border-radius: 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+/* CHAT BOX (messages area) */
+.chat-box {
+  background: #f8f9f9;
+  border-radius: 16px;
+  padding: 20px;
+  min-height: 400px;
+  max-height: 450px;
+  overflow-y: auto;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ROWS */
+.chat-row {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.chat-row.left {
+  justify-content: flex-start;
+}
+
+.chat-row.right {
+  justify-content: flex-end;
+}
+
+/* BUBBLE */
+.bubble {
+  max-width: 60%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  position: relative;
+}
+
+.bubble.me {
+  background: #009688;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.bubble.them {
+  background: white;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* TIME */
+.time {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* INPUT AREA */
+.chat-input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.chat-input-area button {
+  background: #009688;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}

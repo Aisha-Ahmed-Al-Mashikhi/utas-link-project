@@ -1,0 +1,106 @@
+.profile-page {
+  background-color: #f8fcfa;
+  min-height: 90vh;
+  padding: 40px 60px;
+  font-family: "Quicksand", sans-serif;
+}
+
+/* PROFILE CARD */
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 25px 30px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-img-container {
+  width: 130px;
+  height: 130px;
+}
+
+.profile-img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 3px solid #009688;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.profile-detail {
+  color: #555;
+}
+
+/* MAIN BOX */
+.payment-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 28px;
+}
+
+.payment-box h3 {
+  color: #009688;
+  font-weight: 700;
+}
+
+/* CV */
+.cv-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Buttons */
+.cv-btn {
+  width: 115px;
+  height: 42px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cv-btn.view {
+  background: #009688;
+  color: white;
+}
+
+.cv-btn.replace {
+  background: #ffe8bb;
+  color: #8a5a00;
+}
+
+.cv-btn.delete {
+  background: #ffd1d2;
+  color: #b10000;
+}
+
+.upload-cv-btn {
+  background: #009688;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-block;
+}

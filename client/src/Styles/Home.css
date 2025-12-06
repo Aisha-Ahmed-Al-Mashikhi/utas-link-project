@@ -1,0 +1,127 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.home {
+  background: #f5faf8;
+  text-align: center;
+  padding: 90px 20px;
+}
+
+.home-section {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.hero {
+  padding: 60px 0 90px;
+}
+
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.accent {
+  color: #009688;
+}
+
+.hero-text {
+  max-width: 600px;
+  margin: 16px auto 32px;
+  color: #575757;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.hero-btn {
+  background: #009688;
+  color: #fff;
+  padding: 14px 32px;
+  border: none;
+  font-size: 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.15s;
+  font-weight: 600;
+}
+
+.hero-btn:hover {
+  background: #007d73;
+}
+.posts-container {
+  width: 100%;
+  margin: 60px 0;
+  padding: 50px 0;
+  background: rgba(255, 255, 255, 0.45); /* شفاف */
+  backdrop-filter: blur(12px); /* تأثير زجاج */
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 0; /* ممتد للجانبين */
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #222;
+}
+.features-section {
+  padding: 60px 40px;
+  background: #f7fdfa;
+  margin-top: 40px;
+  border-radius: 12px;
+}
+
+.features-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 35px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  text-align: center;
+  transition: 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.feature-card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #009688;
+  font-weight: 600;
+}
+
+.feature-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+

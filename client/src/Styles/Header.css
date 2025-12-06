@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+/* ================= HEADER ================= */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 30px;
+  background: #fff;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-circle {
+  width: 45px;
+  height: 45px;
+  background: #009688;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.brand-main {
+  color: #111;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.brand-accent {
+  color: #009688;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* MENU BUTTON */
+.menu-btn {
+  background: transparent;
+  border: none;
+  font-size: 36px;
+  cursor: pointer;
+  color: #009688;
+  font-weight: bold;
+}
+
+/* ===== DRAWER ===== */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -330px;
+  width: 300px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: 0.3s ease-in-out;
+  z-index: 1000;
+
+  /* ⭐⭐ أهم سطرين لحل مشكلتك ⭐⭐ */
+  overflow-y: auto;
+  padding-bottom: 40px; /* عشان آخر عنصر ما يختفي */
+}
+
+.drawer-open {
+  right: 0;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 36px;
+  cursor: pointer;
+  color: #222;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 500;
+}
+
+/* ===== WELCOME BOX ===== */
+.welcome-box {
+  padding: 20px 10px;
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 20px;
+}
+
+.welcome-title {
+  color: #555;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.welcome-name {
+  color: #009688;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* LINKS */
+.drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.drawer-links a {
+  font-size: 19px;
+  text-decoration: none;
+  color: #111;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.drawer-links a:hover {
+  color: #009688;
+}
+
+/* ICON */
+.icon {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #009688;
+}
+
+/* LOGOUT BUTTON */
+.drawer-logout {
+  margin-top: 25px;
+  padding: 10px 20px;
+  background: transparent;
+  border: 2px solid #009688;
+  color: #009688;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawer-logout:hover {
+  background: #009688;
+  color: #fff;
+}
