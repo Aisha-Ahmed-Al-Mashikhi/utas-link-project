@@ -26,6 +26,8 @@ const CompanyProfile = () => {
   const handleLicenseUpload = (e) => {
     const f = e.target.files[0];
     if (!f) return;
+
+    // upload with correct field name
     dispatch(uploadLicense({ email: company.email, file: f }));
   };
 
@@ -49,6 +51,7 @@ const CompanyProfile = () => {
                 "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
               }
               className="profile-img"
+              alt="company"
             />
           </div>
 
@@ -67,14 +70,15 @@ const CompanyProfile = () => {
       <div className="payment-box">
         <h3>Business License</h3>
 
-        {company.tradeLicense ? (
+        {company.businessLicense ? (
           <div className="cv-section">
             <p className="cv-success">License Uploaded Successfully</p>
 
             <div className="cv-actions">
+
               {/* VIEW */}
               <a
-                href={`${ENV.SERVER_URL}${company.tradeLicense}`}
+                href={`${ENV.SERVER_URL}${company.businessLicense}`}
                 target="_blank"
                 className="cv-btn view"
               >
@@ -93,9 +97,7 @@ const CompanyProfile = () => {
               {/* REPLACE */}
               <button
                 className="cv-btn replace"
-                onClick={() =>
-                  document.getElementById("licenseUP").click()
-                }
+                onClick={() => document.getElementById("licenseUP").click()}
               >
                 Replace
               </button>
@@ -104,6 +106,7 @@ const CompanyProfile = () => {
               <button className="cv-btn delete" onClick={handleDeleteLicense}>
                 Delete
               </button>
+
             </div>
           </div>
         ) : (
@@ -121,8 +124,8 @@ const CompanyProfile = () => {
             </label>
           </>
         )}
-      </div>
 
+      </div>
     </div>
   );
 };
