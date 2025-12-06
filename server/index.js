@@ -192,6 +192,10 @@ app.put("/deleteCV", async (req, res) => {
 
 app.post("/uploadCompanyLicense", upload.single("file"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
     const email = req.body.email;
     const filePath = `/uploads/${req.file.filename}`;
 
@@ -203,10 +207,11 @@ app.post("/uploadCompanyLicense", upload.single("file"), async (req, res) => {
 
     res.send({ company: updated });
   } catch (err) {
-    console.log(err);
+    console.log("UPLOAD ERROR:", err);
     res.status(500).json({ error: "License upload failed" });
   }
 });
+
 
 app.put("/company/deleteLicense", async (req, res) => {
   try {
