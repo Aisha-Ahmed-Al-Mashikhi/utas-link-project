@@ -1,3 +1,6 @@
+// =============================
+//     COMPANY PROFILE PAGE
+// =============================
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,9 +32,8 @@ const CompanyProfile = () => {
   };
 
   const handleDeleteLicense = () => {
-    if (window.confirm("Delete License?")) {
+    if (window.confirm("Delete License?"))
       dispatch(deleteLicense(company.email));
-    }
   };
 
   if (!company) return <p>Loading...</p>;
@@ -39,8 +41,8 @@ const CompanyProfile = () => {
   return (
     <div className="profile-wrapper">
 
-      {/* ===== LEFT PANEL ===== */}
-      <div className="profile-left company-expanded">
+      {/* ===== LEFT BIG CARD ===== */}
+      <div className="profile-left">
         <div className="profile-img-container">
           <img
             src={
@@ -48,7 +50,7 @@ const CompanyProfile = () => {
               "https://cdn-icons-png.flaticon.com/512/847/847969.png"
             }
             className="profile-img"
-            alt="profile"
+            alt="company"
           />
         </div>
 
@@ -71,45 +73,50 @@ const CompanyProfile = () => {
         <p className="profile-text">
           With every job post you publish on our platform, you will find talented,
           well-qualified students applying instantly. We help you reach the perfect
-          candidates quickly, easily, and with high efficiency — ensuring you always
-          connect with the right skills at the right time.
+          candidates quickly, easily, and with high efficiency — ensuring you
+          always connect with the right skills at the right time.
         </p>
 
-        {/* ===== LICENSE SECTION ===== */}
+        {/* LICENSE LABEL */}
+        <h3 className="license-title">Business License</h3>
+
+        {/* ===== UPLOAD LICENSE SECTION ===== */}
         {company.businessLicense ? (
-          <div className="upload-actions">
-            {/* VIEW */}
-            <a
-              href={`${ENV.SERVER_URL}${company.businessLicense}`}
-              target="_blank"
-              className="action-btn view"
-            >
-              View
-            </a>
+          <>
+            <div className="upload-actions">
+              <a
+                href={`${ENV.SERVER_URL}${company.businessLicense}`}
+                target="_blank"
+                className="action-btn view"
+              >
+                View
+              </a>
 
-            {/* REPLACE */}
-            <input
-              id="licenseInput"
-              type="file"
-              accept=".pdf"
-              style={{ display: "none" }}
-              onChange={handleLicenseUpload}
-            />
-            <button
-              className="action-btn replace"
-              onClick={() => document.getElementById("licenseInput").click()}
-            >
-              Replace
-            </button>
+              <input
+                id="licenseInput"
+                type="file"
+                accept=".pdf"
+                style={{ display: "none" }}
+                onChange={handleLicenseUpload}
+              />
 
-            {/* DELETE */}
-            <button
-              className="action-btn delete"
-              onClick={handleDeleteLicense}
-            >
-              Delete
-            </button>
-          </div>
+              <button
+                className="action-btn replace"
+                onClick={() =>
+                  document.getElementById("licenseInput").click()
+                }
+              >
+                Replace
+              </button>
+
+              <button
+                className="action-btn delete"
+                onClick={handleDeleteLicense}
+              >
+                Delete
+              </button>
+            </div>
+          </>
         ) : (
           <>
             <input
