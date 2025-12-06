@@ -1,6 +1,3 @@
-// =============================
-//        USER PROFILE PAGE
-// =============================
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -21,68 +18,63 @@ const UserProfile = () => {
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
-
     dispatch(fetchUser(saved.email));
   }, [dispatch, navigate]);
 
   const handleCVUpload = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    dispatch(uploadCv({ email: user.email, file }));
+    if (file) {
+      dispatch(uploadCv({ email: user.email, file }));
+    }
   };
 
   const handleDeleteCV = () => {
-    if (window.confirm("Delete your CV?"))
+    if (window.confirm("Delete CV?"))
       dispatch(deleteCvThunk(user.email));
   };
 
   if (!user) return <p>Loading...</p>;
 
   return (
-    <div className="profile-page">
+    <div className="profile-wrapper">
 
-      {/* USER INFO */}
-      <div className="profile-card">
-        <div className="profile-left">
-          <div className="profile-img-container">
-            <img
-              src={
-                user.profileImage ||
-                "https://cdn-icons-png.flaticon.com/512/456/456212.png"
-              }
-              className="profile-img"
-            />
-          </div>
-
-          <div>
-            <h2 className="profile-name">{user.name}</h2>
-            <p className="profile-email">{user.email}</p>
-            <p className="profile-detail">{user.major}</p>
-          </div>
+      {/* ===== LEFT PANEL ===== */}
+      <div className="profile-left">
+        <div className="profile-img-container">
+          <img
+            src={user.profileImage || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}
+            className="profile-img"
+          />
         </div>
+
+        <h2 className="profile-name">{user.name}</h2>
+        <p className="profile-email">{user.email}</p>
+        <div className="profile-line"></div>
+        <p className="profile-role">{user.major}</p>
       </div>
 
-      {/* ===================== CV CARD ===================== */}
-      <div className="payment-box">
-        <h3>Curriculum Vitae</h3>
+      {/* ===== RIGHT PANEL ===== */}
+      <div className="profile-right">
+        <h1 className="profile-title">Hello</h1>
+        <p className="profile-sub">Here’s who I am & what I do</p>
 
+        <p className="profile-text">
+          I am a student passionate about technology, learning, and creating projects
+          that make an impact. This is my space to showcase who I am.
+        </p>
+
+        {/* ===== UPLOAD CV SECTION ===== */}
         {user.cvLink ? (
-          <div className="cv-section">
-            <p>CV Uploaded Successfully</p>
-
-            <div className="cv-actions">
-
-              {/* VIEW */}
+          <>
+            <div className="upload-actions">
               <a
                 href={`${ENV.SERVER_URL}${user.cvLink}`}
-                className="action-btn view"
                 target="_blank"
+                className="action-btn view"
               >
                 View
               </a>
 
-              {/* HIDDEN INPUT */}
               <input
                 id="cvInput"
                 type="file"
@@ -90,8 +82,6 @@ const UserProfile = () => {
                 style={{ display: "none" }}
                 onChange={handleCVUpload}
               />
-
-              {/* REPLACE */}
               <button
                 className="action-btn replace"
                 onClick={() => document.getElementById("cvInput").click()}
@@ -99,13 +89,11 @@ const UserProfile = () => {
                 Replace
               </button>
 
-              {/* DELETE */}
               <button className="action-btn delete" onClick={handleDeleteCV}>
                 Delete
               </button>
-
             </div>
-          </div>
+          </>
         ) : (
           <>
             <input
@@ -115,13 +103,12 @@ const UserProfile = () => {
               style={{ display: "none" }}
               onChange={handleCVUpload}
             />
-            <label htmlFor="cvInput" className="upload-btn">
+            <label htmlFor="cvInput" className="upload-label">
               Upload CV
             </label>
           </>
         )}
       </div>
-
     </div>
   );
 };
