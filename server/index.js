@@ -190,6 +190,50 @@ app.put("/deleteCV", async (req, res) => {
   }
 });
 
+app.post("/uploadCompanyLicense", upload.single("file"), async (req, res) => {
+  try {
+    const email = req.body.email;
+    const filePath = `/uploads/${req.file.filename}`;
+
+    const updated = await CompanyModel.findOneAndUpdate(
+      { email },
+      { businessLicense: filePath },
+      { new: true }
+    );
+
+    res.send({ company: updated });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "License upload failed" });
+  }
+});
+
+app.put("/company/deleteLicense", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const company = await CompanyModel.findOne({ email });
+    if (!company) return res.status(404).json({ error: "Company not found" });
+
+    if (company.businessLicense) {
+      const licensePath = path.join(process.cwd(), company.businessLicense);
+      if (fs.existsSync(licensePath)) fs.unlinkSync(licensePath);
+    }
+
+    const updated = await CompanyModel.findOneAndUpdate(
+      { email },
+      { businessLicense: null },
+      { new: true }
+    );
+
+    res.send({ company: updated });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to delete license" });
+  }
+});
+
+
 /*───────────────────────────────────────────────
  ░░ ADD JOB  (NEW + LOCATION)
 ───────────────────────────────────────────────*/
