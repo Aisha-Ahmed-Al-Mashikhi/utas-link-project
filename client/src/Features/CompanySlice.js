@@ -84,13 +84,12 @@ export const uploadLicense = createAsyncThunk(
       form.append("email", email);
       form.append("type", "license");
 
-      const res = await axios.post(
-        `${ENV.SERVER_URL}/uploadCompanyFile`,
-        form,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+     const res = await axios.post(
+  `${ENV.SERVER_URL}/uploadCompanyLicense`,
+  form,
+  { headers: { "Content-Type": "multipart/form-data" } }
+);
+
 
       return res.data.company;
     } catch (err) {
