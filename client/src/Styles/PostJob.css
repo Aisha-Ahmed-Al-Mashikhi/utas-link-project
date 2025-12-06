@@ -133,43 +133,44 @@
   }
 }
 
-/* =========================================================
-   ⭐ NEW SECTOR STYLE — BOXED RADIO BUTTONS (Correct)
-========================================================= */
+/* -------- Corrected Radio Buttons Layout (Sector) -------- */
 
+/* Sector inline radio buttons */
 .sector-inline {
   display: flex;
+  align-items: center;
   gap: 15px;
-  margin-top: 6px;
+  height: 48px; /* same as select height */
+  margin-top: 2px;
 }
 
-.sector-option {
-  flex: 1;
+.sector-box-inline {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
-  border: 1.5px solid #ccc;
+  padding: 0 14px;
   border-radius: 10px;
-  background: #fff;
+  background: #ffffff;
+  border: 1.5px solid #ccc;
+  height: 48px;
   cursor: pointer;
-  transition: 0.2s ease-in-out;
+  transition: 0.2s ease;
 }
 
-.sector-option:hover {
+.sector-box-inline:hover {
   border-color: #009688;
-  background: #f1fdfb;
+  background: #f0fdfb;
 }
 
-.sector-option input[type="radio"] {
+.sector-box-inline input[type="radio"] {
+  accent-color: #009688;
   width: 18px;
   height: 18px;
-  accent-color: #009688;
   cursor: pointer;
 }
 
-.sector-option span {
+.sector-box-inline span {
   font-size: 15px;
-  font-weight: 600;
   color: #333;
+  font-weight: 500;
 }
