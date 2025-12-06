@@ -15,7 +15,6 @@ const CompanyProfile = () => {
 
   const { company } = useSelector((state) => state.companies);
 
-  // LOAD LOGGED COMPANY
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
@@ -24,11 +23,9 @@ const CompanyProfile = () => {
   }, [dispatch, navigate]);
 
   const handleLicenseUpload = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-
-    // upload with correct field name
-    dispatch(uploadLicense({ email: company.email, file: f }));
+    const file = e.target.files[0];
+    if (!file) return;
+    dispatch(uploadLicense({ email: company.email, file }));
   };
 
   const handleDeleteLicense = () => {
@@ -40,8 +37,7 @@ const CompanyProfile = () => {
 
   return (
     <div className="profile-page">
-
-      {/* ===== PROFILE CARD ===== */}
+      {/* Profile Card */}
       <div className="profile-card">
         <div className="profile-left">
           <div className="profile-img-container">
@@ -51,14 +47,13 @@ const CompanyProfile = () => {
                 "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
               }
               className="profile-img"
-              alt="company"
+              alt="profile"
             />
           </div>
 
           <div>
             <h2 className="profile-name">{company.companyName}</h2>
             <p className="profile-email">{company.email}</p>
-
             <p className="profile-detail">
               {company.industry} • {company.location}
             </p>
@@ -66,7 +61,7 @@ const CompanyProfile = () => {
         </div>
       </div>
 
-      {/* ===== LICENSE SECTION ===== */}
+      {/* License Section */}
       <div className="payment-box">
         <h3>Business License</h3>
 
@@ -75,17 +70,14 @@ const CompanyProfile = () => {
             <p className="cv-success">License Uploaded Successfully</p>
 
             <div className="cv-actions">
-
-              {/* VIEW */}
               <a
                 href={`${ENV.SERVER_URL}${company.businessLicense}`}
-                target="_blank"
                 className="cv-btn view"
+                target="_blank"
               >
                 View
               </a>
 
-              {/* HIDDEN INPUT */}
               <input
                 id="licenseUP"
                 type="file"
@@ -94,7 +86,6 @@ const CompanyProfile = () => {
                 onChange={handleLicenseUpload}
               />
 
-              {/* REPLACE */}
               <button
                 className="cv-btn replace"
                 onClick={() => document.getElementById("licenseUP").click()}
@@ -102,11 +93,9 @@ const CompanyProfile = () => {
                 Replace
               </button>
 
-              {/* DELETE */}
               <button className="cv-btn delete" onClick={handleDeleteLicense}>
                 Delete
               </button>
-
             </div>
           </div>
         ) : (
@@ -124,7 +113,6 @@ const CompanyProfile = () => {
             </label>
           </>
         )}
-
       </div>
     </div>
   );
