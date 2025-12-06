@@ -1,24 +1,21 @@
-/* PAGE LAYOUT */
 .postjob-page {
-  background: #f8fcfa;
-  min-height: 90vh;
+  background: #f5fffa;
+  min-height: 100vh;
+  padding: 40px;
   display: flex;
   justify-content: center;
-  padding: 40px 0;
-  font-family: "Quicksand", sans-serif;
 }
 
 .postjob-card {
-  width: 750px;
+  width: 700px;
   background: white;
   padding: 40px 50px;
   border-radius: 18px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* TITLES */
 .page-title {
-  font-size: 2.5rem;
+  font-size: 34px;
   font-weight: 900;
 }
 
@@ -27,24 +24,26 @@
 }
 
 .page-sub {
-  margin-top: 5px;
-  margin-bottom: 25px;
+  margin: 5px 0 25px;
   color: #555;
+  font-size: 16px;
 }
 
-/* FORM */
 label {
-  font-weight: 600;
-  margin-top: 15px;
+  font-weight: 700;
+  margin-top: 20px;
   display: block;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   padding: 12px;
-  margin-top: 6px;
   border-radius: 10px;
   border: 1px solid #ddd;
+  margin-top: 6px;
+  outline: none;
   font-size: 15px;
 }
 
@@ -53,61 +52,60 @@ textarea {
   resize: none;
 }
 
-.error {
-  color: red;
-  font-size: 13px;
-  margin-bottom: -10px;
-}
-
-/* FLEX ROWS */
 .row-flex {
   display: flex;
   gap: 20px;
+  margin-top: 15px;
 }
 
 .col-half {
   flex: 1;
 }
 
-/* RADIO INLINE FIX */
-.radio-row {
+.sector-inline label {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-top: 8px;
 }
 
-/* BUTTONS */
+.error {
+  color: red;
+  font-size: 13px;
+}
+
 .btn-primary {
   background: #009688;
   color: white;
   padding: 12px 24px;
   border-radius: 25px;
   border: none;
+  cursor: pointer;
+  margin-top: 40px; /* 🔥 نزلناه شوي */
   font-size: 16px;
   font-weight: 700;
-  cursor: pointer;
-  margin-top: 25px; /* ينزل الزر شوي */
 }
 
 .btn-primary:hover {
-  background: #007e73;
+  background: #007c70;
 }
 
-/* CLEAN BUTTON (GRAY) */
+/* ============================
+   CLEAN BUTTON (LIGHT GRAY)
+============================ */
 .btn-clean {
-  background: #e0e0e0;
-  color: #333;
-  padding: 12px 24px;
+  margin-top: 12px;
+  background: #e6e6e6;
+  color: #444;
+  padding: 10px 22px;
   border-radius: 25px;
   border: none;
-  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  margin-left: 15px;
-  margin-top: 25px;
+  font-size: 15px;
+  transition: 0.2s ease;
 }
 
 .btn-clean:hover {
-  background: #d5d5d5;
+  background: #d4d4d4;
 }
