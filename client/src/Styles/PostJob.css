@@ -1,22 +1,25 @@
+/* PAGE LAYOUT */
 .postjob-page {
-  background: #f7fbf9;
-  padding: 40px 0;
+  background: #f8fcfa;
+  min-height: 90vh;
   display: flex;
   justify-content: center;
+  padding: 40px 0;
   font-family: "Quicksand", sans-serif;
 }
 
 .postjob-card {
-  width: 850px;
+  width: 750px;
   background: white;
   padding: 40px 50px;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
+/* TITLES */
 .page-title {
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .accent {
@@ -24,10 +27,12 @@
 }
 
 .page-sub {
-  margin-bottom: 20px;
+  margin-top: 5px;
+  margin-bottom: 25px;
   color: #555;
 }
 
+/* FORM */
 label {
   font-weight: 600;
   margin-top: 15px;
@@ -39,58 +44,70 @@ input, select, textarea {
   padding: 12px;
   margin-top: 6px;
   border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+  border: 1px solid #ddd;
+  font-size: 15px;
 }
 
 textarea {
   height: 120px;
+  resize: none;
 }
 
 .error {
   color: red;
-  font-size: 0.9rem;
-  margin-top: 3px;
+  font-size: 13px;
+  margin-bottom: -10px;
 }
 
+/* FLEX ROWS */
 .row-flex {
   display: flex;
-  gap: 18px;
-  margin-top: 10px;
+  gap: 20px;
 }
 
 .col-half {
   flex: 1;
 }
 
-.btn-row {
-  margin-top: 25px; /* 🔥 ينزل الزر شوي */
+/* RADIO INLINE FIX */
+.radio-row {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
+/* BUTTONS */
 .btn-primary {
   background: #009688;
   color: white;
-  padding: 12px 25px;
-  border-radius: 30px;
+  padding: 12px 24px;
+  border-radius: 25px;
   border: none;
-  font-size: 1rem;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
+  margin-top: 25px; /* ينزل الزر شوي */
 }
 
+.btn-primary:hover {
+  background: #007e73;
+}
+
+/* CLEAN BUTTON (GRAY) */
 .btn-clean {
-  background: #cccccc;
+  background: #e0e0e0;
   color: #333;
-  padding: 12px 25px;
-  border-radius: 30px;
+  padding: 12px 24px;
+  border-radius: 25px;
   border: none;
-  font-size: 1rem;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
+  margin-left: 15px;
+  margin-top: 25px;
 }
 
 .btn-clean:hover {
-  background: #b9b9b9;
+  background: #d5d5d5;
 }
