@@ -1,6 +1,3 @@
-// =============================
-//     COMPANY PROFILE PAGE
-// =============================
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,87 +15,75 @@ const CompanyProfile = () => {
 
   const { company } = useSelector((state) => state.companies);
 
-  // LOAD LOGGED COMPANY
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
-
     dispatch(fetchCompany(saved.email));
   }, [dispatch, navigate]);
 
   const handleLicenseUpload = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    dispatch(uploadLicense({ email: company.email, file }));
+    if (file) {
+      dispatch(uploadLicense({ email: company.email, file }));
+    }
   };
 
   const handleDeleteLicense = () => {
-    if (window.confirm("Delete license?")) {
+    if (window.confirm("Delete License?"))
       dispatch(deleteLicense(company.email));
-    }
   };
 
   if (!company) return <p>Loading...</p>;
 
   return (
-    <div className="profile-page">
+    <div className="profile-wrapper">
 
-      {/* ===================== PROFILE CARD ===================== */}
-      <div className="profile-card">
-        <div className="profile-left">
-
-          <div className="profile-img-container">
-            <img
-              src={
-                company.profileImage ||
-                "https://cdn-icons-png.flaticon.com/512/456/456212.png"
-              }
-              className="profile-img"
-              alt="company"
-            />
-          </div>
-
-          <div>
-            <h2 className="profile-name">{company.companyName}</h2>
-            <p className="profile-email">{company.email}</p>
-            <p className="profile-detail">
-              {company.industry} • {company.location}
-            </p>
-          </div>
-
+      {/* ===== LEFT PANEL ===== */}
+      <div className="profile-left">
+        <div className="profile-img-container">
+          <img
+            src={company.profileImage || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}
+            className="profile-img"
+          />
         </div>
+
+        <h2 className="profile-name">{company.companyName}</h2>
+        <p className="profile-email">{company.email}</p>
+        <div className="profile-line"></div>
+        <p className="profile-role">
+          {company.industry} — {company.location}
+        </p>
       </div>
 
-      {/* ===================== LICENSE CARD ===================== */}
-      <div className="payment-box">
-        <h3>Business License</h3>
+      {/* ===== RIGHT PANEL ===== */}
+      <div className="profile-right">
+        <h1 className="profile-title">Hello</h1>
+        <p className="profile-sub">Here’s who we are & what we do</p>
 
+        <p className="profile-text">
+          We are a modern company aiming to provide excellent services and contribute
+          to a better digital future. This is our identity and what we stand for.
+        </p>
+
+        {/* ===== UPLOAD LICENSE SECTION ===== */}
         {company.businessLicense ? (
-          <div className="license-section">
-            <p>License Uploaded Successfully</p>
-
-            <div className="license-actions">
-
-              {/* VIEW */}
+          <>
+            <div className="upload-actions">
               <a
                 href={`${ENV.SERVER_URL}${company.businessLicense}`}
-                className="action-btn view"
                 target="_blank"
+                className="action-btn view"
               >
                 View
               </a>
 
-              {/* HIDDEN INPUT */}
               <input
                 id="licenseInput"
                 type="file"
-                accept="application/pdf"
+                accept=".pdf"
                 style={{ display: "none" }}
                 onChange={handleLicenseUpload}
               />
-
-              {/* REPLACE */}
               <button
                 className="action-btn replace"
                 onClick={() => document.getElementById("licenseInput").click()}
@@ -106,25 +91,21 @@ const CompanyProfile = () => {
                 Replace
               </button>
 
-              {/* DELETE */}
-              <button
-                className="action-btn delete"
-                onClick={handleDeleteLicense}
-              >
+              <button className="action-btn delete" onClick={handleDeleteLicense}>
                 Delete
               </button>
             </div>
-          </div>
+          </>
         ) : (
           <>
             <input
               id="licenseInput"
               type="file"
-              accept="application/pdf"
+              accept=".pdf"
               style={{ display: "none" }}
               onChange={handleLicenseUpload}
             />
-            <label htmlFor="licenseInput" className="upload-btn">
+            <label htmlFor="licenseInput" className="upload-label">
               Upload License (PDF)
             </label>
           </>
