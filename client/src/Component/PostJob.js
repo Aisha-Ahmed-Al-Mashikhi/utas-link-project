@@ -88,26 +88,23 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+          
           {/* Job Title */}
           <label>Job Title</label>
           <input
             type="text"
             value={jobTitle}
-            {...register("jobTitle", {
-              onChange: (e) => setJobTitle(e.target.value),
-            })}
+            {...register("jobTitle", { onChange: (e) => setJobTitle(e.target.value) })}
           />
           <p className="error">{errors.jobTitle?.message}</p>
 
-          {/* Category & Sector */}
+          {/* Category + Sector */}
           <div className="row-flex">
             <div className="col-half">
               <label>Category</label>
               <select
                 value={category}
-                {...register("category", {
-                  onChange: (e) => setCategory(e.target.value),
-                })}
+                {...register("category", { onChange: (e) => setCategory(e.target.value) })}
               >
                 <option value="">Select category</option>
                 {CATEGORIES.map((c) => (
@@ -118,9 +115,9 @@ const PostJob = () => {
 
             <div className="col-half">
               <label>Sector</label>
-              <div className="sector-inline">
+              <div className="sector-box">
                 {SECTORS.map((s) => (
-                  <label key={s}>
+                  <label key={s} className="sector-option">
                     <input
                       type="radio"
                       value={s}
@@ -136,15 +133,14 @@ const PostJob = () => {
             </div>
           </div>
 
+          {/* Rate */}
           <div className="row-flex">
             <div className="col-half">
               <label>Rate (OMR)</label>
               <input
                 type="number"
                 value={rate}
-                {...register("rate", {
-                  onChange: (e) => setRate(e.target.value),
-                })}
+                {...register("rate", { onChange: (e) => setRate(e.target.value) })}
               />
             </div>
 
@@ -152,9 +148,7 @@ const PostJob = () => {
               <label>Rate Type</label>
               <select
                 value={rateType}
-                {...register("rateType", {
-                  onChange: (e) => setRateType(e.target.value),
-                })}
+                {...register("rateType", { onChange: (e) => setRateType(e.target.value) })}
               >
                 <option value="">Select type</option>
                 {RATE_TYPES.map((r) => (
@@ -169,18 +163,14 @@ const PostJob = () => {
           <input
             type="text"
             value={skills}
-            {...register("skills", {
-              onChange: (e) => setSkills(e.target.value),
-            })}
+            {...register("skills", { onChange: (e) => setSkills(e.target.value) })}
           />
 
           {/* Description */}
           <label>Description</label>
           <textarea
             value={description}
-            {...register("description", {
-              onChange: (e) => setDescription(e.target.value),
-            })}
+            {...register("description", { onChange: (e) => setDescription(e.target.value) })}
           />
 
           {/* Payout */}
@@ -188,14 +178,23 @@ const PostJob = () => {
           <input
             type="text"
             value={payout}
-            {...register("payout", {
-              onChange: (e) => setPayout(e.target.value),
-            })}
+            {...register("payout", { onChange: (e) => setPayout(e.target.value) })}
           />
 
-          <button className="btn-primary" type="submit">
-            Post Job
-          </button>
+          {/* Buttons */}
+          <div className="actions">
+            <button className="btn-primary" type="submit">
+              Post Job
+            </button>
+
+            <button
+              className="btn-ghost"
+              type="button"
+              onClick={() => reset()}
+            >
+              Clean
+            </button>
+          </div>
         </form>
       </div>
     </div>
