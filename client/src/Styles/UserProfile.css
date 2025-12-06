@@ -1,120 +1,106 @@
-.company-page {
-  background: #f7fbf9;
-  padding: 50px 0;
-  display: flex;
-  justify-content: center;
+.profile-page {
+  background-color: #f8fcfa;
+  min-height: 90vh;
+  padding: 40px 60px;
   font-family: "Quicksand", sans-serif;
 }
 
-.company-card {
-  width: 900px;
-  background: white;
-  padding: 40px 50px;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-}
-
-/* ---------- TOP SECTION ---------- */
-.top-section {
+/* PROFILE CARD */
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 25px 30px;
+  margin-bottom: 30px;
   display: flex;
   align-items: center;
-  gap: 30px;
-  margin-bottom: 35px;
+  gap: 20px;
 }
 
-.profile-img-box {
-  width: 120px;
-  height: 120px;
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-img-container {
+  width: 130px;
+  height: 130px;
 }
 
 .profile-img {
-  width: 100%;
-  height: 100%;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  border: 4px solid #009688;
+  border: 3px solid #009688;
   object-fit: cover;
 }
 
-.company-name {
-  font-size: 2rem;
-  font-weight: 800;
-}
-
-.company-email {
-  color: #666;
-  margin-top: 3px;
-}
-
-.company-meta {
-  font-weight: 600;
-  color: #333;
-  margin-top: 10px;
-}
-
-/* ---------- ABOUT SECTION ---------- */
-.hello-title {
-  font-size: 3.5rem;
-  font-weight: 900;
-  margin-bottom: 8px;
-}
-
-.welcome-title {
-  font-size: 1.3rem;
-  color: #555;
-  margin-bottom: 18px;
-}
-
-.about-text {
-  font-size: 1.1rem;
-  line-height: 1.9;
-  color: #333;
-  margin-bottom: 40px;
-  max-width: 90%;
-}
-
-/* ---------- LICENSE SECTION ---------- */
-.license-title {
-  font-size: 1.4rem;
+.profile-name {
+  font-size: 1.6rem;
   font-weight: 700;
+}
+
+.profile-detail {
+  color: #555;
+}
+
+/* MAIN BOX */
+.payment-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 28px;
+}
+
+.payment-box h3 {
   color: #009688;
-  margin-bottom: 15px;
+  font-weight: 700;
 }
 
-.license-actions {
+/* CV */
+.cv-actions {
+  margin-top: 10px;
   display: flex;
-  gap: 12px;
-}
-
-.btn {
-  padding: 10px 22px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
+  gap: 10px;
 }
 
 /* Buttons */
-.btn.view {
+.cv-btn {
+  width: 115px;
+  height: 42px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cv-btn.view {
   background: #009688;
   color: white;
 }
 
-.btn.replace {
-  background: #ffe7b8;
+.cv-btn.replace {
+  background: #ffe8bb;
   color: #8a5a00;
 }
 
-.btn.delete {
-  background: #ffd1d1;
-  color: #a30000;
+.cv-btn.delete {
+  background: #ffd1d2;
+  color: #b10000;
 }
 
-.upload-btn {
+.upload-cv-btn {
   background: #009688;
   color: white;
   padding: 12px 22px;
   border-radius: 10px;
-  font-weight: 600;
   cursor: pointer;
+  font-weight: 600;
   display: inline-block;
 }
