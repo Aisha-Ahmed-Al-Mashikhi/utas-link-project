@@ -67,14 +67,15 @@ const CompanyProfile = () => {
       <div className="payment-box">
         <h3>Business License</h3>
 
-        {company.tradeLicense ? (
+        {company.businessLicense ? (
           <div className="cv-section">
             <p className="cv-success">License Uploaded Successfully</p>
 
             <div className="cv-actions">
+
               {/* VIEW */}
               <a
-                href={`${ENV.SERVER_URL}${company.tradeLicense}`}
+                href={`${ENV.SERVER_URL}${company.businessLicense}`}
                 target="_blank"
                 className="cv-btn view"
               >
