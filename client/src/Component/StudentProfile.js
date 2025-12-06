@@ -49,7 +49,7 @@ const UserProfile = () => {
             <img
               src={
                 user.profileImage ||
-                "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
+                "https://cdn-icons-png.flaticon.com/512/456/456212.png"
               }
               className="profile-img"
             />
