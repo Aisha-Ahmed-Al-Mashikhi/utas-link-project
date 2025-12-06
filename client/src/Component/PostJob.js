@@ -66,6 +66,14 @@ const PostJob = () => {
       .then(() => {
         alert("Job posted successfully!");
         reset();
+        setJobTitle("");
+        setCategory("");
+        setSector("");
+        setRate("");
+        setRateType("");
+        setSkills("");
+        setDescription("");
+        setPayout("");
       })
       .catch(() => alert("Failed to post job"));
   };
@@ -84,18 +92,22 @@ const PostJob = () => {
           <label>Job Title</label>
           <input
             type="text"
-            {...register("jobTitle")}
-            onChange={(e) => setJobTitle(e.target.value)}
+            value={jobTitle}
+            {...register("jobTitle", {
+              onChange: (e) => setJobTitle(e.target.value),
+            })}
           />
           <p className="error">{errors.jobTitle?.message}</p>
 
-          {/* Category + Sector */}
+          {/* Category & Sector */}
           <div className="row-flex">
             <div className="col-half">
               <label>Category</label>
               <select
-                {...register("category")}
-                onChange={(e) => setCategory(e.target.value)}
+                value={category}
+                {...register("category", {
+                  onChange: (e) => setCategory(e.target.value),
+                })}
               >
                 <option value="">Select category</option>
                 {CATEGORIES.map((c) => (
@@ -108,12 +120,14 @@ const PostJob = () => {
               <label>Sector</label>
               <div className="sector-inline">
                 {SECTORS.map((s) => (
-                  <label key={s} className="radio-row">
+                  <label key={s}>
                     <input
                       type="radio"
                       value={s}
-                      {...register("sector")}
-                      onChange={(e) => setSector(e.target.value)}
+                      checked={sector === s}
+                      {...register("sector", {
+                        onChange: (e) => setSector(e.target.value),
+                      })}
                     />
                     {s}
                   </label>
@@ -127,16 +141,20 @@ const PostJob = () => {
               <label>Rate (OMR)</label>
               <input
                 type="number"
-                {...register("rate")}
-                onChange={(e) => setRate(e.target.value)}
+                value={rate}
+                {...register("rate", {
+                  onChange: (e) => setRate(e.target.value),
+                })}
               />
             </div>
 
             <div className="col-half">
               <label>Rate Type</label>
               <select
-                {...register("rateType")}
-                onChange={(e) => setRateType(e.target.value)}
+                value={rateType}
+                {...register("rateType", {
+                  onChange: (e) => setRateType(e.target.value),
+                })}
               >
                 <option value="">Select type</option>
                 {RATE_TYPES.map((r) => (
@@ -150,30 +168,36 @@ const PostJob = () => {
           <label>Skills Required</label>
           <input
             type="text"
-            {...register("skills")}
-            onChange={(e) => setSkills(e.target.value)}
+            value={skills}
+            {...register("skills", {
+              onChange: (e) => setSkills(e.target.value),
+            })}
           />
 
           {/* Description */}
           <label>Description</label>
           <textarea
-            {...register("description")}
-            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+            {...register("description", {
+              onChange: (e) => setDescription(e.target.value),
+            })}
           />
 
           {/* Payout */}
           <label>Payout (optional)</label>
           <input
             type="text"
-            {...register("payout")}
-            onChange={(e) => setPayout(e.target.value)}
+            value={payout}
+            {...register("payout", {
+              onChange: (e) => setPayout(e.target.value),
+            })}
           />
 
-          {/* Buttons */}
           <button className="btn-primary" type="submit">
             Post Job
           </button>
 
+          {/* NEW CLEAN BUTTON */}
           <button
             type="button"
             className="btn-clean"
