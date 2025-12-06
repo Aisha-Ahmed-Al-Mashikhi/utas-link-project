@@ -1,3 +1,6 @@
+// =============================
+//        USER PROFILE PAGE
+// =============================
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -5,17 +8,16 @@ import {
   uploadCv,
   deleteCvThunk,
 } from "../Features/UserSlice";
-import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 import * as ENV from "../config";
+import { useNavigate } from "react-router-dom";
 
-const StudentProfile = () => {
+const UserProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.users);
 
-  // Load logged user
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
@@ -23,24 +25,31 @@ const StudentProfile = () => {
     dispatch(fetchUser(saved.email));
   }, [dispatch, navigate]);
 
-  if (!user) return <p>Loading...</p>;
+  const handleCVUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const handleCvUpload = (e) => {
-    if (!e.target.files[0]) return;
-    dispatch(uploadCv({ file: e.target.files[0], email: user.email }));
+    dispatch(uploadCv({ email: user.email, file }));
   };
+
+  const handleDeleteCV = () => {
+    if (window.confirm("Delete your CV?"))
+      dispatch(deleteCvThunk(user.email));
+  };
+
+  if (!user) return <p>Loading...</p>;
 
   return (
     <div className="profile-page">
 
-      {/* ------------ PROFILE CARD ------------ */}
+      {/* USER INFO */}
       <div className="profile-card">
         <div className="profile-left">
           <div className="profile-img-container">
             <img
               src={
                 user.profileImage ||
-                "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
               }
               className="profile-img"
             />
@@ -49,73 +58,49 @@ const StudentProfile = () => {
           <div>
             <h2 className="profile-name">{user.name}</h2>
             <p className="profile-email">{user.email}</p>
+            <p className="profile-detail">{user.major}</p>
           </div>
         </div>
       </div>
 
-      {/* ------------ ACADEMIC INFO ------------ */}
+      {/* ===================== CV CARD ===================== */}
       <div className="payment-box">
-        <h3>Academic Information</h3>
-
-        <p>
-          <strong>Major:</strong> {user.major}
-        </p>
-        <p>
-          <strong>Age:</strong> {user.age}
-        </p>
-        <p>
-          <strong>Role:</strong> {user.role}
-        </p>
-        <p>
-          <strong>Status:</strong>{" "}
-          <span className="status active">Active</span>
-        </p>
-      </div>
-
-      {/* ------------ CV SECTION ------------ */}
-      <div className="payment-box">
-        <h3>Curriculum Vitae (CV)</h3>
+        <h3>Curriculum Vitae</h3>
 
         {user.cvLink ? (
           <div className="cv-section">
-            <p className="cv-success">CV Uploaded Successfully</p>
+            <p>CV Uploaded Successfully</p>
 
             <div className="cv-actions">
 
-              {/* VIEW CV */}
+              {/* VIEW */}
               <a
                 href={`${ENV.SERVER_URL}${user.cvLink}`}
+                className="action-btn view"
                 target="_blank"
-                className="cv-btn view"
               >
                 View
               </a>
 
-              {/* Replace CV */}
+              {/* HIDDEN INPUT */}
               <input
+                id="cvInput"
                 type="file"
-                id="cvReplaceInput"
-                accept=".pdf"
+                accept=".pdf,.doc,.docx"
                 style={{ display: "none" }}
-                onChange={(e) =>
-                  dispatch(uploadCv({ file: e.target.files[0], email: user.email }))
-                }
+                onChange={handleCVUpload}
               />
 
+              {/* REPLACE */}
               <button
-                className="cv-btn replace"
-                onClick={() =>
-                  document.getElementById("cvReplaceInput").click()
-                }
+                className="action-btn replace"
+                onClick={() => document.getElementById("cvInput").click()}
               >
                 Replace
               </button>
 
-              {/* Delete CV */}
-              <button
-                className="cv-btn delete"
-                onClick={() => dispatch(deleteCvThunk(user.email))}
-              >
+              {/* DELETE */}
+              <button className="action-btn delete" onClick={handleDeleteCV}>
                 Delete
               </button>
 
@@ -124,15 +109,14 @@ const StudentProfile = () => {
         ) : (
           <>
             <input
+              id="cvInput"
               type="file"
-              id="cvUpload"
-              accept=".pdf"
+              accept=".pdf,.doc,.docx"
               style={{ display: "none" }}
-              onChange={handleCvUpload}
+              onChange={handleCVUpload}
             />
-
-            <label htmlFor="cvUpload" className="upload-cv-btn">
-              Upload CV (PDF)
+            <label htmlFor="cvInput" className="upload-btn">
+              Upload CV
             </label>
           </>
         )}
@@ -142,4 +126,4 @@ const StudentProfile = () => {
   );
 };
 
-export default StudentProfile;
+export default UserProfile;
