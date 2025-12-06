@@ -10,7 +10,7 @@ const CompanySchema = new mongoose.Schema(
     foundedDate: String, // Established date
 
     // FILES
-    tradeLicense: String, // Optional license document
+businessLicense: String,
     profileImage: String, // Company profile image
   },
   { timestamps: true }
