@@ -88,7 +88,7 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          
+          {/* Job Title */}
           <label>Job Title</label>
           <input
             type="text"
@@ -99,6 +99,7 @@ const PostJob = () => {
           />
           <p className="error">{errors.jobTitle?.message}</p>
 
+          {/* Category & Sector */}
           <div className="row-flex">
             <div className="col-half">
               <label>Category</label>
@@ -163,6 +164,7 @@ const PostJob = () => {
             </div>
           </div>
 
+          {/* Skills */}
           <label>Skills Required</label>
           <input
             type="text"
@@ -172,6 +174,7 @@ const PostJob = () => {
             })}
           />
 
+          {/* Description */}
           <label>Description</label>
           <textarea
             value={description}
@@ -180,6 +183,7 @@ const PostJob = () => {
             })}
           />
 
+          {/* Payout */}
           <label>Payout (optional)</label>
           <input
             type="text"
@@ -192,7 +196,6 @@ const PostJob = () => {
           <button className="btn-primary" type="submit">
             Post Job
           </button>
-
         </form>
       </div>
     </div>
