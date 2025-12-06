@@ -196,15 +196,6 @@ const PostJob = () => {
           <button className="btn-primary" type="submit">
             Post Job
           </button>
-
-          {/* NEW CLEAN BUTTON */}
-          <button
-            type="button"
-            className="btn-clean"
-            onClick={() => reset()}
-          >
-            Clean
-          </button>
         </form>
       </div>
     </div>
