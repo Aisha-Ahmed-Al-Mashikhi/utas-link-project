@@ -1,25 +1,30 @@
-/* FULL COMPANY CARD LIKE STUDENT */
-.company-card {
-  width: 420px;
-  background: white;
-  padding: 45px 35px;
-  border-radius: 18px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* Make card wider */
-.profile-wrapper {
+.company-page {
+  background: #f7fbf9;
+  padding: 50px 0;
   display: flex;
-  gap: 50px;
-  padding: 40px 60px;
-  background: #f8fcfa;
+  justify-content: center;
+  font-family: "Quicksand", sans-serif;
 }
 
-.profile-img-container {
-  width: 110px;
-  height: 110px;
-  margin: 0 auto;
+.company-card {
+  width: 900px;
+  background: white;
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ---------- TOP SECTION ---------- */
+.top-section {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 35px;
+}
+
+.profile-img-box {
+  width: 120px;
+  height: 120px;
 }
 
 .profile-img {
@@ -30,76 +35,86 @@
   object-fit: cover;
 }
 
-/* Clean typography */
-.profile-name {
-  font-size: 1.6rem;
-  margin-top: 15px;
-  font-weight: 700;
+.company-name {
+  font-size: 2rem;
+  font-weight: 800;
 }
 
-.profile-email {
-  font-size: 1rem;
+.company-email {
   color: #666;
+  margin-top: 3px;
 }
 
-.profile-line {
-  width: 60px;
-  height: 3px;
-  background: #009688;
-  margin: 12px auto;
-  border-radius: 10px;
-}
-
-.profile-role {
+.company-meta {
   font-weight: 600;
-  color: #444;
-  margin-bottom: 25px;
+  color: #333;
+  margin-top: 10px;
 }
 
-/* License Title */
+/* ---------- ABOUT SECTION ---------- */
+.hello-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.welcome-title {
+  font-size: 1.3rem;
+  color: #555;
+  margin-bottom: 18px;
+}
+
+.about-text {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #333;
+  margin-bottom: 40px;
+  max-width: 90%;
+}
+
+/* ---------- LICENSE SECTION ---------- */
 .license-title {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #009688;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.license-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
 }
 
 /* Buttons */
-.upload-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.upload-label {
-  background: #009688;
-  padding: 10px 20px;
-  border-radius: 10px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.action-btn {
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.action-btn.view {
+.btn.view {
   background: #009688;
   color: white;
 }
 
-.action-btn.replace {
+.btn.replace {
   background: #ffe7b8;
   color: #8a5a00;
 }
 
-.action-btn.delete {
+.btn.delete {
   background: #ffd1d1;
   color: #a30000;
+}
+
+.upload-btn {
+  background: #009688;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
 }
