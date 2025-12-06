@@ -1,6 +1,3 @@
-// =============================
-//     COMPANY PROFILE PAGE
-// =============================
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -41,8 +38,10 @@ const CompanyProfile = () => {
   return (
     <div className="profile-wrapper">
 
-      {/* ===== LEFT BIG CARD ===== */}
-      <div className="profile-left">
+      {/* FULL WHITE CARD */}
+      <div className="company-card">
+
+        {/* IMAGE */}
         <div className="profile-img-container">
           <img
             src={
@@ -54,6 +53,7 @@ const CompanyProfile = () => {
           />
         </div>
 
+        {/* TEXT INFO */}
         <h2 className="profile-name">{company.companyName}</h2>
         <p className="profile-email">{company.email}</p>
 
@@ -62,28 +62,15 @@ const CompanyProfile = () => {
         <p className="profile-role">
           {company.industry} — {company.location}
         </p>
-      </div>
 
-      {/* ===== RIGHT PANEL ===== */}
-      <div className="profile-right">
-        <h1 className="profile-title">Hello</h1>
-
-        <p className="profile-sub">Welcome, dear company</p>
-
-        <p className="profile-text">
-          With every job post you publish on our platform, you will find talented,
-          well-qualified students applying instantly. We help you reach the perfect
-          candidates quickly, easily, and with high efficiency — ensuring you
-          always connect with the right skills at the right time.
-        </p>
-
-        {/* LICENSE LABEL */}
+        {/* BUSINESS LICENSE LABEL */}
         <h3 className="license-title">Business License</h3>
 
-        {/* ===== UPLOAD LICENSE SECTION ===== */}
+        {/* LICENSE SECTION */}
         {company.businessLicense ? (
           <>
             <div className="upload-actions">
+
               <a
                 href={`${ENV.SERVER_URL}${company.businessLicense}`}
                 target="_blank"
@@ -115,6 +102,7 @@ const CompanyProfile = () => {
               >
                 Delete
               </button>
+
             </div>
           </>
         ) : (
@@ -131,7 +119,23 @@ const CompanyProfile = () => {
             </label>
           </>
         )}
+
       </div>
+
+      {/* RIGHT SECTION (TEXT ONLY) */}
+      <div className="profile-right">
+        <h1 className="profile-title">Hello</h1>
+
+        <p className="profile-sub">Welcome, dear company</p>
+
+        <p className="profile-text">
+          With every job post you publish on our platform, you will find talented,
+          well-qualified students applying instantly. We help you reach the perfect
+          candidates quickly, easily, and with high efficiency — ensuring you
+          always connect with the right skills at the right time.
+        </p>
+      </div>
+
     </div>
   );
 };
