@@ -25,18 +25,18 @@
 }
 
 .profile-img-container {
-  position: relative;
-  width: 95px;
-  height: 95px;
+  width: 130px;
+  height: 130px;
 }
 
 .profile-img {
-  width: 95px;
-  height: 95px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   border: 3px solid #009688;
   object-fit: cover;
 }
+
 
 .profile-name {
   font-size: 1.6rem;
