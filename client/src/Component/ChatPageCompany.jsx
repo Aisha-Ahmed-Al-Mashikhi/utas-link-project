@@ -49,44 +49,58 @@ const ChatPageCompany = () => {
   };
 
   return (
-    <div className="chat-wrapper">
-      <div className="chat-header">
-        <h2>Chat with <span className="accent">Applicant</span></h2>
-        <button className="close-chat" onClick={() => navigate(-1)}>✕</button>
-      </div>
+    <>
+      <div className="chat-bg-shape1"></div>
+      <div className="chat-bg-shape2"></div>
 
-      <div className="chat-box">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`chat-row ${
-              msg.from.email === company.email ? "right" : "left"
-            }`}
-          >
-            <div className={`bubble ${
-              msg.from.email === company.email ? "me" : "them"
-            }`}>
-              <p>{msg.message.text}</p>
-              <span className="time">
-                {new Date(msg.message.sentAt).toLocaleTimeString()}
-              </span>
+      <div className="chat-wrapper">
+        {/* HEADER */}
+        <div className="chat-header">
+          <h2>
+            Chat with <span className="accent">Applicant</span>
+          </h2>
+          <button className="close-chat" onClick={() => navigate(-1)}>✕</button>
+        </div>
+
+        {/* CHAT BOX */}
+        <div className="chat-box">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`chat-row ${
+                msg.from.email === company.email ? "right" : "left"
+              }`}
+            >
+              <div
+                className={`bubble ${
+                  msg.from.email === company.email ? "me" : "them"
+                }`}
+              >
+                <p>{msg.message.text}</p>
+                <span className="time">
+                  {new Date(msg.message.sentAt).toLocaleTimeString()}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        <div ref={bottomRef}></div>
+          <div ref={bottomRef}></div>
+        </div>
+
+        {/* INPUT */}
+        <div className="chat-input-area">
+          <input
+            placeholder="Write a message..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+
+          <button className="send-btn" onClick={handleSend}>
+            Send <span className="arrow">➤</span>
+          </button>
+        </div>
       </div>
-
-      <div className="chat-input-area">
-        <input
-          placeholder="Write a message..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-
-        <button onClick={handleSend}>Send ➤</button>
-      </div>
-    </div>
+    </>
   );
 };
 
