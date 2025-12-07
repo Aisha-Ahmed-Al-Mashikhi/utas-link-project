@@ -47,7 +47,7 @@ const Header = () => {
           </div>
         </div>
 
-        {/* ===== HEADER NAV LINKS ===== */}
+        {/* ===== HEADER NAV LINKS — ONLY MAIN PAGES ===== */}
         <div className="header-links">
           {/* Student */}
           {role === "student" && (
@@ -119,16 +119,8 @@ const Header = () => {
           {/* ======================= STUDENT ======================= */}
           {role === "student" && (
             <>
-              <Link to="/" onClick={() => setOpen(false)}>
-                <FiHome className="icon" /> Home
-              </Link>
-
               <Link to="/student-profile" onClick={() => setOpen(false)}>
                 <FiUser className="icon" /> Profile
-              </Link>
-
-              <Link to="/find-job" onClick={() => setOpen(false)}>
-                <FiBriefcase className="icon" /> Find Job
               </Link>
 
               <Link to="/student-applications" onClick={() => setOpen(false)}>
@@ -137,10 +129,6 @@ const Header = () => {
 
               <Link to="/student-chats" onClick={() => setOpen(false)}>
                 <FiMessageCircle className="icon" /> Chats
-              </Link>
-
-              <Link to="/create-post" onClick={() => setOpen(false)}>
-                <FiPlusCircle className="icon" /> Create Post
               </Link>
 
               <Link to="/developers" onClick={() => setOpen(false)}>
@@ -156,28 +144,12 @@ const Header = () => {
           {/* ======================= COMPANY ======================= */}
           {role === "company" && (
             <>
-              <Link to="/" onClick={() => setOpen(false)}>
-                <FiHome className="icon" /> Home
-              </Link>
-
               <Link to="/company-profile" onClick={() => setOpen(false)}>
                 <FiUser className="icon" /> Company Profile
               </Link>
 
-              <Link to="/post-job" onClick={() => setOpen(false)}>
-                <FiPlusCircle className="icon" /> Post Job
-              </Link>
-
-              <Link to="/company-jobs" onClick={() => setOpen(false)}>
-                <FiBriefcase className="icon" /> My Jobs
-              </Link>
-
               <Link to="/company-chats" onClick={() => setOpen(false)}>
                 <FiMessageCircle className="icon" /> Chats
-              </Link>
-
-              <Link to="/create-post" onClick={() => setOpen(false)}>
-                <FiPlusCircle className="icon" /> Create Post
               </Link>
 
               <Link to="/developers" onClick={() => setOpen(false)}>
