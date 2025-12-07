@@ -8,7 +8,7 @@
   position: relative;
 }
 
-/* Background gradients for right side only */
+/* Background gradients (RIGHT SIDE) */
 .profile-page::before {
   content: "";
   position: absolute;
@@ -19,7 +19,7 @@
   top: 55%;
   left: 55%;
   filter: blur(90px);
-  opacity: 0.50;
+  opacity: 0.5;
   z-index: 0;
 }
 
@@ -33,11 +33,11 @@
   top: 10%;
   left: 30%;
   filter: blur(95px);
-  opacity: 0.50;
+  opacity: 0.5;
   z-index: 0;
 }
 
-/* Columns */
+/* ====== COLUMNS ====== */
 .left-column,
 .right-column {
   position: relative;
@@ -45,7 +45,7 @@
 }
 
 .left-column {
-  width: 40%; /* تكبير الكرت اليسار */
+  width: 40%;
 }
 
 .right-column {
@@ -55,24 +55,32 @@
   gap: 25px;
 }
 
-/* ====== PROFILE CARD ====== */
+/* ==========================
+   PROFILE CARD (FINAL FIX)
+   ========================== */
 .profile-card {
   width: 100%;
-  padding: 40px 20px 50px;
   background: #ffffff !important;
   border-radius: 25px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   text-align: center;
-  position: relative;
+
+  padding: 40px 20px 30px;
+
+  /* هذا يمنع الكرت يصير طويل فاضي */
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-/* ====== BIG PROFILE IMAGE (300PX) ====== */
+/* ===== BIG PROFILE IMAGE (260PX) ===== */
 .profile-img-container {
-  width: 300px;
-  height: 300px;
-  margin: 0 auto 25px;
-  position: relative;
-  z-index: 5;
+  width: 260px;
+  height: 260px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .profile-img {
@@ -82,11 +90,11 @@
   object-fit: cover;
   background: #fff;
 
-  border: 8px solid #e6e9f5; /* إطار */
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18); /* ظل جميل */
+  border: 8px solid #e6e9f5;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
 }
 
-/* Profile text */
+/* ===== TEXT UNDER IMAGE ===== */
 .profile-name {
   font-size: 24px;
   font-weight: 700;
@@ -96,10 +104,11 @@
 .profile-email {
   color: #555;
   font-size: 16px;
-  margin-bottom: 25px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
-/* ====== RIGHT SIDE CARDS (GLASS EFFECT) ====== */
+/* ====== RIGHT SIDE GLASS CARDS ====== */
 .glass-card {
   width: 100%;
   padding: 25px;
@@ -120,7 +129,7 @@
   font-size: 15px;
 }
 
-/* Status dot */
+/* STATUS DOT */
 .status-dot {
   display: inline-block;
   width: 12px;
@@ -184,7 +193,7 @@
   opacity: 0.85;
 }
 
-/* Upload button */
+/* UPLOAD BUTTON */
 .upload-cv-btn {
   background: #009688;
   color: white;
@@ -200,7 +209,7 @@
   opacity: 0.85;
 }
 
-/* Remove save button */
+/* HIDE SAVE BUTTON */
 .save-btn {
   display: none;
 }
