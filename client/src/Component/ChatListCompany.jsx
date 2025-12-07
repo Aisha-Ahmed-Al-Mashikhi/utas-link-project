@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchApplicants } from "../Features/ApplicationSlice";
-import "../Styles/ChatList.css"; // نستخدم نفس ملف الاستايل
+import "../Styles/ChatList.css";
 import { useNavigate } from "react-router-dom";
 
 const ChatListCompany = () => {
@@ -11,14 +11,11 @@ const ChatListCompany = () => {
   const { user } = useSelector((state) => state.users);
   const { applicants } = useSelector((state) => state.applications);
 
-  // Get company email
   const companyEmail =
     user?.email || JSON.parse(localStorage.getItem("loggedUser"))?.email;
 
   useEffect(() => {
-    if (companyEmail) {
-      dispatch(fetchApplicants(companyEmail));
-    }
+    if (companyEmail) dispatch(fetchApplicants(companyEmail));
   }, [dispatch, companyEmail]);
 
   return (
@@ -46,9 +43,7 @@ const ChatListCompany = () => {
                 </div>
               </div>
 
-              <button className="chat-btn">
-                Open Chat
-              </button>
+              <button className="chat-btn">Open Chat</button>
             </div>
           ))}
         </div>
