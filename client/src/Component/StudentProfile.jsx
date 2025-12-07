@@ -33,9 +33,10 @@ const StudentProfile = () => {
   return (
     <div className="profile-page">
 
-      {/* ------------ PROFILE CARD ------------ */}
-      <div className="profile-card">
-        <div className="profile-left">
+      {/* LEFT SIDE — PROFILE CARD */}
+      <div className="left-column">
+
+        <div className="profile-card glass-card">
           <div className="profile-img-container">
             <img
               src={
@@ -46,96 +47,93 @@ const StudentProfile = () => {
             />
           </div>
 
-          <div>
-            <h2 className="profile-name">{user.name}</h2>
-            <p className="profile-email">{user.email}</p>
-          </div>
+          <h2 className="profile-name">{user.name}</h2>
+          <p className="profile-email">{user.email}</p>
+
+          <button className="save-btn">Save</button>
         </div>
+
       </div>
 
-      {/* ------------ ACADEMIC INFO ------------ */}
-      <div className="payment-box">
-        <h3>Academic Information</h3>
+      {/* RIGHT SIDE — ACADEMIC + CV */}
+      <div className="right-column">
 
-        <p>
-          <strong>Major:</strong> {user.major}
-        </p>
-        <p>
-          <strong>Age:</strong> {user.age}
-        </p>
-        <p>
-          <strong>Role:</strong> {user.role}
-        </p>
-        <p>
-          <strong>Status:</strong>{" "}
-          <span className="status active">Active</span>
-        </p>
-      </div>
+        {/* ACADEMIC CARD */}
+        <div className="glass-card info-card">
+          <h3>Academic Information</h3>
 
-      {/* ------------ CV SECTION ------------ */}
-      <div className="payment-box">
-        <h3>Curriculum Vitae (CV)</h3>
+          <p><strong>Major:</strong> {user.major}</p>
+          <p><strong>Age:</strong> {user.age}</p>
+          <p><strong>Role:</strong> {user.role}</p>
 
-        {user.cvLink ? (
-          <div className="cv-section">
-            <p className="cv-success">CV Uploaded Successfully</p>
+          <p>
+            <strong>Status:</strong>{" "}
+            <span className="status-dot green"></span> Active
+          </p>
+        </div>
 
-            <div className="cv-actions">
+        {/* CV CARD */}
+        <div className="glass-card info-card">
+          <h3>Curriculum Vitae (CV)</h3>
 
-              {/* VIEW CV */}
-              <a
-                href={`${ENV.SERVER_URL}${user.cvLink}`}
-                target="_blank"
-                className="cv-btn view"
-              >
-                View
-              </a>
+          {user.cvLink ? (
+            <div className="cv-section">
+              <p className="cv-success">CV Uploaded Successfully</p>
 
-              {/* Replace CV */}
+              <div className="cv-actions">
+                <a
+                  href={`${ENV.SERVER_URL}${user.cvLink}`}
+                  target="_blank"
+                  className="cv-btn view"
+                >
+                  View
+                </a>
+
+                <input
+                  type="file"
+                  id="cvReplaceInput"
+                  accept=".pdf"
+                  style={{ display: "none" }}
+                  onChange={(e) =>
+                    dispatch(uploadCv({ file: e.target.files[0], email: user.email }))
+                  }
+                />
+
+                <button
+                  className="cv-btn replace"
+                  onClick={() =>
+                    document.getElementById("cvReplaceInput").click()
+                  }
+                >
+                  Replace
+                </button>
+
+                <button
+                  className="cv-btn delete"
+                  onClick={() => dispatch(deleteCvThunk(user.email))}
+                >
+                  Delete
+                </button>
+
+              </div>
+            </div>
+          ) : (
+            <>
               <input
                 type="file"
-                id="cvReplaceInput"
+                id="cvUpload"
                 accept=".pdf"
                 style={{ display: "none" }}
-                onChange={(e) =>
-                  dispatch(uploadCv({ file: e.target.files[0], email: user.email }))
-                }
+                onChange={handleCvUpload}
               />
 
-              <button
-                className="cv-btn replace"
-                onClick={() =>
-                  document.getElementById("cvReplaceInput").click()
-                }
-              >
-                Replace
-              </button>
+              <label htmlFor="cvUpload" className="upload-cv-btn">
+                Upload CV (PDF)
+              </label>
+            </>
+          )}
+        </div>
 
-              {/* Delete CV */}
-              <button
-                className="cv-btn delete"
-                onClick={() => dispatch(deleteCvThunk(user.email))}
-              >
-                Delete
-              </button>
-
-            </div>
-          </div>
-        ) : (
-          <>
-            <input
-              type="file"
-              id="cvUpload"
-              accept=".pdf"
-              style={{ display: "none" }}
-              onChange={handleCvUpload}
-            />
-
-            <label htmlFor="cvUpload" className="upload-cv-btn">
-              Upload CV (PDF)
-            </label>
-          </>
-        )}
       </div>
 
     </div>
