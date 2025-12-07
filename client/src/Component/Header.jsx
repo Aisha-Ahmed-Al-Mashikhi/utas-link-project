@@ -142,25 +142,31 @@ const Header = () => {
           )}
 
           {/* ======================= COMPANY ======================= */}
-          {role === "company" && (
-            <>
-              <Link to="/company-profile" onClick={() => setOpen(false)}>
-                <FiUser className="icon" /> Company Profile
-              </Link>
+{role === "company" && (
+  <>
+    <Link to="/company-profile" onClick={() => setOpen(false)}>
+      <FiUser className="icon" /> Company Profile
+    </Link>
 
-              <Link to="/company-chats" onClick={() => setOpen(false)}>
-                <FiMessageCircle className="icon" /> Chats
-              </Link>
+    <Link to="/company-chats" onClick={() => setOpen(false)}>
+      <FiMessageCircle className="icon" /> Chats
+    </Link>
 
-              <Link to="/developers" onClick={() => setOpen(false)}>
-                <FiUser className="icon" /> About Developer
-              </Link>
+    {/* ⭐ NEW — Applicants (go to company jobs page) */}
+    <Link to="/company-jobs" onClick={() => setOpen(false)}>
+      <FiBriefcase className="icon" /> Applicants
+    </Link>
 
-              <button className="drawer-logout" onClick={handleLogout}>
-                <FiLogOut className="icon" /> Logout
-              </button>
-            </>
-          )}
+    <Link to="/developers" onClick={() => setOpen(false)}>
+      <FiUser className="icon" /> About Developer
+    </Link>
+
+    <button className="drawer-logout" onClick={handleLogout}>
+      <FiLogOut className="icon" /> Logout
+    </button>
+  </>
+)}
+
         </nav>
       </div>
     </>
