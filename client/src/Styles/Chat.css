@@ -1,36 +1,4 @@
-/* PAGE BACKGROUND LIKE PROFILE PAGE */
-body {
-  background: linear-gradient(135deg, #f5fffc, #e8fffa);
-  min-height: 100vh;
-  font-family: "Quicksand", sans-serif;
-  overflow-x: hidden;
-}
 
-/* Decorative soft circles */
-.chat-bg-shape1,
-.chat-bg-shape2 {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.45;
-  z-index: -1;
-}
-
-.chat-bg-shape1 {
-  width: 280px;
-  height: 280px;
-  background: #a0ffee;
-  top: -60px;
-  left: -60px;
-}
-
-.chat-bg-shape2 {
-  width: 320px;
-  height: 320px;
-  background: #cafff3;
-  bottom: -80px;
-  right: -80px;
-}
 /* MAIN WRAPPER */
 .chat-wrapper {
   padding: 20px;
