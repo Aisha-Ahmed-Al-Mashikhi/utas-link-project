@@ -9,6 +9,7 @@ import { addJob } from "../Features/JobSlice";
 const PostJob = () => {
   const dispatch = useDispatch();
 
+  /* ====== STATES المطلوبة حسب طلب الأستاذ ====== */
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
   const [sector, setSector] = useState("");
@@ -44,28 +45,35 @@ const PostJob = () => {
   const SECTORS = ["Private Company", "Government"];
   const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
 
-  const onSubmit = () => {
+  /* =====================================================
+       SUBMIT — تصحيح المشكلة بدون حذف أي useState
+     ===================================================== */
+  const onSubmit = (data) => {
     const company = JSON.parse(localStorage.getItem("loggedUser"));
     if (!company) return alert("Please log in first.");
 
-    dispatch(
-      addJob({
-        jobTitle,
-        category,
-        sector,
-        rate,
-        rateType,
-        skills,
-        description,
-        payout,
-        organization: company.companyName,
-        postedBy: company.email,
-      })
-    )
+    // دمج قيم useState + قيم react-hook-form
+    const finalJob = {
+      jobTitle: jobTitle || data.jobTitle,
+      category: category || data.category,
+      sector: sector || data.sector,
+      rate: rate || data.rate,
+      rateType: rateType || data.rateType,
+      skills: skills || data.skills,
+      description: description || data.description,
+      payout: payout || data.payout,
+
+      organization: company.companyName,
+      postedBy: company.email,
+    };
+
+    dispatch(addJob(finalJob))
       .unwrap()
       .then(() => {
         alert("Job posted successfully!");
         reset();
+
+        // تفريغ الـ states حسب طلب الأستاذ
         setJobTitle("");
         setCategory("");
         setSector("");
@@ -136,6 +144,7 @@ const PostJob = () => {
             </div>
           </div>
 
+          {/* Rate & Rate Type */}
           <div className="row-flex">
             <div className="col-half">
               <label>Rate (OMR)</label>
