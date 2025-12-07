@@ -7,7 +7,7 @@ import {
   deletePost,
 } from "../Features/PostSlice";
 import moment from "moment";
-import "../Styles/CreatePost.css"; // ← ملف التصميم
+import "../Styles/CreatePost.css";
 
 const CreatePost = () => {
   const dispatch = useDispatch();
@@ -18,20 +18,19 @@ const CreatePost = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  // Load user posts
+  // Fetch user's posts
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchUserPosts(user.email));
     }
   }, [user, dispatch]);
 
-  // Submit new or updated post
+  // Add or Update post
   const handleSubmit = () => {
     if (!postMsg.trim()) return;
 
     if (editMode) {
       dispatch(updatePost({ id: editId, postMsg }));
-      alert("Post updated successfully!");
       setEditMode(false);
       setEditId(null);
     } else {
@@ -39,8 +38,7 @@ const CreatePost = () => {
         addPost({
           postMsg,
           email: user.email,
-          name: user.name,
-          companyName: user.companyName,
+          name: user.name || user.companyName, // 👈 دعم اسم الشركة
         })
       );
     }
@@ -52,7 +50,6 @@ const CreatePost = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       dispatch(deletePost(id));
-      alert("Post deleted successfully.");
     }
   };
 
@@ -63,47 +60,47 @@ const CreatePost = () => {
     setPostMsg(post.postMsg);
   };
 
-  // Auto detect student or company name
-  const getAuthorName = () => {
-    return user.companyName ?? user.name;
-  };
-
   return (
     <div className="post-page-container">
-      {/* INPUT BOX */}
+      {/* CREATE BOX */}
       <div className="create-box">
         <textarea
-          placeholder="Write something..."
+          className="post-input"
+          placeholder="✏️ Write something..."
           value={postMsg}
           onChange={(e) => setPostMsg(e.target.value)}
-          className="post-input"
         ></textarea>
 
-        <button onClick={handleSubmit} className="post-btn">
+        <button className="post-btn" onClick={handleSubmit}>
           {editMode ? "Update" : "Post"}
         </button>
       </div>
 
-      <h3 className="section-title">My Posts</h3>
-
-      {myPosts.length === 0 && <p className="no-posts">No posts yet.</p>}
-
       {/* POSTS LIST */}
+      <h3 className="my-posts-title">My Posts</h3>
+
+      {myPosts.length === 0 && <p>No posts yet.</p>}
+
       {myPosts.map((post) => (
         <div key={post._id} className="post-card">
           <div className="post-header">
-            <p className="author">{getAuthorName()}</p>
-            <p className="time">{moment(post.createdAt).fromNow()}</p>
+            <div className="post-info">
+              <p className="author">{user.name || user.companyName}</p>
+              <p className="time">{moment(post.createdAt).fromNow()}</p>
+            </div>
           </div>
 
-          <p className="post-text">{post.postMsg}</p>
+          <p className="post-content">{post.postMsg}</p>
 
-          <div className="btn-row">
+          <div className="post-actions">
             <button className="edit-btn" onClick={() => handleEdit(post)}>
               Edit
             </button>
 
-            <button className="delete-btn" onClick={() => handleDelete(post._id)}>
+            <button
+              className="delete-btn"
+              onClick={() => handleDelete(post._id)}
+            >
               Delete
             </button>
           </div>
