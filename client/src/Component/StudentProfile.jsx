@@ -8,6 +8,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 import * as ENV from "../config";
+
+// صورة المستخدم (ثابتة إذا ما كان عنده صورة)
 import profileImg from "../Images/profile.png";
 
 const StudentProfile = () => {
@@ -33,6 +35,7 @@ const StudentProfile = () => {
   return (
     <div className="profile-page">
 
+      {/* LEFT SIDE — PROFILE CARD */}
       <div className="left-column">
         <div className="profile-card glass-card">
 
@@ -49,8 +52,10 @@ const StudentProfile = () => {
         </div>
       </div>
 
+      {/* RIGHT SIDE — ACADEMIC + CV */}
       <div className="right-column">
 
+        {/* ACADEMIC CARD */}
         <div className="glass-card info-card">
           <h3>Academic Information</h3>
 
@@ -64,6 +69,7 @@ const StudentProfile = () => {
           </p>
         </div>
 
+        {/* CV CARD */}
         <div className="glass-card info-card">
           <h3>Curriculum Vitae (CV)</h3>
 
