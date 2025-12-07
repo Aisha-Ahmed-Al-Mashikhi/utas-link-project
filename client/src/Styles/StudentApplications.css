@@ -1,8 +1,7 @@
-/* ========== PAGE STYLING ========== */
-
+/* -------------------- PAGE LAYOUT -------------------- */
 .applications-page {
   background-color: #f9fcfb;
-  padding: 40px 50px;
+  padding: 50px 80px;
   min-height: 90vh;
   font-family: "Quicksand", sans-serif;
 }
@@ -23,157 +22,182 @@
   margin-bottom: 25px;
 }
 
-/* ===================================================== */
-/* =============     SCROLLER ROW     =================== */
-/* ===================================================== */
+/* ======================================================
+   HORIZONTAL SCROLL FOR APPLICATION CARDS
+====================================================== */
 
 .applications-scroll {
   display: flex;
   gap: 25px;
-  overflow-x: auto !important;
-  overflow-y: hidden;
-  padding: 10px 5px;
+  overflow-x: auto;
+  padding-bottom: 15px;
   scroll-behavior: smooth;
-  white-space: nowrap;
-  width: 100%;
 }
 
-/* SCROLLBAR */
+/* Scrollbar design */
 .applications-scroll::-webkit-scrollbar {
   height: 10px;
 }
+
 .applications-scroll::-webkit-scrollbar-thumb {
   background: #009688;
-  border-radius: 50px;
-}
-.applications-scroll::-webkit-scrollbar-track {
-  background: #d9f2ef;
-  border-radius: 50px;
+  border-radius: 10px;
 }
 
-/* ===================================================== */
-/* =============     CARD STYLING     =================== */
-/* ===================================================== */
+.applications-scroll::-webkit-scrollbar-track {
+  background: #e8f6f4;
+  border-radius: 10px;
+}
+
+/* ======================================================
+   APPLICATION CARD DESIGN
+====================================================== */
 
 .application-card {
   background: white;
   border-radius: 20px;
-  padding: 25px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 35px rgba(0, 0, 0, 0.08);
   transition: 0.2s;
-  display: inline-block;
-  vertical-align: top;
 }
 
-/* 🔥 SMALLER CARD WIDTH */
+/* SMALLER CARD FOR SCROLLER */
 .small-card {
-  width: 300px;
-  min-width: 300px;
+  width: 350px;
+  min-width: 350px;
 }
 
+/* Hover effect */
 .application-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
+/* CARD CONTENT */
 .app-info {
   display: flex;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .app-icon {
-  font-size: 34px;
+  font-size: 35px;
+  color: #009688;
 }
 
 .job-title {
   font-weight: 700;
-  font-size: 17px;
+  font-size: 18px;
   color: #222;
+  margin-bottom: 4px;
 }
 
-.company,
+.company {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 2px;
+}
+
 .details {
   font-size: 14px;
-  color: #555;
+  color: #666;
   margin-bottom: 3px;
 }
 
-/* STATUS COLORS */
+/* Status badge */
 .status-badge {
   display: inline-block;
-  margin-top: 6px;
-  padding: 5px 12px;
-  border-radius: 12px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border-radius: 14px;
   font-weight: 600;
+  font-size: 0.85rem;
 }
+
+.status-badge.pending {
+  background-color: #fff8e1;
+  color: #8d6e63;
+}
+
 .status-badge.accepted {
-  background: #c8f7c5;
+  background-color: #c8f7c5;
   color: #0b9444;
 }
-.status-badge.pending {
-  background: #fff4d4;
-  color: #a17400;
-}
+
 .status-badge.rejected {
-  background: #ffd6d6;
-  color: #b10000;
+  background-color: #ffd3d3;
+  color: #b71c1c;
 }
 
+/* Deleted warning */
 .deleted-warning {
   color: #d9534f;
-  font-size: 14px;
   font-weight: 600;
+  margin-top: 8px;
+  font-size: 14px;
 }
 
-/* ===================================================== */
-/* =============     BUTTONS CENTER     ================= */
-/* ===================================================== */
+/* ======================================================
+   ACTION BUTTONS
+====================================================== */
 
-.center-buttons {
+.app-actions {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .chat-btn {
-  background: #009688;
+  background-color: #009688;
   color: white;
-  padding: 7px 15px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
   border: none;
-  cursor: pointer;
   font-weight: 600;
-}
-
-.withdraw-btn {
-  background: #e53935;
-  color: white;
-  padding: 7px 15px;
-  border-radius: 8px;
-  border: none;
   cursor: pointer;
-  font-weight: 600;
+  transition: 0.2s;
 }
 
 .chat-btn:hover {
-  background: #007c6c;
+  background-color: #007c6c;
+}
+
+.withdraw-btn {
+  background-color: #e57373;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 .withdraw-btn:hover {
-  background: #c62828;
+  background-color: #d32f2f;
 }
 
-/* EMPTY STATE */
+/* ======================================================
+   EMPTY STATE (NO APPLICATIONS)
+====================================================== */
 .empty-state {
   background: #ffffff;
   padding: 40px;
   border-radius: 20px;
   text-align: center;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
-  border: 1px solid #ececec;
-  max-width: 350px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+  border: 1px solid #e8e8e8;
+  max-width: 420px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 15px;
 }
 
 .findjob-btn {
@@ -185,4 +209,9 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.findjob-btn:hover {
+  background-color: #007c6c;
 }
