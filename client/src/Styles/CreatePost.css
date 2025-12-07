@@ -1,60 +1,57 @@
-/* PAGE LAYOUT */
+/* MAIN PAGE LAYOUT */
 .post-page {
   display: flex;
   gap: 30px;
   padding: 30px;
   width: 100%;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 120px);
 }
 
-/* GLASS STYLE */
+/* GLASS EFFECT */
 .glass {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(18px);
   border-radius: 25px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.12);
 }
 
-/* LEFT CARD — Write box */
+/* LEFT CARD (WRITE POST) */
 .left-card {
-  width: 35%;
+  width: 38%;
+  height: 100%;
   padding: 25px;
-  min-height: 500px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
 }
 
 .left-card textarea {
   width: 100%;
-  height: 200px;
-  border-radius: 20px;
-  border: 1px solid #dcdcdc;
+  height: 230px;
+  border-radius: 15px;
+  border: 1px solid #cfcfcf;
   padding: 15px;
-  resize: none;
-  font-size: 15px;
-  background: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  background: #fff;
 }
 
 .post-btn {
   margin-top: 15px;
-  padding: 12px 25px;
+  padding: 12px 30px;
   background: #009688;
   border: none;
   color: white;
-  border-radius: 12px;
+  border-radius: 10px;
+  font-size: 16px;
   cursor: pointer;
-  font-weight: 600;
 }
 
-/* RIGHT CARD — My posts */
+/* RIGHT CARD (MY POSTS) */
 .right-card {
-  flex: 1;
-  padding: 35px;
-  min-height: 500px;
+  width: 60%;
+  height: 100%;
+  padding: 25px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .right-card h3 {
@@ -62,38 +59,38 @@
   font-size: 22px;
 }
 
-/* POSTS AREA */
+/* SCROLL AREA */
 .posts-scroll {
-  flex: 1;
   overflow-y: auto;
   padding-right: 10px;
 }
 
 .posts-scroll::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
 .posts-scroll::-webkit-scrollbar-thumb {
-  background: #bdbdbd;
-  border-radius: 10px;
+  background: #bfbfbf;
+  border-radius: 20px;
 }
 
-/* EACH POST */
+/* POST CARD */
 .post-card {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
+  border-radius: 18px;
   padding: 20px;
   margin-bottom: 20px;
-  min-height: 210px;
   width: 95%;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+  min-height: 200px;
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
   transition: 0.25s;
 }
 
 .post-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.20);
+  transform: translateY(-4px);
 }
 
+/* HEADER */
 .post-top {
   display: flex;
   justify-content: space-between;
@@ -106,14 +103,14 @@
 }
 
 .time {
-  color: #888;
   font-size: 14px;
+  color: gray;
 }
 
-/* MESSAGE */
+/* CONTENT */
 .content {
   margin: 10px 0;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 /* BUTTONS */
@@ -126,25 +123,10 @@
 }
 
 .edit {
-  background: #ffca28;
+  background-color: #ffc928;
 }
 
 .delete {
-  background: #e57373;
+  background-color: #e57373;
   color: white;
-}
-
-/* DOTS BELOW */
-.scroll-dots {
-  display: flex;
-  gap: 8px;
-  margin-top: 15px;
-  justify-content: center;
-}
-
-.scroll-dots span {
-  width: 10px;
-  height: 10px;
-  background: #c7c7c7;
-  border-radius: 50%;
 }
