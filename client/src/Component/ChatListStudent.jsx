@@ -22,23 +22,30 @@ const ChatListStudent = () => {
 
   return (
     <div className="chatlist-page">
-      <h1 className="title">
+      <h1 className="chatlist-title">
         My <span className="accent">Chats</span>
       </h1>
 
       {applications.length === 0 ? (
         <p>No chats available.</p>
       ) : (
-        <div className="chatlist-container">
+        <div className="chatlist-grid">
           {applications.map((app) => (
             <div
               key={app._id}
-              className="chatlist-card"
+              className="chat-card"
               onClick={() => navigate(`/student-chat/${app._id}`)}
             >
-              <h3>{app.jobTitle}</h3>
-              <p>{app.organization}</p>
-              <span className="chatlist-tag">Open Chat</span>
+              <div className="chat-left">
+                <div className="chat-icon">💬</div>
+
+                <div>
+                  <h3 className="chat-job">{app.jobTitle}</h3>
+                  <p className="chat-company">{app.organization}</p>
+                </div>
+              </div>
+
+              <button className="chat-btn">Open Chat</button>
             </div>
           ))}
         </div>
