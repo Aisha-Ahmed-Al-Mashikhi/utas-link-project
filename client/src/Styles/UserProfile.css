@@ -55,14 +55,15 @@
   gap: 25px;
 }
 
-/* ====== LEFT PROFILE CARD ====== */
+/* ====== LEFT PROFILE CARD (GLASS STYLE) ====== */
 .profile-card {
   width: 100%;
-  height: 380px; /* نفس طول باقي الكروت */
+  height: 380px;
   padding: 35px 20px;
-  background: #ffffff;
-  border-radius: 25px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
   text-align: center;
 
   display: flex;
@@ -72,29 +73,30 @@
 
 /* Profile Image */
 .profile-img-container {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   margin: 0 auto 15px;
+  overflow: hidden; /* يمنع انفجار الصورة */
 }
 
 .profile-img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: cover; /* يحافظ على الشكل */
   border: 6px solid #eef1f7;
 }
 
 /* Profile text */
 .profile-name {
-  font-size: 20px; /* أصغر */
+  font-size: 20px;
   font-weight: 700;
   margin-top: 10px;
 }
 
 .profile-email {
   color: #555;
-  font-size: 14px; /* أصغر */
+  font-size: 14px;
   margin-bottom: 5px;
 }
 
@@ -112,12 +114,12 @@
 .info-card h3 {
   margin-bottom: 10px;
   color: #222;
-  font-size: 18px; /* أصغر */
+  font-size: 18px;
 }
 
 .info-card p {
   margin: 6px 0;
-  font-size: 14px; /* أصغر */
+  font-size: 14px;
 }
 
 /* Status dot */
@@ -149,12 +151,12 @@
   gap: 12px;
 }
 
-/* Buttons */
+/* CV buttons */
 .cv-btn {
-  padding: 8px 16px; /* أصغر */
+  padding: 8px 16px;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 13px; /* أصغر */
+  font-size: 13px;
   border: none;
   font-weight: 600;
   transition: 0.25s;
