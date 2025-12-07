@@ -1,3 +1,5 @@
+// src/Components/ChatPageStudent.jsx
+
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,10 +17,12 @@ const ChatPageStudent = () => {
   const [text, setText] = useState("");
   const bottomRef = useRef(null);
 
+  // Load messages
   useEffect(() => {
     dispatch(fetchMessages(applicationId));
   }, [applicationId, dispatch]);
 
+  // Auto scroll to latest message
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -49,44 +53,62 @@ const ChatPageStudent = () => {
   };
 
   return (
-    <div className="chat-wrapper">
-      <div className="chat-header">
-        <h2>Chat <span className="accent">Support</span></h2>
-        <button className="close-chat" onClick={() => navigate(-1)}>✕</button>
-      </div>
+    <>
+      {/* BACKGROUND SHAPES */}
+      <div className="chat-bg-shape1"></div>
+      <div className="chat-bg-shape2"></div>
 
-      <div className="chat-box">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`chat-row ${
-              msg.from.email === user.email ? "right" : "left"
-            }`}
-          >
-            <div className={`bubble ${
-              msg.from.email === user.email ? "me" : "them"
-            }`}>
-              <p>{msg.message.text}</p>
-              <span className="time">
-                {new Date(msg.message.sentAt).toLocaleTimeString()}
-              </span>
+      <div className="chat-wrapper">
+        {/* HEADER */}
+        <div className="chat-header">
+          <h2>
+            Chat <span className="accent">Support</span>
+          </h2>
+          <button className="close-chat" onClick={() => navigate(-1)}>
+            ✕
+          </button>
+        </div>
+
+        {/* CHAT BOX */}
+        <div className="chat-box">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`chat-row ${
+                msg.from.email === user.email ? "right" : "left"
+              }`}
+            >
+              <div
+                className={`bubble ${
+                  msg.from.email === user.email ? "me" : "them"
+                }`}
+              >
+                <p>{msg.message.text}</p>
+
+                <span className="time">
+                  {new Date(msg.message.sentAt).toLocaleTimeString()}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        <div ref={bottomRef}></div>
+          <div ref={bottomRef}></div>
+        </div>
+
+        {/* INPUT AREA */}
+        <div className="chat-input-area">
+          <input
+            placeholder="Write a message..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+
+          <button className="send-btn" onClick={handleSend}>
+            Send <span className="arrow">➤</span>
+          </button>
+        </div>
       </div>
-
-      <div className="chat-input-area">
-        <input
-          placeholder="Write a message..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-
-        <button onClick={handleSend}>Send ➤</button>
-      </div>
-    </div>
+    </>
   );
 };
 
