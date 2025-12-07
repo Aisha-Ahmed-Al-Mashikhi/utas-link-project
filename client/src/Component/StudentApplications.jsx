@@ -6,7 +6,6 @@ import {
   fetchStudentApplications,
   cancelStudentApplication,
 } from "../Features/ApplicationSlice";
-
 import "../Styles/StudentApplications.css";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +31,10 @@ const StudentApplications = () => {
       .catch(() => alert("Error deleting application."));
   };
 
+  if (isLoading && studentApplications.length === 0) {
+    return <p>Loading applications...</p>;
+  }
+
   return (
     <div className="applications-page">
       <h1 className="applications-title">
@@ -42,7 +45,7 @@ const StudentApplications = () => {
         Track the status of your submitted job applications.
       </p>
 
-      {/* 🌟 NEW: Horizontal Scroll Container */}
+      {/* 🔥 SCROLLER HERE */}
       <div className="applications-scroll">
         {studentApplications.length === 0 ? (
           <div className="empty-state">
@@ -59,6 +62,7 @@ const StudentApplications = () => {
             <div className="application-card small-card" key={app._id}>
               <div className="app-info">
                 <div className="app-icon">🏢</div>
+
                 <div>
                   <h3 className="job-title">{app.jobTitle}</h3>
                   <p className="company">Company: {app.organization}</p>
@@ -68,20 +72,23 @@ const StudentApplications = () => {
                     Applied:{" "}
                     {app.createdAt
                       ? new Date(app.createdAt).toLocaleString()
-                      : "N/A"}
+                      : "Not Available"}
                   </p>
 
                   <p className={`status-badge ${app.status?.toLowerCase()}`}>
-                    {app.status || "Pending"}
+                    {app.status || "Pending Review"}
                   </p>
 
                   {app.jobDeleted && (
-                    <p className="deleted-warning">Job no longer available.</p>
+                    <p className="deleted-warning">
+                      This job is no longer available.
+                    </p>
                   )}
                 </div>
               </div>
 
-              <div className="app-actions">
+              {/* 🔥 BUTTONS CENTER */}
+              <div className="app-actions center-buttons">
                 {!app.jobDeleted && (
                   <button
                     className="chat-btn"
