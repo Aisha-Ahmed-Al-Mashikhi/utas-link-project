@@ -1,106 +1,186 @@
+/* ====== PAGE LAYOUT ====== */
 .profile-page {
-  background-color: #f8fcfa;
-  min-height: 90vh;
-  padding: 40px 60px;
-  font-family: "Quicksand", sans-serif;
+  display: flex;
+  gap: 25px;
+  padding: 25px;
+  min-height: 100vh;
+  background: #f4f5f7;
+  position: relative;
+}
+
+/* colorful shapes background */
+.profile-page::before {
+  content: "";
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  background: linear-gradient(135deg, #ff0080, #ffbf00);
+  border-radius: 50%;
+  top: 50%;
+  left: 60%;
+  filter: blur(90px);
+  opacity: 0.45;
+  z-index: 0;
+}
+
+.profile-page::after {
+  content: "";
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: linear-gradient(135deg, #00d4ff, #009688);
+  border-radius: 50%;
+  top: 10%;
+  left: 30%;
+  filter: blur(100px);
+  opacity: 0.45;
+  z-index: 0;
+}
+
+/* Columns */
+.left-column,
+.right-column {
+  position: relative;
+  z-index: 2;
+}
+
+.left-column {
+  width: 35%;
+}
+
+.right-column {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* ====== GLASS CARD ====== */
+.glass-card {
+  width: 100%;
+  padding: 25px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
 }
 
 /* PROFILE CARD */
 .profile-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 25px 30px;
-  margin-bottom: 30px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.profile-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  text-align: center;
+  padding: 30px;
 }
 
 .profile-img-container {
   width: 130px;
   height: 130px;
+  margin: 0 auto 15px;
 }
 
 .profile-img {
-  width: 130px;
-  height: 130px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  border: 3px solid #009688;
   object-fit: cover;
 }
 
 .profile-name {
-  font-size: 1.6rem;
+  font-size: 22px;
   font-weight: 700;
+  margin-top: 5px;
 }
 
-.profile-detail {
-  color: #555;
+.profile-email {
+  color: #666;
+  margin-bottom: 15px;
 }
 
-/* MAIN BOX */
-.payment-box {
-  background: #fff;
-  border-radius: 16px;
-  padding: 25px 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 28px;
-}
-
-.payment-box h3 {
-  color: #009688;
-  font-weight: 700;
-}
-
-/* CV */
-.cv-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-/* Buttons */
-.cv-btn {
-  width: 115px;
-  height: 42px;
-  border-radius: 10px;
+.save-btn {
+  background: #009688;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 12px;
   border: none;
   font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
+  transition: 0.25s;
+}
+
+.save-btn:hover {
+  opacity: 0.85;
+}
+
+/* INFO CARDS */
+.info-card h3 {
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.info-card p {
+  margin: 6px 0;
+}
+
+/* STATUS DOT */
+.status-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.green {
+  background: #3fbf3f;
+}
+
+/* CV SECTION */
+.cv-section {
+  margin-top: 10px;
+}
+
+.cv-success {
+  color: #009688;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.cv-actions {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 12px;
+}
+
+.cv-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  font-weight: 600;
+  transition: 0.25s;
 }
 
 .cv-btn.view {
   background: #009688;
-  color: white;
+  color: #fff;
 }
 
 .cv-btn.replace {
-  background: #ffe8bb;
-  color: #8a5a00;
+  background: #ffc107;
+  color: #000;
 }
 
 .cv-btn.delete {
-  background: #ffd1d2;
-  color: #b10000;
+  background: #e74c3c;
+  color: white;
 }
 
+/* UPLOAD CV BUTTON */
 .upload-cv-btn {
   background: #009688;
   color: white;
-  padding: 12px 22px;
+  padding: 10px 18px;
   border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
   display: inline-block;
+  font-weight: 600;
+  margin-top: 10px;
 }
