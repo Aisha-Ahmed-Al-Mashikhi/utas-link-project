@@ -38,7 +38,7 @@ const CompanyProfile = () => {
   return (
     <div className="profile-page">
 
-      {/* LEFT PROFILE CARD */}
+      {/* LEFT SIDE PROFILE CARD */}
       <div className="left-column">
         <div className="profile-card-modern">
           <img
@@ -47,23 +47,31 @@ const CompanyProfile = () => {
               "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
             }
             className="profile-avatar"
-            alt="company logo"
+            alt="profile"
           />
 
           <div className="profile-info">
             <h2>{company.companyName}</h2>
             <p>{company.email}</p>
-            <p style={{ marginTop: "6px", color: "#444" }}>
+            <p>
               {company.industry} • {company.location}
             </p>
           </div>
         </div>
       </div>
 
-      {/* RIGHT COLUMN */}
+      {/* RIGHT SIDE */}
       <div className="right-column">
 
-        {/* BUSINESS LICENSE CARD */}
+        {/* CARD 2: Company Information */}
+        <div className="glass-card info-card">
+          <h3>Company Information</h3>
+          <p><strong>Industry:</strong> {company.industry}</p>
+          <p><strong>Location:</strong> {company.location}</p>
+          <p><strong>Status:</strong> <span className="status-dot green"></span> Active</p>
+        </div>
+
+        {/* CARD 3: License Section */}
         <div className="glass-card info-card">
           <h3>Business License</h3>
 
@@ -95,10 +103,7 @@ const CompanyProfile = () => {
                   Replace
                 </button>
 
-                <button
-                  className="cv-btn delete"
-                  onClick={handleDeleteLicense}
-                >
+                <button className="cv-btn delete" onClick={handleDeleteLicense}>
                   Delete
                 </button>
               </div>
@@ -121,7 +126,6 @@ const CompanyProfile = () => {
         </div>
 
       </div>
-
     </div>
   );
 };
