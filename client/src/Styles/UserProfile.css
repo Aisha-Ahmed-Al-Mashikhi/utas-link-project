@@ -3,40 +3,47 @@
   display: flex;
   gap: 25px;
   padding: 25px;
-  min-height: 120vh;
+  min-height: 100vh;
   background: #f4f5f7;
   position: relative;
 }
 
-/* Gradient background circles */
+/* Background gradients for right side only */
 .profile-page::before {
   content: "";
   position: absolute;
-  width: 480px;
-  height: 480px;
+  width: 420px;
+  height: 420px;
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   border-radius: 50%;
-  top: 45%;
-  left: 62%;
-  transform: translateY(-50%);
-  filter: blur(100px);
-  opacity: 0.55;
+  top: 55%;
+  left: 55%;
+  filter: blur(90px);
+  opacity: 0.50;
+  z-index: 0;
 }
 
 .profile-page::after {
   content: "";
   position: absolute;
-  width: 480px;
-  height: 480px;
+  width: 420px;
+  height: 420px;
   background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
   border-radius: 50%;
-  top: 5%;
-  left: 22%;
-  filter: blur(100px);
-  opacity: 0.55;
+  top: 10%;
+  left: 30%;
+  filter: blur(95px);
+  opacity: 0.50;
+  z-index: 0;
 }
 
 /* Columns */
+.left-column,
+.right-column {
+  position: relative;
+  z-index: 2;
+}
+
 .left-column {
   width: 35%;
 }
@@ -48,29 +55,21 @@
   gap: 25px;
 }
 
-/* ====== GLASS CARD ====== */
-.glass-card {
-  width: 100%;
-  padding: 30px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(12px);
-}
-
-/* ====== PROFILE CARD ====== */
+/* ====== PROFILE CARD (WHITE, CLEAN) ====== */
 .profile-card {
+  width: 100%;
+  padding: 40px 20px;
+  background: #ffffff !important;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
 
-/* BIG BEAUTIFUL PROFILE IMAGE */
+/* Bigger clean profile image */
 .profile-img-container {
-  width: 280px;
-  height: 280px;
-  margin: 45px auto 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 20px;
 }
 
 .profile-img {
@@ -78,29 +77,36 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-
-  border: 8px solid #eef3ff;
-  box-shadow: 0 6px 22px rgba(0,0,0,0.15);
-  background: white;
+  background: #fff;
+  border: 6px solid #eef1f7;
 }
 
-/* Profile Text */
+/* Profile text */
 .profile-name {
   font-size: 24px;
   font-weight: 700;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .profile-email {
   color: #555;
-  margin-bottom: 14px;
-  font-size: 15px;
+  font-size: 16px;
+  margin-bottom: 25px;
 }
 
+/* ====== GLASS CARD FOR RIGHT SIDE ====== */
+.glass-card {
+  width: 100%;
+  padding: 25px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
 
-/* ====== INFO CARD ====== */
+/* Info styles */
 .info-card h3 {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #222;
   font-size: 20px;
 }
@@ -112,18 +118,26 @@
 
 /* Status dot */
 .status-dot {
-  width: 13px;
-  height: 13px;
-  background: #29cc29;
-  border-radius: 50%;
   display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
 
-/* ====== CV SECTION ====== */
+.green {
+  background: #3fbf3f;
+}
+
+/* ===== CV SECTION ===== */
+.cv-section {
+  margin-top: 10px;
+}
+
 .cv-success {
   color: #009688;
+  margin-bottom: 10px;
   font-weight: 600;
-  margin-bottom: 12px;
+  font-size: 15px;
 }
 
 .cv-actions {
@@ -136,35 +150,51 @@
   padding: 10px 18px;
   border-radius: 12px;
   cursor: pointer;
-  color: white;
+  font-size: 14px;
   border: none;
   font-weight: 600;
   transition: 0.25s;
 }
 
-/* View */
 .cv-btn.view {
   background: #00a58b;
+  color: white;
+}
+.cv-btn.view:hover {
+  opacity: 0.85;
 }
 
-/* Replace – soft indigo */
 .cv-btn.replace {
   background: #7d9dff;
+  color: white;
+}
+.cv-btn.replace:hover {
+  opacity: 0.85;
 }
 
-/* Delete – soft red */
 .cv-btn.delete {
   background: #ff8b8b;
+  color: white;
+}
+.cv-btn.delete:hover {
+  opacity: 0.85;
 }
 
-/* Upload button */
 .upload-cv-btn {
   background: #009688;
   color: white;
   padding: 10px 18px;
   border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
   display: inline-block;
+  font-weight: 600;
   margin-top: 10px;
+  font-size: 15px;
+}
+.upload-cv-btn:hover {
+  opacity: 0.85;
+}
+
+.save-btn {
+  display: none; /* حذف زر الحفظ */
 }
