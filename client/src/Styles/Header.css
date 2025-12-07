@@ -49,7 +49,7 @@
 /* ===== HEADER LINKS ===== */
 .header-links {
   display: flex;
-  gap: 70px; 
+  gap: 90px; 
 }
 
 .header-links a {
