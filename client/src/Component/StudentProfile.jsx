@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 
-import profileImg from "../Images/profile.png"; // صورة البروفايل الجديدة
+import profileImg from "../Images/profile.png";
 
 const StudentProfile = () => {
   const dispatch = useDispatch();
@@ -34,18 +34,18 @@ const StudentProfile = () => {
   return (
     <div className="profile-page">
 
-      {/* LEFT PROFILE CARD */}
+      {/* LEFT PROFILE CARD — NEW DESIGN */}
       <div className="left-column">
-        <div className="profile-card">
-          <div className="profile-img-container">
-            <img
-              src={user.profileImage || profileImg}
-              className="profile-img"
-            />
-          </div>
+        <div className="glass-card profile-card-modern">
+          <img
+            src={user.profileImage || profileImg}
+            className="profile-avatar"
+          />
 
-          <h2 className="profile-name">{user.name}</h2>
-          <p className="profile-email">{user.email}</p>
+          <div className="profile-info">
+            <h2>{user.name}</h2>
+            <p>{user.email}</p>
+          </div>
         </div>
       </div>
 
@@ -75,7 +75,6 @@ const StudentProfile = () => {
               <p className="cv-success">CV Uploaded Successfully</p>
 
               <div className="cv-actions">
-
                 <a
                   href={`${ENV.SERVER_URL}${user.cvLink}`}
                   target="_blank"
@@ -96,9 +95,7 @@ const StudentProfile = () => {
 
                 <button
                   className="cv-btn replace"
-                  onClick={() =>
-                    document.getElementById("cvReplaceInput").click()
-                  }
+                  onClick={() => document.getElementById("cvReplaceInput").click()}
                 >
                   Replace
                 </button>
@@ -109,7 +106,6 @@ const StudentProfile = () => {
                 >
                   Delete
                 </button>
-
               </div>
             </div>
           ) : (
@@ -121,7 +117,6 @@ const StudentProfile = () => {
                 style={{ display: "none" }}
                 onChange={handleCvUpload}
               />
-
               <label htmlFor="cvUpload" className="upload-cv-btn">
                 Upload CV (PDF)
               </label>
