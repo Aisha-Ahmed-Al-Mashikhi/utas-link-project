@@ -5,7 +5,7 @@ import {
   uploadLicense,
   deleteLicense,
 } from "../Features/CompanySlice";
-import "../Styles/UserProfile.css"; // نفس ستايل الطالب
+import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 import { useNavigate } from "react-router-dom";
 
@@ -38,10 +38,9 @@ const CompanyProfile = () => {
   return (
     <div className="profile-page">
 
-      {/* LEFT PROFILE CARD (MODERN) */}
+      {/* LEFT PROFILE CARD */}
       <div className="left-column">
         <div className="profile-card-modern">
-
           <img
             src={
               company.profileImage ||
@@ -54,17 +53,17 @@ const CompanyProfile = () => {
           <div className="profile-info">
             <h2>{company.companyName}</h2>
             <p>{company.email}</p>
-
-            <p style={{ fontSize: "14px", marginTop: "6px", color: "#444" }}>
+            <p style={{ marginTop: "6px", color: "#444" }}>
               {company.industry} • {company.location}
             </p>
           </div>
         </div>
       </div>
 
-      {/* RIGHT SIDE — BUSINESS LICENSE CARD */}
+      {/* RIGHT COLUMN */}
       <div className="right-column">
 
+        {/* BUSINESS LICENSE CARD */}
         <div className="glass-card info-card">
           <h3>Business License</h3>
 
@@ -122,6 +121,7 @@ const CompanyProfile = () => {
         </div>
 
       </div>
+
     </div>
   );
 };
