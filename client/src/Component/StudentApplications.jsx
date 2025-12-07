@@ -1,5 +1,3 @@
-// src/Component/StudentApplications.js
-
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -42,7 +40,7 @@ const StudentApplications = () => {
         Track the status of your submitted job applications.
       </p>
 
-      {/* 🌟 NEW: Horizontal Scroll Container */}
+      {/* 🌟 Horizontal scroll container */}
       <div className="applications-scroll">
         {studentApplications.length === 0 ? (
           <div className="empty-state">
@@ -59,6 +57,7 @@ const StudentApplications = () => {
             <div className="application-card small-card" key={app._id}>
               <div className="app-info">
                 <div className="app-icon">🏢</div>
+
                 <div>
                   <h3 className="job-title">{app.jobTitle}</h3>
                   <p className="company">Company: {app.organization}</p>
@@ -71,17 +70,15 @@ const StudentApplications = () => {
                       : "N/A"}
                   </p>
 
-                  <p className={`status-badge ${app.status?.toLowerCase()}`}>
-                    {app.status || "Pending"}
-                  </p>
-
+                  {/* Deleted job message */}
                   {app.jobDeleted && (
                     <p className="deleted-warning">Job no longer available.</p>
                   )}
                 </div>
               </div>
 
-              <div className="app-actions">
+              {/* 🌟 NEW: Status moved to action buttons */}
+              <div className="app-actions-row">
                 {!app.jobDeleted && (
                   <button
                     className="chat-btn"
@@ -97,6 +94,10 @@ const StudentApplications = () => {
                 >
                   Remove
                 </button>
+
+                <span className={`status-btn ${app.status?.toLowerCase()}`}>
+                  {app.status}
+                </span>
               </div>
             </div>
           ))
