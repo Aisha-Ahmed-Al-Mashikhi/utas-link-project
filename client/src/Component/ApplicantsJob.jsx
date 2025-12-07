@@ -29,7 +29,7 @@ const ApplicantsJob = () => {
 
   return (
     <div className="applicants-page">
-      <h1 className="title">
+      <h1 className="app-title">
         Job <span className="accent">Applicants</span>
       </h1>
 
@@ -38,12 +38,20 @@ const ApplicantsJob = () => {
       ) : (
         <div className="applicants-grid">
           {applicants.map((app) => (
-            <div key={app._id} className="applicant-card">
-              <h3>{app.applicantName}</h3>
-              <p>Email: {app.applicantEmail}</p>
-              <p>Status: {app.status}</p>
+            <div key={app._id} className="applicant-card glass-card">
+              <div className="profile-row">
+                <div className="icon-circle">👤</div>
+                <div>
+                  <h3 className="applicant-name">{app.applicantName}</h3>
+                  <p className="email">{app.applicantEmail}</p>
+                </div>
+              </div>
 
-              <div className="actions">
+              <p className="status">
+                Status: <span className={`status-tag ${app.status.toLowerCase()}`}>{app.status}</span>
+              </p>
+
+              <div className="action-row">
                 <button
                   className="chat-btn"
                   onClick={() => navigate(`/company-chat/${app._id}`)}
