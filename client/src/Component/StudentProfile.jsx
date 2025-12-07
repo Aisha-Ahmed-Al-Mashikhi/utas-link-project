@@ -9,8 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 
-// صورة المستخدم (ثابتة إذا ما كان عنده صورة)
-import profileImg from "../Images/profile.png";
+import profileImg from "../Images/profile.png"; // صورة البروفايل الجديدة
 
 const StudentProfile = () => {
   const dispatch = useDispatch();
@@ -35,10 +34,9 @@ const StudentProfile = () => {
   return (
     <div className="profile-page">
 
-      {/* LEFT SIDE — PROFILE CARD */}
+      {/* LEFT PROFILE CARD */}
       <div className="left-column">
-        <div className="profile-card glass-card">
-
+        <div className="profile-card">
           <div className="profile-img-container">
             <img
               src={user.profileImage || profileImg}
@@ -48,14 +46,13 @@ const StudentProfile = () => {
 
           <h2 className="profile-name">{user.name}</h2>
           <p className="profile-email">{user.email}</p>
-
         </div>
       </div>
 
-      {/* RIGHT SIDE — ACADEMIC + CV */}
+      {/* RIGHT SIDE */}
       <div className="right-column">
 
-        {/* ACADEMIC CARD */}
+        {/* Academic Card */}
         <div className="glass-card info-card">
           <h3>Academic Information</h3>
 
@@ -69,7 +66,7 @@ const StudentProfile = () => {
           </p>
         </div>
 
-        {/* CV CARD */}
+        {/* CV Card */}
         <div className="glass-card info-card">
           <h3>Curriculum Vitae (CV)</h3>
 
@@ -78,6 +75,7 @@ const StudentProfile = () => {
               <p className="cv-success">CV Uploaded Successfully</p>
 
               <div className="cv-actions">
+
                 <a
                   href={`${ENV.SERVER_URL}${user.cvLink}`}
                   target="_blank"
