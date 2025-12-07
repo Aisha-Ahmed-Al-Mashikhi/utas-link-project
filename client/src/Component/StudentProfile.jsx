@@ -8,8 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 import * as ENV from "../config";
-
-import profileImg from "../Images/profile.png"; // ← صورتك الجديدة
+import profileImg from "../Images/profile.png";
 
 const StudentProfile = () => {
   const dispatch = useDispatch();
@@ -17,7 +16,6 @@ const StudentProfile = () => {
 
   const { user } = useSelector((state) => state.users);
 
-  // Load logged user
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
@@ -35,10 +33,9 @@ const StudentProfile = () => {
   return (
     <div className="profile-page">
 
-      {/* LEFT SIDE — PROFILE CARD */}
       <div className="left-column">
-
         <div className="profile-card glass-card">
+
           <div className="profile-img-container">
             <img
               src={user.profileImage || profileImg}
@@ -49,15 +46,11 @@ const StudentProfile = () => {
           <h2 className="profile-name">{user.name}</h2>
           <p className="profile-email">{user.email}</p>
 
-          <button className="save-btn">Save</button>
         </div>
-
       </div>
 
-      {/* RIGHT SIDE — ACADEMIC + CV */}
       <div className="right-column">
 
-        {/* ACADEMIC CARD */}
         <div className="glass-card info-card">
           <h3>Academic Information</h3>
 
@@ -71,7 +64,6 @@ const StudentProfile = () => {
           </p>
         </div>
 
-        {/* CV CARD */}
         <div className="glass-card info-card">
           <h3>Curriculum Vitae (CV)</h3>
 
