@@ -2,6 +2,7 @@
 
 * {
   font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
 }
 
 /* ================= HEADER ================= */
@@ -45,7 +46,43 @@
   font-weight: 700;
 }
 
-/* MENU BUTTON */
+/* ===== HEADER LINKS ===== */
+.header-links {
+  display: flex;
+  gap: 28px;
+}
+
+.header-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 17px;
+  transition: 0.25s;
+}
+
+.header-links a:hover {
+  color: #009688;
+}
+
+/* ACTIVE LINK in HEADER */
+.header-links a.active {
+  color: #009688 !important;
+  font-weight: 600;
+  position: relative;
+}
+
+.header-links a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #009688;
+  border-radius: 2px;
+}
+
+/* =========== MENU BUTTON =========== */
 .menu-btn {
   background: transparent;
   border: none;
@@ -55,15 +92,7 @@
   font-weight: bold;
 }
 
-/* ACTIVE LINK – HEADER */
-.header-links a.active {
-  color: #009688 !important;
-  font-weight: 700;
-  border-bottom: 3px solid #009688;
-  padding-bottom: 3px;
-}
-
-/* ===== DRAWER ===== */
+/* ================= DRAWER ================= */
 .drawer {
   position: fixed;
   top: 0;
@@ -125,40 +154,54 @@
   font-weight: 700;
 }
 
-/* LINKS */
+/* ===== DRAWER LINKS ===== */
 .drawer-links {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 18px;
 }
 
 .drawer-links a {
-  font-size: 19px;
+  font-size: 18px;
   text-decoration: none;
   color: #111;
   font-weight: 600;
   display: flex;
   align-items: center;
+  gap: 12px;
+  padding: 10px 6px;
+  transition: 0.25s;
 }
 
 .drawer-links a:hover {
   color: #009688;
 }
 
-/* ACTIVE LINK – DRAWER */
+/* ========== ACTIVE LINK LIKE THE EXAMPLE IMAGE ========= */
 .drawer-links a.active {
+  background: #ffffff;
+  padding: 12px 14px;
+  border-radius: 12px;
   color: #009688 !important;
-  font-weight: 700;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .drawer-links a.active .icon {
   color: #009688 !important;
 }
 
-/* ICON */
+/* ICON STYLE */
 .icon {
-  margin-right: 10px;
   font-size: 20px;
+  color: #777;
+  transition: 0.2s;
+}
+
+.drawer-links a:hover .icon {
   color: #009688;
 }
 
@@ -177,6 +220,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
 }
 
 .drawer-logout:hover {
