@@ -1,6 +1,4 @@
-/* ==============================
-   MAIN PAGE
-============================== */
+/* -------------------- PAGE LAYOUT -------------------- */
 .applications-page {
   background-color: #f9fcfb;
   padding: 50px 80px;
@@ -24,148 +22,194 @@
   margin-bottom: 25px;
 }
 
-/* ==============================
-   LIST
-============================== */
-.applications-list {
+/* ======================================================
+   HORIZONTAL SCROLL FOR APPLICATION CARDS
+====================================================== */
+
+.applications-scroll {
+  display: flex;
+  gap: 25px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar design */
+.applications-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.applications-scroll::-webkit-scrollbar-thumb {
+  background: #009688;
+  border-radius: 10px;
+}
+
+.applications-scroll::-webkit-scrollbar-track {
+  background: #e8f6f4;
+  border-radius: 10px;
+}
+
+/* ======================================================
+   APPLICATION CARD DESIGN
+====================================================== */
+
+.application-card {
+  background: white;
+  border-radius: 20px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-}
-
-/* ==============================
-   GLASS CARD (same as MY POSTS)
-============================== */
-.application-card {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px);
-  border-radius: 25px;
-  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.12);
-  padding: 32px;
-  display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  transition: 0.25s ease-in-out;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 35px rgba(0, 0, 0, 0.08);
+  transition: 0.2s;
 }
 
+/* SMALLER CARD FOR SCROLLER */
+.small-card {
+  width: 350px;
+  min-width: 350px;
+}
+
+/* Hover effect */
 .application-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* LEFT SIDE */
+/* CARD CONTENT */
 .app-info {
   display: flex;
   align-items: flex-start;
-  gap: 18px;
+  gap: 16px;
 }
 
 .app-icon {
-  font-size: 45px;
+  font-size: 35px;
+  color: #009688;
 }
 
 .job-title {
   font-weight: 700;
-  font-size: 22px;
-  margin-bottom: 6px;
-  color: #111;
+  font-size: 18px;
+  color: #222;
+  margin-bottom: 4px;
 }
 
-.company,
-.details {
+.company {
   font-size: 15px;
-  color: #444;
+  color: #555;
+  margin-bottom: 2px;
+}
+
+.details {
+  font-size: 14px;
+  color: #666;
   margin-bottom: 3px;
 }
 
-/* STATUS BADGE */
+/* Status badge */
 .status-badge {
   display: inline-block;
-  padding: 7px 16px;
-  border-radius: 15px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.status-badge.pending {
+  background-color: #fff8e1;
+  color: #8d6e63;
+}
+
+.status-badge.accepted {
+  background-color: #c8f7c5;
+  color: #0b9444;
+}
+
+.status-badge.rejected {
+  background-color: #ffd3d3;
+  color: #b71c1c;
+}
+
+/* Deleted warning */
+.deleted-warning {
+  color: #d9534f;
   font-weight: 600;
   margin-top: 8px;
   font-size: 14px;
 }
 
-.status-badge.accepted {
-  background: #c8f7c5;
-  color: #0b9444;
-}
+/* ======================================================
+   ACTION BUTTONS
+====================================================== */
 
-.status-badge.rejected {
-  background: #ffd3d3;
-  color: #b71c1c;
-}
-
-.status-badge.pending {
-  background: #fff3c4;
-  color: #8d6e00;
-}
-
-.deleted-warning {
-  margin-top: 10px;
-  color: #d9534f;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-/* RIGHT SIDE BUTTONS */
 .app-actions {
   display: flex;
-  gap: 14px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .chat-btn {
-  background: #009688;
+  background-color: #009688;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 16px;
+  border-radius: 10px;
   border: none;
-  border-radius: 12px;
-  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .chat-btn:hover {
-  background: #007c6c;
+  background-color: #007c6c;
 }
 
 .withdraw-btn {
-  background: #e84a4a;
+  background-color: #e57373;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 18px;
+  border-radius: 10px;
   border: none;
-  border-radius: 12px;
-  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .withdraw-btn:hover {
-  background: #c0392b;
+  background-color: #d32f2f;
 }
 
-/* EMPTY STATE */
+/* ======================================================
+   EMPTY STATE (NO APPLICATIONS)
+====================================================== */
 .empty-state {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(14px);
-  border-radius: 25px;
+  background: #ffffff;
   padding: 40px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-  width: 400px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+  border: 1px solid #e8e8e8;
+  max-width: 420px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 15px;
 }
 
 .findjob-btn {
   background-color: #009688;
   color: white;
   padding: 12px 24px;
-  border-radius: 12px;
+  border-radius: 10px;
   border: none;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .findjob-btn:hover {
