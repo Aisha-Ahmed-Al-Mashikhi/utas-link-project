@@ -9,10 +9,9 @@ import { addJob } from "../Features/JobSlice";
 const PostJob = () => {
   const dispatch = useDispatch();
 
-  /* ====== STATES المطلوبة حسب طلب الأستاذ ====== */
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [sector, setSector] = useState("");
+  const [sector, setSector] = useState(""); 
   const [rate, setRate] = useState("");
   const [rateType, setRateType] = useState("");
   const [skills, setSkills] = useState("");
@@ -27,6 +26,16 @@ const PostJob = () => {
   } = useForm({
     resolver: yupResolver(postJobSchema),
     mode: "onChange",
+    defaultValues: {
+      jobTitle: "",
+      category: "",
+      sector: "",
+      rate: "",
+      rateType: "",
+      skills: "",
+      description: "",
+      payout: "",
+    },
   });
 
   const CATEGORIES = [
@@ -45,35 +54,29 @@ const PostJob = () => {
   const SECTORS = ["Private Company", "Government"];
   const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
 
-  /* =====================================================
-       SUBMIT — تصحيح المشكلة بدون حذف أي useState
-     ===================================================== */
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     const company = JSON.parse(localStorage.getItem("loggedUser"));
     if (!company) return alert("Please log in first.");
 
-    // دمج قيم useState + قيم react-hook-form
-    const finalJob = {
-      jobTitle: jobTitle || data.jobTitle,
-      category: category || data.category,
-      sector: sector || data.sector,
-      rate: rate || data.rate,
-      rateType: rateType || data.rateType,
-      skills: skills || data.skills,
-      description: description || data.description,
-      payout: payout || data.payout,
-
-      organization: company.companyName,
-      postedBy: company.email,
-    };
-
-    dispatch(addJob(finalJob))
+    dispatch(
+      addJob({
+        jobTitle,
+        category,
+        sector,
+        rate,
+        rateType,
+        skills,
+        description,
+        payout,
+        organization: company.companyName,
+        postedBy: company.email,
+      })
+    )
       .unwrap()
       .then(() => {
         alert("Job posted successfully!");
-        reset();
 
-        // تفريغ الـ states حسب طلب الأستاذ
+        reset();
         setJobTitle("");
         setCategory("");
         setSector("");
@@ -122,6 +125,7 @@ const PostJob = () => {
                   <option key={c}>{c}</option>
                 ))}
               </select>
+              <p className="error">{errors.category?.message}</p>
             </div>
 
             <div className="col-half">
@@ -141,10 +145,11 @@ const PostJob = () => {
                   </label>
                 ))}
               </div>
+              <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
 
-          {/* Rate & Rate Type */}
+          {/* Rate + RateType */}
           <div className="row-flex">
             <div className="col-half">
               <label>Rate (OMR)</label>
@@ -155,6 +160,7 @@ const PostJob = () => {
                   onChange: (e) => setRate(e.target.value),
                 })}
               />
+              <p className="error">{errors.rate?.message}</p>
             </div>
 
             <div className="col-half">
@@ -170,6 +176,7 @@ const PostJob = () => {
                   <option key={r}>{r}</option>
                 ))}
               </select>
+              <p className="error">{errors.rateType?.message}</p>
             </div>
           </div>
 
@@ -182,6 +189,7 @@ const PostJob = () => {
               onChange: (e) => setSkills(e.target.value),
             })}
           />
+          <p className="error">{errors.skills?.message}</p>
 
           {/* Description */}
           <label>Description</label>
@@ -191,6 +199,7 @@ const PostJob = () => {
               onChange: (e) => setDescription(e.target.value),
             })}
           />
+          <p className="error">{errors.description?.message}</p>
 
           {/* Payout */}
           <label>Payout (optional)</label>
