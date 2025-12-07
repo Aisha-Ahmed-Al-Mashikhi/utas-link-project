@@ -191,6 +191,54 @@ app.put("/deleteCV", async (req, res) => {
 });
 
 /*───────────────────────────────────────────────
+  ░░ UPLOAD COMPANY LICENSE
+───────────────────────────────────────────────*/
+app.post("/uploadLicense", upload.single("license"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+    const email = req.body.email;
+    const filePath = `/uploads/${req.file.filename}`;
+
+    await CompanyModel.findOneAndUpdate(
+      { email },
+      { businessLicense: filePath }
+    );
+
+    res.send({ businessLicense: filePath });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "License upload failed" });
+  }
+});
+/*───────────────────────────────────────────────
+  ░░ DELETE COMPANY LICENSE
+───────────────────────────────────────────────*/
+app.put("/deleteLicense", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const company = await CompanyModel.findOne({ email });
+    if (!company) return res.status(404).json({ error: "Company not found" });
+
+    if (company.businessLicense) {
+      const filePath = path.join(process.cwd(), company.businessLicense);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    }
+
+    await CompanyModel.findOneAndUpdate(
+      { email },
+      { businessLicense: null }
+    );
+
+    res.send({ msg: "License deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Error deleting license" });
+  }
+});
+
+
+/*───────────────────────────────────────────────
  ░░ ADD JOB  (NEW + LOCATION)
 ───────────────────────────────────────────────*/
 app.post("/jobs", async (req, res) => {
