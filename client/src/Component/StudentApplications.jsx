@@ -1,3 +1,5 @@
+// src/Component/StudentApplications.js
+
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -40,7 +42,7 @@ const StudentApplications = () => {
         Track the status of your submitted job applications.
       </p>
 
-      {/* 🌟 Horizontal scroll container */}
+      {/* Horizontal Scroll */}
       <div className="applications-scroll">
         {studentApplications.length === 0 ? (
           <div className="empty-state">
@@ -70,14 +72,13 @@ const StudentApplications = () => {
                       : "N/A"}
                   </p>
 
-                  {/* Deleted job message */}
                   {app.jobDeleted && (
                     <p className="deleted-warning">Job no longer available.</p>
                   )}
                 </div>
               </div>
 
-              {/* 🌟 NEW: Status moved to action buttons */}
+              {/* Buttons Row */}
               <div className="app-actions-row">
                 {!app.jobDeleted && (
                   <button
@@ -95,8 +96,8 @@ const StudentApplications = () => {
                   Remove
                 </button>
 
-                <span className={`status-btn ${app.status?.toLowerCase()}`}>
-                  {app.status}
+                <span className={`status-badge ${app.status?.toLowerCase()}`}>
+                  {app.status || "Pending"}
                 </span>
               </div>
             </div>
