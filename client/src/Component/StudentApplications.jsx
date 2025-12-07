@@ -32,10 +32,6 @@ const StudentApplications = () => {
       .catch(() => alert("Error deleting application."));
   };
 
-  if (isLoading && studentApplications.length === 0) {
-    return <p>Loading applications...</p>;
-  }
-
   return (
     <div className="applications-page">
       <h1 className="applications-title">
@@ -46,11 +42,11 @@ const StudentApplications = () => {
         Track the status of your submitted job applications.
       </p>
 
-      <div className="applications-list">
+      {/* 🌟 NEW: Horizontal Scroll Container */}
+      <div className="applications-scroll">
         {studentApplications.length === 0 ? (
           <div className="empty-state">
             <p>No applications yet.</p>
-
             <button
               className="findjob-btn"
               onClick={() => navigate("/find-job")}
@@ -60,37 +56,31 @@ const StudentApplications = () => {
           </div>
         ) : (
           studentApplications.map((app) => (
-            <div className="application-card" key={app._id}>
-              
-              {/* LEFT SIDE INFO */}
+            <div className="application-card small-card" key={app._id}>
               <div className="app-info">
                 <div className="app-icon">🏢</div>
-
                 <div>
                   <h3 className="job-title">{app.jobTitle}</h3>
                   <p className="company">Company: {app.organization}</p>
-                  <p className="details">Company Email: {app.companyEmail}</p>
+                  <p className="details">Email: {app.companyEmail}</p>
 
                   <p className="details">
-                    Applied on:{" "}
+                    Applied:{" "}
                     {app.createdAt
                       ? new Date(app.createdAt).toLocaleString()
-                      : "Not Available"}
+                      : "N/A"}
                   </p>
 
                   <p className={`status-badge ${app.status?.toLowerCase()}`}>
-                    {app.status || "Pending Review"}
+                    {app.status || "Pending"}
                   </p>
 
                   {app.jobDeleted && (
-                    <p className="deleted-warning">
-                      This job is no longer available.
-                    </p>
+                    <p className="deleted-warning">Job no longer available.</p>
                   )}
                 </div>
               </div>
 
-              {/* RIGHT SIDE BUTTONS */}
               <div className="app-actions">
                 {!app.jobDeleted && (
                   <button
