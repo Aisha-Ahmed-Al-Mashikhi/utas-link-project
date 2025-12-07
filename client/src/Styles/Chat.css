@@ -1,18 +1,17 @@
-/* CHAT BOX (area) */
+/* CHAT BOX */
 .chat-box {
   background: #fafafa;
-  border-radius: 18px;
-  padding: 25px;
-  min-height: 420px;
+  border-radius: 14px;
+  padding: 20px;
+  min-height: 400px;
   max-height: 450px;
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 /* ROWS */
 .chat-row {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .chat-row.left {
@@ -23,49 +22,34 @@
   justify-content: flex-end;
 }
 
-/* BUBBLE DESIGN — Elegant Minimal */
+/* MESSAGE BUBBLES */
 .bubble {
-  max-width: 65%;
-  padding: 14px 18px;
-  border-radius: 18px;
+  max-width: 60%;
+  padding: 12px 16px;
+  border-radius: 16px;
   font-size: 15px;
-  line-height: 1.5;
-  position: relative;
-  transition: 0.2s;
+  line-height: 1.4;
 }
 
-/* Student message (Right Bubble) */
+/* Student (right side) */
 .bubble.me {
   background: #009688;
   color: white;
-  border-top-right-radius: 6px;
-  box-shadow: 0px 3px 10px rgba(0, 128, 128, 0.25);
+  border-radius: 16px 16px 4px 16px;
 }
 
-/* Company message (Left Bubble) */
+/* Company (left side) */
 .bubble.them {
   background: #ffffff;
+  border: 1px solid #e6e6e6;
   color: #333;
-  border: 1.2px solid #e6e6e6;
-  border-top-left-radius: 6px;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 16px 16px 16px 4px;
 }
 
-/* TIME STYLING — soft and elegant */
+/* TIME */
 .time {
   display: block;
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: 6px;
+  font-size: 11px;
   color: #777;
-  opacity: 0.75;
-}
-
-/* Smooth scrolling padding */
-.chat-box::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-box::-webkit-scrollbar-thumb {
-  background-color: #b5dad6;
-  border-radius: 20px;
 }
