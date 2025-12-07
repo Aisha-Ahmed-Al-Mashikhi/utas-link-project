@@ -1,122 +1,150 @@
 /* PAGE LAYOUT */
 .post-page {
   display: flex;
-  gap: 25px;
-  padding: 25px;
+  gap: 30px;
+  padding: 30px;
+  width: 100%;
+  height: calc(100vh - 100px);
 }
 
-/* LEFT SIDE (WRITE POST CARD) */
+/* GLASS STYLE */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(18px);
+  border-radius: 25px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* LEFT CARD — Write box */
 .left-card {
   width: 35%;
-  background: #fff;
   padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  height: fit-content;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
-.post-input {
+.left-card textarea {
   width: 100%;
-  height: 120px;
-  border: 1px solid #ddd;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 15px;
+  height: 200px;
+  border-radius: 20px;
+  border: 1px solid #dcdcdc;
+  padding: 15px;
   resize: none;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .post-btn {
-  margin-top: 12px;
-  width: 120px;
-  padding: 10px 0;
+  margin-top: 15px;
+  padding: 12px 25px;
   background: #009688;
-  color: white;
   border: none;
-  border-radius: 10px;
+  color: white;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
 }
 
-.post-btn:hover {
-  opacity: 0.85;
-}
-
-/* RIGHT SIDE (POSTS LIST CARD) */
+/* RIGHT CARD — My posts */
 .right-card {
-  width: 65%;
-  background: #fff;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  flex: 1;
+  padding: 35px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.section-title {
-  margin-bottom: 20px;
+.right-card h3 {
+  margin-bottom: 15px;
   font-size: 22px;
-  font-weight: 700;
 }
 
+/* POSTS AREA */
+.posts-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.posts-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.posts-scroll::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 10px;
+}
+
+/* EACH POST */
 .post-card {
-  background: #fafafa;
-  padding: 18px 20px;
-  border-radius: 15px;
-  margin-bottom: 18px;
-  border: 1px solid #eee;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  min-height: 210px;
+  width: 95%;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
   transition: 0.25s;
 }
 
 .post-card:hover {
-  background: #f3fffc;
-  border-color: #009688;
   transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.20);
 }
 
-.post-header {
+.post-top {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-.post-author {
+.author {
+  font-size: 18px;
   font-weight: 700;
-  font-size: 17px;
 }
 
-.post-time {
-  font-size: 13px;
-  color: #777;
-}
-
-.post-text {
-  margin: 10px 0;
-  font-size: 15px;
-}
-
-.post-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.edit-btn {
-  background: #ffca28;
-  border: none;
-  padding: 6px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.delete-btn {
-  background: #e57373;
-  border: none;
-  padding: 6px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: white;
-  font-weight: 600;
-}
-
-.empty-msg {
+.time {
   color: #888;
-  font-size: 15px;
+  font-size: 14px;
+}
+
+/* MESSAGE */
+.content {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+/* BUTTONS */
+.actions button {
+  padding: 7px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.edit {
+  background: #ffca28;
+}
+
+.delete {
+  background: #e57373;
+  color: white;
+}
+
+/* DOTS BELOW */
+.scroll-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.scroll-dots span {
+  width: 10px;
+  height: 10px;
+  background: #c7c7c7;
+  border-radius: 50%;
 }
