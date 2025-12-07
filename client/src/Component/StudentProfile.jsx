@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 
+import profileImg from "../Images/profile.png"; // ← صورتك الجديدة
+
 const StudentProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,10 +41,7 @@ const StudentProfile = () => {
         <div className="profile-card glass-card">
           <div className="profile-img-container">
             <img
-              src={
-                user.profileImage ||
-                "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-              }
+              src={user.profileImage || profileImg}
               className="profile-img"
             />
           </div>
