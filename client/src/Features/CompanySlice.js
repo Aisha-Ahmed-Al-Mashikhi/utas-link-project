@@ -44,7 +44,7 @@ export const fetchCompany = createAsyncThunk(
 );
 
 /* =============================
-    UPLOAD PROFILE PICTURE
+    UPLOAD PROFILE
 ============================= */
 export const uploadProfile = createAsyncThunk(
   "companies/uploadProfile",
@@ -55,13 +55,9 @@ export const uploadProfile = createAsyncThunk(
       form.append("email", email);
       form.append("type", "profile");
 
-      const res = await axios.post(
-        `${ENV.SERVER_URL}/uploadCompanyFile`,
-        form,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axios.post(`${ENV.SERVER_URL}/uploadCompanyFile`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       return res.data.company;
     } catch (err) {
@@ -73,7 +69,7 @@ export const uploadProfile = createAsyncThunk(
 );
 
 /* =============================
-    UPLOAD LICENSE PDF
+    UPLOAD LICENSE
 ============================= */
 export const uploadLicense = createAsyncThunk(
   "companies/uploadLicense",
@@ -84,13 +80,9 @@ export const uploadLicense = createAsyncThunk(
       form.append("email", email);
       form.append("type", "license");
 
-      const res = await axios.post(
-        `${ENV.SERVER_URL}/uploadCompanyFile`,
-        form,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axios.post(`${ENV.SERVER_URL}/uploadCompanyFile`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       return res.data.company;
     } catch (err) {
@@ -111,7 +103,6 @@ export const deleteLicense = createAsyncThunk(
       const res = await axios.put(`${ENV.SERVER_URL}/company/deleteLicense`, {
         email,
       });
-
       return res.data.company;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -138,7 +129,6 @@ const companySlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-
       /* REGISTER */
       .addCase(registerCompany.pending, (state) => {
         state.isLoading = true;
@@ -154,24 +144,60 @@ const companySlice = createSlice({
         state.message = action.payload;
       })
 
-      /* FETCH COMPANY */
+      /* FETCH */
+      .addCase(fetchCompany.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(fetchCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.company = action.payload;
+      })
+      .addCase(fetchCompany.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       })
 
       /* UPLOAD PROFILE */
+      .addCase(uploadProfile.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(uploadProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.company = action.payload;
+      })
+      .addCase(uploadProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       })
 
       /* UPLOAD LICENSE */
+      .addCase(uploadLicense.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(uploadLicense.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.company = action.payload;
+      })
+      .addCase(uploadLicense.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       })
 
       /* DELETE LICENSE */
+      .addCase(deleteLicense.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(deleteLicense.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.company = action.payload;
+      })
+      .addCase(deleteLicense.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });
