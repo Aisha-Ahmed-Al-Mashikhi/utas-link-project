@@ -1,7 +1,7 @@
 /* -------------------- PAGE LAYOUT -------------------- */
 .applications-page {
   background-color: #f9fcfb;
-  padding: 40px 60px;
+  padding: 50px 80px;
   min-height: 90vh;
   font-family: "Quicksand", sans-serif;
 }
@@ -22,17 +22,17 @@
   margin-bottom: 25px;
 }
 
-/* -------------------- SCROLL ROW -------------------- */
+/* -------------------- HORIZONTAL SCROLL -------------------- */
 .applications-scroll {
   display: flex;
   gap: 25px;
   overflow-x: auto;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   scroll-behavior: smooth;
 }
 
 .applications-scroll::-webkit-scrollbar {
-  height: 10px;
+  height: 8px;
 }
 
 .applications-scroll::-webkit-scrollbar-thumb {
@@ -45,128 +45,141 @@
   border-radius: 10px;
 }
 
-/* -------------------- CARDS -------------------- */
+/* -------------------- APPLICATION CARD -------------------- */
 .application-card {
-  background: white;
-  border-radius: 18px;
-  padding: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.07);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 35px rgba(0, 0, 0, 0.08);
   transition: 0.2s;
-}
-
-.small-card {
-  width: 320px;
-  min-width: 320px; /* required for scroll */
 }
 
 .application-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* Info inside card */
+/* Bigger Width */
+.small-card {
+  width: 420px;
+  min-width: 420px;
+}
+
+/* -------------------- INFO -------------------- */
 .app-info {
   display: flex;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .app-icon {
-  font-size: 32px;
+  font-size: 34px;
+  color: #009688;
 }
 
-/* Text */
 .job-title {
-  font-size: 18px;
   font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 5px;
 }
 
 .company,
 .details {
   font-size: 14px;
   color: #555;
+  margin-bottom: 4px;
 }
 
-/* Deleted job message */
-.deleted-warning {
-  color: #e53935;
+/* -------------------- STATUS BADGE -------------------- */
+.status-badge {
+  padding: 10px 12px;
+  border-radius: 12px;
   font-weight: 600;
+  text-align: center;
 }
 
-/* -------------------- ACTION BUTTONS -------------------- */
+.status-badge.pending {
+  background: #fff1c4;
+  color: #8d6e23;
+}
+
+.status-badge.accepted {
+  background: #c8f7c5;
+  color: #0b9444;
+}
+
+.status-badge.rejected {
+  background: #ffd2d2;
+  color: #b11a1a;
+}
+
+.deleted-warning {
+  color: #d9534f;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* -------------------- ACTION BUTTONS ROW -------------------- */
 .app-actions-row {
   display: flex;
-  justify-content: flex-start;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
+.app-actions-row button,
+.app-actions-row .status-badge {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 0;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Chat Button */
 .chat-btn {
   background-color: #009688;
   color: white;
-  padding: 8px 16px;
-  border-radius: 10px;
   border: none;
-  cursor: pointer;
-  font-weight: 600;
 }
-
 .chat-btn:hover {
   background-color: #007c6c;
 }
 
+/* Remove Button */
 .withdraw-btn {
-  background-color: #e57373;
+  background: #e57373;
   color: white;
-  padding: 8px 16px;
-  border-radius: 10px;
   border: none;
-  cursor: pointer;
-  font-weight: 600;
 }
-
 .withdraw-btn:hover {
-  background-color: #d32f2f;
-}
-
-/* Status button */
-.status-btn {
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-weight: 700;
-  border: none;
-}
-
-.status-btn.accepted {
-  background-color: #c8f7c5;
-  color: #0b9444;
-}
-
-.status-btn.pending {
-  background-color: #fff4c8;
-  color: #7a6336;
-}
-
-.status-btn.rejected {
-  background-color: #ffd3d3;
-  color: #b71c1c;
+  background: #d32f2f;
 }
 
 /* -------------------- EMPTY STATE -------------------- */
 .empty-state {
-  background: white;
-  padding: 35px;
-  border-radius: 16px;
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+  border: 1px solid #e8e8e8;
+  max-width: 420px;
+}
+.empty-state p {
+  color: #444;
+  margin-bottom: 10px;
 }
 
 .findjob-btn {
-  background-color: #009688;
+  background: #009688;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 10px;
   border: none;
-  cursor: pointer;
-  margin-top: 12px;
+  font-weight: 600;
+}
+.findjob-btn:hover {
+  background: #007c6c;
 }
