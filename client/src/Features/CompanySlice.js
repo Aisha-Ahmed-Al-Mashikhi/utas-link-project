@@ -44,47 +44,24 @@ export const fetchCompany = createAsyncThunk(
 );
 
 /* =============================
-    UPLOAD PROFILE
-============================= */
-export const uploadProfile = createAsyncThunk(
-  "companies/uploadProfile",
-  async ({ email, file }, thunkAPI) => {
-    try {
-      const form = new FormData();
-      form.append("file", file);
-      form.append("email", email);
-      form.append("type", "profile");
-
-      const res = await axios.post(`${ENV.SERVER_URL}/uploadCompanyFile`, form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      return res.data.company;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data || "Profile upload failed"
-      );
-    }
-  }
-);
-
-/* =============================
-    UPLOAD LICENSE
+    UPLOAD LICENSE (PDF)
 ============================= */
 export const uploadLicense = createAsyncThunk(
   "companies/uploadLicense",
   async ({ email, file }, thunkAPI) => {
     try {
       const form = new FormData();
-      form.append("file", file);
+      form.append("license", file);
       form.append("email", email);
-      form.append("type", "license");
 
-      const res = await axios.post(`${ENV.SERVER_URL}/uploadCompanyFile`, form, {
+      const res = await axios.post(`${ENV.SERVER_URL}/uploadLicense`, form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      return res.data.company;
+      return {
+        ...res.data,
+        email,
+      };
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.response?.data || "License upload failed"
@@ -100,10 +77,14 @@ export const deleteLicense = createAsyncThunk(
   "companies/deleteLicense",
   async (email, thunkAPI) => {
     try {
-      const res = await axios.put(`${ENV.SERVER_URL}/company/deleteLicense`, {
+      const res = await axios.put(`${ENV.SERVER_URL}/deleteLicense`, {
         email,
       });
-      return res.data.company;
+
+      return {
+        ...res.data,
+        email,
+      };
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.response?.data || "Failed to delete license"
@@ -158,27 +139,16 @@ const companySlice = createSlice({
         state.message = action.payload;
       })
 
-      /* UPLOAD PROFILE */
-      .addCase(uploadProfile.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(uploadProfile.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.company = action.payload;
-      })
-      .addCase(uploadProfile.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-
       /* UPLOAD LICENSE */
       .addCase(uploadLicense.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(uploadLicense.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.company = action.payload;
+        state.company = {
+          ...state.company,
+          businessLicense: action.payload.businessLicense,
+        };
       })
       .addCase(uploadLicense.rejected, (state, action) => {
         state.isLoading = false;
@@ -192,7 +162,10 @@ const companySlice = createSlice({
       })
       .addCase(deleteLicense.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.company = action.payload;
+        state.company = {
+          ...state.company,
+          businessLicense: null,
+        };
       })
       .addCase(deleteLicense.rejected, (state, action) => {
         state.isLoading = false;
