@@ -8,13 +8,13 @@
   position: relative;
 }
 
-/* colorful shapes background */
+/* Soft gradient background shapes */
 .profile-page::before {
   content: "";
   position: absolute;
   width: 380px;
   height: 380px;
-  background: linear-gradient(135deg, #ff0080, #ffbf00);
+  background: linear-gradient(135deg, #a2d9ff, #d7b4ff); /* NEW */
   border-radius: 50%;
   top: 50%;
   left: 60%;
@@ -28,7 +28,7 @@
   position: absolute;
   width: 350px;
   height: 350px;
-  background: linear-gradient(135deg, #00d4ff, #009688);
+  background: linear-gradient(135deg, #b3ffe2, #b4d7ff); /* NEW */
   border-radius: 50%;
   top: 10%;
   left: 30%;
@@ -95,6 +95,7 @@
   margin-bottom: 15px;
 }
 
+/* SAVE BUTTON */
 .save-btn {
   background: #009688;
   color: white;
@@ -148,6 +149,7 @@
   gap: 12px;
 }
 
+/* CV BUTTONS */
 .cv-btn {
   padding: 8px 14px;
   border-radius: 10px;
@@ -164,12 +166,12 @@
 }
 
 .cv-btn.replace {
-  background: #ffc107;
-  color: #000;
+  background: #3498db; /* BLUE */
+  color: #fff;
 }
 
 .cv-btn.delete {
-  background: #e74c3c;
+  background: #e63946; /* SOFT RED */
   color: white;
 }
 
