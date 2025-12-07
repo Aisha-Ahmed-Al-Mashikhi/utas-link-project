@@ -18,10 +18,9 @@ const CreatePost = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
+  // Fetch user posts
   useEffect(() => {
-    if (user?.email) {
-      dispatch(fetchUserPosts(user.email));
-    }
+    if (user?.email) dispatch(fetchUserPosts(user.email));
   }, [user, dispatch]);
 
   const handleSubmit = () => {
@@ -32,22 +31,14 @@ const CreatePost = () => {
       setEditMode(false);
       setEditId(null);
     } else {
-      dispatch(
-        addPost({
-          postMsg,
-          email: user.email,
-          name: user.name || user.companyName, // 👈 يدعم الطالب + الشركة
-        })
-      );
+      dispatch(addPost({ postMsg, email: user.email, name: user.name }));
     }
 
     setPostMsg("");
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Delete post?")) {
-      dispatch(deletePost(id));
-    }
+    if (window.confirm("Delete post?")) dispatch(deletePost(id));
   };
 
   const handleEdit = (post) => {
@@ -57,50 +48,55 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="post-wrapper">
+    <div className="post-page">
 
-      {/* كتابة بوست */}
-      <div className="create-card">
+      {/* LEFT SIDE — CREATE POST */}
+      <div className="left-card">
         <textarea
-          className="textarea"
           placeholder="Write something..."
           value={postMsg}
           onChange={(e) => setPostMsg(e.target.value)}
+          className="post-input"
         ></textarea>
 
-        <button className="post-button" onClick={handleSubmit}>
+        <button className="post-btn" onClick={handleSubmit}>
           {editMode ? "Update" : "Post"}
         </button>
       </div>
 
-      <h3 className="section-title">My Posts</h3>
+      {/* RIGHT SIDE — POSTS LIST */}
+      <div className="right-card">
+        <h3 className="section-title">My Posts</h3>
 
-      {myPosts.length === 0 && <p>No posts yet.</p>}
+        {myPosts.length === 0 && <p className="empty-msg">No posts yet.</p>}
 
-      {/* عرض بوستات المستخدم */}
-      {myPosts.map((post) => (
-        <div
-          key={post._id}
-          className="post-card"
-          onClick={() => console.log("Card Clicked")}
-        >
-          <div className="post-header">
-            <p className="post-author">{user.name || user.companyName}</p>
-            <span className="post-time">{moment(post.createdAt).fromNow()}</span>
+        {myPosts.map((post) => (
+          <div className="post-card" key={post._id}>
+            <div className="post-header">
+              <p className="post-author">
+                {user.name || user.companyName}
+              </p>
+              <p className="post-time">{moment(post.createdAt).fromNow()}</p>
+            </div>
+
+            <p className="post-text">{post.postMsg}</p>
+
+            <div className="post-actions">
+              <button className="edit-btn" onClick={() => handleEdit(post)}>
+                Edit
+              </button>
+
+              <button
+                className="delete-btn"
+                onClick={() => handleDelete(post._id)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
+        ))}
+      </div>
 
-          <p className="post-text">{post.postMsg}</p>
-
-          <div className="post-actions">
-            <button className="edit-btn" onClick={() => handleEdit(post)}>
-              Edit
-            </button>
-            <button className="delete-btn" onClick={() => handleDelete(post._id)}>
-              Delete
-            </button>
-          </div>
-        </div>
-      ))}
     </div>
   );
 };
