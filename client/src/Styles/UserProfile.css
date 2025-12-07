@@ -19,7 +19,7 @@
   top: 55%;
   left: 55%;
   filter: blur(90px);
-  opacity: 0.45;
+  opacity: 0.5;
   z-index: 0;
 }
 
@@ -33,11 +33,11 @@
   top: 10%;
   left: 30%;
   filter: blur(95px);
-  opacity: 0.45;
+  opacity: 0.5;
   z-index: 0;
 }
 
-/* Column layout */
+/* Columns */
 .left-column,
 .right-column {
   position: relative;
@@ -55,70 +55,65 @@
   gap: 25px;
 }
 
-/* ====== PROFILE CARD (Left Side) ====== */
-.profile-card {
-  width: 100%;
-  padding: 40px 25px;
-  border-radius: 22px;
-  background: #ffffff;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
-  backdrop-filter: blur(10px);
+/* ========== NEW MODERN PROFILE CARD ========== */
+.profile-card-modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 35px 20px;
+  border-radius: 25px;
   text-align: center;
+  min-height: 380px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Profile Image */
-.profile-img-container {
-  width: 230px;
-  height: 230px;
-  margin: 0 auto 20px;
-}
-
-.profile-img {
-  width: 100%;
-  height: 100%;
+.profile-avatar {
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 6px solid #eef1f7;
-  background: white;
+  border: 5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+  margin-bottom: 18px;
 }
 
-/* Text */
-.profile-name {
+.profile-info h2 {
   font-size: 22px;
   font-weight: 700;
-  margin-top: 10px;
+  margin-bottom: 6px;
+  color: #222;
 }
 
-.profile-email {
-  color: #555;
+.profile-info p {
   font-size: 15px;
-  margin-bottom: 25px;
+  color: #555;
 }
 
-/* ====== GLASS CARD (Right side – Academic & CV) ====== */
+/* ====== GLASS CARD ====== */
 .glass-card {
   width: 100%;
   padding: 25px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.75);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
 }
 
-/* Info text formatting */
+/* Info text */
 .info-card h3 {
   margin-bottom: 10px;
   color: #222;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
 }
 
 .info-card p {
   margin: 6px 0;
-  font-size: 14px;
+  font-size: 15px;
 }
 
-/* Status Dot */
+/* Status dot */
 .status-dot {
   display: inline-block;
   width: 12px;
@@ -130,7 +125,7 @@
   background: #3fbf3f;
 }
 
-/* CV Section */
+/* ===== CV SECTION ===== */
 .cv-section {
   margin-top: 10px;
 }
@@ -158,7 +153,6 @@
   transition: 0.25s;
 }
 
-/* View */
 .cv-btn.view {
   background: #00a58b;
   color: white;
@@ -167,7 +161,6 @@
   opacity: 0.85;
 }
 
-/* Replace */
 .cv-btn.replace {
   background: #7d9dff;
   color: white;
@@ -176,7 +169,6 @@
   opacity: 0.85;
 }
 
-/* Delete */
 .cv-btn.delete {
   background: #ff8b8b;
   color: white;
@@ -185,7 +177,6 @@
   opacity: 0.85;
 }
 
-/* Upload CV */
 .upload-cv-btn {
   background: #009688;
   color: white;
@@ -199,9 +190,4 @@
 }
 .upload-cv-btn:hover {
   opacity: 0.85;
-}
-
-/* Hide Save Button if exists */
-.save-btn {
-  display: none;
 }
