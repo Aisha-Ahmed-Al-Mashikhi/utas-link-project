@@ -47,6 +47,27 @@ const Header = () => {
           </div>
         </div>
 
+        {/* ===== HEADER NAV LINKS ===== */}
+        <div className="header-links">
+          {/* Student */}
+          {role === "student" && (
+            <>
+              <Link to="/">Home</Link>
+              <Link to="/find-job">Find Job</Link>
+              <Link to="/create-post">Create Post</Link>
+            </>
+          )}
+
+          {/* Company */}
+          {role === "company" && (
+            <>
+              <Link to="/">Home</Link>
+              <Link to="/post-job">Post Job</Link>
+              <Link to="/company-jobs">My Jobs</Link>
+            </>
+          )}
+        </div>
+
         {/* MENU BUTTON */}
         <button className="menu-btn" onClick={() => setOpen(true)}>
           ☰
@@ -74,10 +95,7 @@ const Header = () => {
 
         {/* ===== NAVIGATION ===== */}
         <nav className="drawer-links">
-
-          {/* =======================
-              NOT LOGGED IN (GUEST)
-          ======================= */}
+          {/* ======================= GUEST ======================= */}
           {!role && (
             <>
               <Link to="/" onClick={() => setOpen(false)}>
@@ -92,22 +110,19 @@ const Header = () => {
                 <FiUserPlus className="icon" /> Register
               </Link>
 
-            <Link to="/developers" onClick={() => setOpen(false)}>
-  <FiUser className="icon" /> About Developer
-</Link>
-
+              <Link to="/developers" onClick={() => setOpen(false)}>
+                <FiUser className="icon" /> About Developer
+              </Link>
             </>
           )}
 
-          {/* =======================
-                STUDENT
-          ======================= */}
+          {/* ======================= STUDENT ======================= */}
           {role === "student" && (
             <>
-            <Link to="/" onClick={() => setOpen(false)}>
+              <Link to="/" onClick={() => setOpen(false)}>
                 <FiHome className="icon" /> Home
               </Link>
-            
+
               <Link to="/student-profile" onClick={() => setOpen(false)}>
                 <FiUser className="icon" /> Profile
               </Link>
@@ -116,10 +131,7 @@ const Header = () => {
                 <FiBriefcase className="icon" /> Find Job
               </Link>
 
-              <Link
-                to="/student-applications"
-                onClick={() => setOpen(false)}
-              >
+              <Link to="/student-applications" onClick={() => setOpen(false)}>
                 <FiBookOpen className="icon" /> My Applications
               </Link>
 
@@ -130,9 +142,10 @@ const Header = () => {
               <Link to="/create-post" onClick={() => setOpen(false)}>
                 <FiPlusCircle className="icon" /> Create Post
               </Link>
+
               <Link to="/developers" onClick={() => setOpen(false)}>
-  <FiUser className="icon" /> About Developer
-</Link>
+                <FiUser className="icon" /> About Developer
+              </Link>
 
               <button className="drawer-logout" onClick={handleLogout}>
                 <FiLogOut className="icon" /> Logout
@@ -140,15 +153,13 @@ const Header = () => {
             </>
           )}
 
-          {/* =======================
-                COMPANY
-          ======================= */}
+          {/* ======================= COMPANY ======================= */}
           {role === "company" && (
             <>
-            <Link to="/" onClick={() => setOpen(false)}>
+              <Link to="/" onClick={() => setOpen(false)}>
                 <FiHome className="icon" /> Home
               </Link>
-            
+
               <Link to="/company-profile" onClick={() => setOpen(false)}>
                 <FiUser className="icon" /> Company Profile
               </Link>
@@ -168,16 +179,16 @@ const Header = () => {
               <Link to="/create-post" onClick={() => setOpen(false)}>
                 <FiPlusCircle className="icon" /> Create Post
               </Link>
-             <Link to="/developers" onClick={() => setOpen(false)}>
-  <FiUser className="icon" /> About Developer
-</Link>
+
+              <Link to="/developers" onClick={() => setOpen(false)}>
+                <FiUser className="icon" /> About Developer
+              </Link>
 
               <button className="drawer-logout" onClick={handleLogout}>
                 <FiLogOut className="icon" /> Logout
               </button>
             </>
           )}
-
         </nav>
       </div>
     </>
