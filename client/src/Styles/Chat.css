@@ -1,54 +1,18 @@
-/* MAIN WRAPPER */
-.chat-wrapper {
-  padding: 20px;
-  width: 100%;
-  max-width: 1100px;
-  margin: auto;
-  min-height: 75vh;
-}
-
-/* HEADER */
-.chat-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.chat-header h2 {
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.accent {
-  color: #009688;
-}
-
-.close-chat {
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  font-size: 20px;
-  border-radius: 8px;
-  padding: 5px 12px;
-  cursor: pointer;
-}
-
-/* CHAT BOX (messages area) */
+/* CHAT BOX (area) */
 .chat-box {
-  background: #f8f9f9;
-  border-radius: 16px;
-  padding: 20px;
-  min-height: 400px;
+  background: #fafafa;
+  border-radius: 18px;
+  padding: 25px;
+  min-height: 420px;
   max-height: 450px;
   overflow-y: auto;
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 /* ROWS */
 .chat-row {
   display: flex;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .chat-row.left {
@@ -59,56 +23,49 @@
   justify-content: flex-end;
 }
 
-/* BUBBLE */
+/* BUBBLE DESIGN — Elegant Minimal */
 .bubble {
-  max-width: 60%;
-  padding: 12px 16px;
-  border-radius: 14px;
+  max-width: 65%;
+  padding: 14px 18px;
+  border-radius: 18px;
   font-size: 15px;
+  line-height: 1.5;
   position: relative;
+  transition: 0.2s;
 }
 
+/* Student message (Right Bubble) */
 .bubble.me {
   background: #009688;
   color: white;
-  border-bottom-right-radius: 4px;
+  border-top-right-radius: 6px;
+  box-shadow: 0px 3px 10px rgba(0, 128, 128, 0.25);
 }
 
+/* Company message (Left Bubble) */
 .bubble.them {
-  background: white;
-  border-bottom-left-radius: 4px;
-  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  color: #333;
+  border: 1.2px solid #e6e6e6;
+  border-top-left-radius: 6px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* TIME */
+/* TIME STYLING — soft and elegant */
 .time {
   display: block;
-  margin-top: 6px;
-  font-size: 11px;
-  opacity: 0.8;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #777;
+  opacity: 0.75;
 }
 
-/* INPUT AREA */
-.chat-input-area {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
+/* Smooth scrolling padding */
+.chat-box::-webkit-scrollbar {
+  width: 6px;
 }
 
-.chat-input-area input {
-  flex: 1;
-  border-radius: 10px;
-  border: 1.5px solid #ccc;
-  padding: 12px;
-  font-size: 15px;
-}
-
-.chat-input-area button {
-  background: #009688;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
+.chat-box::-webkit-scrollbar-thumb {
+  background-color: #b5dad6;
+  border-radius: 20px;
 }
