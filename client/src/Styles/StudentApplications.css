@@ -34,16 +34,13 @@
   scroll-behavior: smooth;
 }
 
-/* Scrollbar design */
 .applications-scroll::-webkit-scrollbar {
   height: 10px;
 }
-
 .applications-scroll::-webkit-scrollbar-thumb {
   background: #009688;
   border-radius: 10px;
 }
-
 .applications-scroll::-webkit-scrollbar-track {
   background: #e8f6f4;
   border-radius: 10px;
@@ -56,7 +53,7 @@
 .application-card {
   background: white;
   border-radius: 20px;
-  padding: 22px;
+  padding: 25px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -65,10 +62,11 @@
   transition: 0.2s;
 }
 
-/* SMALLER CARD FOR SCROLLER */
+/* Bigger width + less height */
 .small-card {
-  width: 350px;
-  min-width: 350px;
+  width: 380px;
+  min-width: 380px;
+  min-height: 280px;
 }
 
 /* Hover effect */
@@ -77,7 +75,6 @@
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* CARD CONTENT */
 .app-info {
   display: flex;
   align-items: flex-start;
@@ -105,13 +102,22 @@
 .details {
   font-size: 14px;
   color: #666;
-  margin-bottom: 3px;
+}
+
+/* ======================================================
+   NEW: BADGE NEXT TO BUTTONS
+====================================================== */
+
+.status-actions-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
 }
 
 /* Status badge */
 .status-badge {
-  display: inline-block;
-  margin-top: 8px;
   padding: 6px 14px;
   border-radius: 14px;
   font-weight: 600;
@@ -133,22 +139,13 @@
   color: #b71c1c;
 }
 
-/* Deleted warning */
-.deleted-warning {
-  color: #d9534f;
-  font-weight: 600;
-  margin-top: 8px;
-  font-size: 14px;
-}
-
 /* ======================================================
-   ACTION BUTTONS
+   ACTION BUTTONS (CENTERED)
 ====================================================== */
 
-.app-actions {
+.action-btns {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
 }
 
 .chat-btn {
@@ -159,11 +156,6 @@
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-.chat-btn:hover {
-  background-color: #007c6c;
 }
 
 .withdraw-btn {
@@ -174,16 +166,17 @@
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+}
+
+.chat-btn:hover {
+  background-color: #007c6c;
 }
 
 .withdraw-btn:hover {
   background-color: #d32f2f;
 }
 
-/* ======================================================
-   EMPTY STATE (NO APPLICATIONS)
-====================================================== */
+/* Empty state */
 .empty-state {
   background: #ffffff;
   padding: 40px;
@@ -192,12 +185,6 @@
   box-shadow: 0 4px 25px rgba(0,0,0,0.05);
   border: 1px solid #e8e8e8;
   max-width: 420px;
-}
-
-.empty-state p {
-  font-size: 16px;
-  color: #444;
-  margin-bottom: 15px;
 }
 
 .findjob-btn {
@@ -209,7 +196,6 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .findjob-btn:hover {
