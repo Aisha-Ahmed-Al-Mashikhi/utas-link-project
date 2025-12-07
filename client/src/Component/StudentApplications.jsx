@@ -6,6 +6,7 @@ import {
   fetchStudentApplications,
   cancelStudentApplication,
 } from "../Features/ApplicationSlice";
+
 import "../Styles/StudentApplications.css";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +15,6 @@ const StudentApplications = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.users);
-
   const { studentApplications, isLoading } = useSelector(
     (state) => state.applications
   );
@@ -50,6 +50,7 @@ const StudentApplications = () => {
         {studentApplications.length === 0 ? (
           <div className="empty-state">
             <p>No applications yet.</p>
+
             <button
               className="findjob-btn"
               onClick={() => navigate("/find-job")}
@@ -60,6 +61,8 @@ const StudentApplications = () => {
         ) : (
           studentApplications.map((app) => (
             <div className="application-card" key={app._id}>
+              
+              {/* LEFT SIDE INFO */}
               <div className="app-info">
                 <div className="app-icon">🏢</div>
 
@@ -68,20 +71,17 @@ const StudentApplications = () => {
                   <p className="company">Company: {app.organization}</p>
                   <p className="details">Company Email: {app.companyEmail}</p>
 
-<p className="details">
-  Applied on: 
-  {app.createdAt 
-    ? new Date(app.createdAt).toLocaleString()
-    : "Not Available"}
-</p>
+                  <p className="details">
+                    Applied on:{" "}
+                    {app.createdAt
+                      ? new Date(app.createdAt).toLocaleString()
+                      : "Not Available"}
+                  </p>
 
-
-                  {/* Status badge */}
                   <p className={`status-badge ${app.status?.toLowerCase()}`}>
                     {app.status || "Pending Review"}
                   </p>
 
-                  {/* Job deleted message */}
                   {app.jobDeleted && (
                     <p className="deleted-warning">
                       This job is no longer available.
@@ -90,6 +90,7 @@ const StudentApplications = () => {
                 </div>
               </div>
 
+              {/* RIGHT SIDE BUTTONS */}
               <div className="app-actions">
                 {!app.jobDeleted && (
                   <button
