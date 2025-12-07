@@ -18,10 +18,9 @@ const CreatePost = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  // Fetch user posts
   useEffect(() => {
     if (user?.email) dispatch(fetchUserPosts(user.email));
-  }, [user, dispatch]);
+  }, [user]);
 
   const handleSubmit = () => {
     if (!postMsg.trim()) return;
@@ -33,70 +32,77 @@ const CreatePost = () => {
     } else {
       dispatch(addPost({ postMsg, email: user.email, name: user.name }));
     }
-
     setPostMsg("");
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Delete post?")) dispatch(deletePost(id));
+    if (window.confirm("Are you sure?")) dispatch(deletePost(id));
   };
 
-  const handleEdit = (post) => {
-    setEditMode(true);
-    setEditId(post._id);
-    setPostMsg(post.postMsg);
-  };
+  const author =
+    user?.name || user?.companyName || "Unknown";
 
   return (
     <div className="post-page">
-
-      {/* LEFT SIDE — CREATE POST */}
-      <div className="left-card">
+      {/* LEFT CARD — Write Post */}
+      <div className="left-card glass">
         <textarea
           placeholder="Write something..."
           value={postMsg}
           onChange={(e) => setPostMsg(e.target.value)}
-          className="post-input"
         ></textarea>
 
-        <button className="post-btn" onClick={handleSubmit}>
+        <button onClick={handleSubmit} className="post-btn">
           {editMode ? "Update" : "Post"}
         </button>
       </div>
 
-      {/* RIGHT SIDE — POSTS LIST */}
-      <div className="right-card">
-        <h3 className="section-title">My Posts</h3>
+      {/* RIGHT CARD — My Posts */}
+      <div className="right-card glass">
+        <h3>My Posts</h3>
 
-        {myPosts.length === 0 && <p className="empty-msg">No posts yet.</p>}
+        <div className="posts-scroll">
+          {myPosts.length === 0 && <p className="empty">No posts yet.</p>}
 
-        {myPosts.map((post) => (
-          <div className="post-card" key={post._id}>
-            <div className="post-header">
-              <p className="post-author">
-                {user.name || user.companyName}
-              </p>
-              <p className="post-time">{moment(post.createdAt).fromNow()}</p>
+          {myPosts.map((post, idx) => (
+            <div className="post-card" key={idx}>
+              <div className="post-top">
+                <p className="author">{author}</p>
+                <p className="time">{moment(post.createdAt).fromNow()}</p>
+              </div>
+
+              <p className="content">{post.postMsg}</p>
+
+              <div className="actions">
+                <button
+                  className="edit"
+                  onClick={() => {
+                    setEditMode(true);
+                    setEditId(post._id);
+                    setPostMsg(post.postMsg);
+                  }}
+                >
+                  Edit
+                </button>
+
+                <button
+                  className="delete"
+                  onClick={() => handleDelete(post._id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
+          ))}
+        </div>
 
-            <p className="post-text">{post.postMsg}</p>
-
-            <div className="post-actions">
-              <button className="edit-btn" onClick={() => handleEdit(post)}>
-                Edit
-              </button>
-
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(post._id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+        {/* Small dots / scroll indicators */}
+        <div className="scroll-dots">
+          {myPosts.map((_, i) => (
+            <span key={i}></span>
+          ))}
+        </div>
       </div>
-
     </div>
   );
 };
