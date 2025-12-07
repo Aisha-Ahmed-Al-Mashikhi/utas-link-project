@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, fetchUserPosts, updatePost, deletePost } from "../Features/PostSlice";
+import {
+  addPost,
+  fetchUserPosts,
+  updatePost,
+  deletePost,
+} from "../Features/PostSlice";
 import moment from "moment";
+import "../Styles/CreatePost.css"; // ← ملف التصميم
 
 const CreatePost = () => {
   const dispatch = useDispatch();
@@ -12,14 +18,14 @@ const CreatePost = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  // Fetch user's posts
+  // Load user posts
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchUserPosts(user.email));
     }
   }, [user, dispatch]);
 
-  // Add or Update post
+  // Submit new or updated post
   const handleSubmit = () => {
     if (!postMsg.trim()) return;
 
@@ -34,6 +40,7 @@ const CreatePost = () => {
           postMsg,
           email: user.email,
           name: user.name,
+          companyName: user.companyName,
         })
       );
     }
@@ -41,7 +48,7 @@ const CreatePost = () => {
     setPostMsg("");
   };
 
-  // Delete post with confirmation
+  // Delete post
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       dispatch(deletePost(id));
@@ -56,89 +63,50 @@ const CreatePost = () => {
     setPostMsg(post.postMsg);
   };
 
+  // Auto detect student or company name
+  const getAuthorName = () => {
+    return user.companyName ?? user.name;
+  };
+
   return (
-    <div style={{ width: "100%", marginTop: "30px" }}>
-      {/* INPUT */}
-      <textarea
-        placeholder="Write something..."
-        value={postMsg}
-        onChange={(e) => setPostMsg(e.target.value)}
-        style={{
-          width: "100%",
-          height: "90px",
-          border: "1px solid #ccc",
-          borderRadius: "6px",
-          padding: "10px",
-        }}
-      ></textarea>
+    <div className="post-page-container">
+      {/* INPUT BOX */}
+      <div className="create-box">
+        <textarea
+          placeholder="Write something..."
+          value={postMsg}
+          onChange={(e) => setPostMsg(e.target.value)}
+          className="post-input"
+        ></textarea>
 
-      <button
-        onClick={handleSubmit}
-        style={{
-          marginTop: "10px",
-          padding: "8px 20px",
-          background: "#00897b",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        {editMode ? "Update" : "Post"}
-      </button>
+        <button onClick={handleSubmit} className="post-btn">
+          {editMode ? "Update" : "Post"}
+        </button>
+      </div>
 
-      <hr style={{ margin: "30px 0" }} />
+      <h3 className="section-title">My Posts</h3>
 
-      {/* USER POSTS LIST */}
-      <h3>My Posts</h3>
+      {myPosts.length === 0 && <p className="no-posts">No posts yet.</p>}
 
-      {myPosts.length === 0 && <p>No posts yet.</p>}
-
+      {/* POSTS LIST */}
       {myPosts.map((post) => (
-        <div
-          key={post._id}
-          style={{
-            background: "#fff",
-            padding: "15px",
-            borderRadius: "8px",
-            marginBottom: "15px",
-            border: "1px solid #eee",
-          }}
-        >
-          <p style={{ fontWeight: "bold" }}>{user.name}</p>
-          <p style={{ fontSize: "13px", color: "#666" }}>
-            {moment(post.createdAt).fromNow()}
-          </p>
+        <div key={post._id} className="post-card">
+          <div className="post-header">
+            <p className="author">{getAuthorName()}</p>
+            <p className="time">{moment(post.createdAt).fromNow()}</p>
+          </div>
 
-          <p>{post.postMsg}</p>
+          <p className="post-text">{post.postMsg}</p>
 
-          <button
-            style={{
-              background: "#ffca28",
-              border: 0,
-              padding: "6px 15px",
-              borderRadius: "5px",
-              marginRight: "10px",
-              cursor: "pointer",
-            }}
-            onClick={() => handleEdit(post)}
-          >
-            Edit
-          </button>
+          <div className="btn-row">
+            <button className="edit-btn" onClick={() => handleEdit(post)}>
+              Edit
+            </button>
 
-          <button
-            style={{
-              background: "#e57373",
-              border: 0,
-              padding: "6px 15px",
-              borderRadius: "5px",
-              cursor: "pointer",
-              color: "white",
-            }}
-            onClick={() => handleDelete(post._id)}
-          >
-            Delete
-          </button>
+            <button className="delete-btn" onClick={() => handleDelete(post._id)}>
+              Delete
+            </button>
+          </div>
         </div>
       ))}
     </div>
