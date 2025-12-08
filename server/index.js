@@ -307,21 +307,26 @@ app.get("/jobs/company/:email", async (req, res) => {
   }
 });
 /*───────────────────────────────────────────────
- ░░ GET SINGLE JOB BY ID  ⭐ REQUIRED FOR EDIT PAGE
+ ░░ UPDATE JOB
 ───────────────────────────────────────────────*/
-app.get("/jobs/:id", async (req, res) => {
+app.put("/jobs/:id", async (req, res) => {
   try {
-    const job = await JobModel.findById(req.params.id);
+    const updated = await JobModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
 
-    if (!job) {
+    if (!updated) {
       return res.status(404).json({ error: "Job not found" });
     }
 
-    res.send(job);
+    res.send(updated);
   } catch (err) {
-    res.status(500).json({ error: "Error fetching job" });
+    res.status(500).json({ error: "Error updating job" });
   }
 });
+
 
 /*───────────────────────────────────────────────
  ░░ APPLY TO JOB  (UPDATED → Saves real company name)
