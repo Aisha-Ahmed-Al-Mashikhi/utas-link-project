@@ -14,9 +14,9 @@
   border-radius: 20px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 30px 35px; /* smaller */
+  padding: 30px 35px; 
   width: 100%;
-  max-width: 900px; /* smaller */
+  max-width: 900px;
 }
 
 .page-title {
@@ -44,6 +44,7 @@
   border-radius: 8px;
   border: 1.3px solid #ccc;
   font-size: 14px;
+  width: 100%;
 }
 
 label {
@@ -52,9 +53,9 @@ label {
   margin-top: 14px;
 }
 
-/* Bigger Description Box */
+/* Description same size as input */
 .postjob-card textarea {
-  height: 140px; 
+  height: 45px; 
   resize: none;
 }
 
@@ -70,21 +71,22 @@ label {
   min-width: 300px;
 }
 
-/* Sector Boxes */
+/* Sector Boxes (smaller) */
 .sector-grid {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .sector-box {
   flex: 1;
-  border: 1.5px solid #ccc;
-  padding: 10px 15px;
-  border-radius: 10px;
+  border: 1.3px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
+  height: 45px; /* same height as input */
   transition: 0.2s;
 }
 
@@ -98,9 +100,14 @@ label {
 }
 
 .sector-box input {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   accent-color: #009688;
+}
+
+.sector-box span {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* Buttons */
