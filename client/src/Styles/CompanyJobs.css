@@ -3,7 +3,7 @@
 ============================ */
 .companyjobs-page {
   background: #f5faf8;
-  min-height: 85vh;
+  min-height: 90vh;
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
@@ -11,9 +11,9 @@
 }
 
 .companyjobs-title {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 800;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .accent {
@@ -21,46 +21,53 @@
 }
 
 /* ============================
-   JOB CARD
+   JOB CARD (محسّن)
 ============================ */
 .job-card {
   background: #ffffff;
-  border-radius: 18px;
-  padding: 25px;
-  margin-bottom: 22px;
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
   width: 100%;
   max-width: 900px;
-  box-shadow: 0px 3px 18px rgba(0, 0, 0, 0.06);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.07);
 }
 
 .job-card h3 {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.org {
-  color: #777;
+  color: #222;
   margin-bottom: 10px;
 }
 
-.desc {
-  color: #444;
-  margin-bottom: 12px;
+.job-location,
+.postedAt {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 6px;
 }
 
+/* Tags */
 .tags {
   display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin: 12px 0;
 }
 
 .tag {
-  background: #e0f7f4;
+  background-color: #dff7f3;
   color: #009688;
-  padding: 5px 12px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 13px;
+}
+
+/* Description */
+.desc {
+  color: #333;
+  margin: 14px 0;
+  line-height: 1.5;
 }
 
 /* ============================
@@ -68,28 +75,46 @@
 ============================ */
 .job-actions {
   display: flex;
-  gap: 12px;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.edit-btn,
+.delete-btn,
+.applicants-btn {
+  padding: 10px 22px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s ease;
 }
 
 .edit-btn {
   background: #ffc107;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
+}
+
+.edit-btn:hover {
+  background: #e7b000;
 }
 
 .delete-btn {
   background: #ff6b6b;
-  padding: 8px 16px;
-  border-radius: 8px;
   color: #fff;
+}
+
+.delete-btn:hover {
+  background: #e05959;
 }
 
 .applicants-btn {
   background: #009688;
   color: #fff;
-  padding: 8px 18px;
-  border-radius: 8px;
+}
+
+.applicants-btn:hover {
+  background: #007a6f;
 }
 
 /* ============================
@@ -101,75 +126,86 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3000;
+  backdrop-filter: blur(2px);
+  z-index: 5000;
 }
 
 /* ============================
-   MODAL BOX
+   MODAL BOX (جديد ومحسّن)
 ============================ */
 .edit-modal {
   background: #ffffff;
   width: 95%;
   max-width: 650px;
-  padding: 35px 40px;
+  padding: 40px;
   border-radius: 20px;
   position: relative;
-  box-shadow: 0px 8px 30px rgba(0,0,0,0.15);
-  animation: fade-in 0.25s ease-out;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+  animation: modalPop 0.25s ease-out;
 }
 
-/* animation */
-@keyframes fade-in {
-  from { transform: scale(0.94); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+@keyframes modalPop {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-/* ============================
-   CLOSE BUTTON (X)
-============================ */
+/* Close Button */
 .edit-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 35px;
-  height: 35px;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: #f0f0f0;
   border: none;
   cursor: pointer;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
   color: #444;
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
 .edit-close:hover {
   background: #e0e0e0;
 }
 
-/* ============================
-   INPUTS
-============================ */
+/* Input styles */
 .edit-modal label {
   font-size: 15px;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   display: block;
+  color: #222;
 }
 
 .edit-modal input,
 .edit-modal select,
 .edit-modal textarea {
   width: 100%;
-  padding: 10px;
-  border: 1.4px solid #ccc;
-  border-radius: 10px;
-  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1.6px solid #cfcfcf;
+  border-radius: 12px;
+  margin-bottom: 16px;
   font-size: 15px;
+  transition: border 0.2s ease;
+}
+
+.edit-modal input:focus,
+.edit-modal select:focus,
+.edit-modal textarea:focus {
+  border-color: #009688;
+  outline: none;
 }
 
 .edit-modal textarea {
@@ -178,31 +214,40 @@
 }
 
 /* ============================
-   SECTOR ROW
+   SECTOR STYLE (مطابق لبوست جوب)
 ============================ */
 .sector-edit-row {
   display: flex;
   gap: 12px;
-  margin-bottom: 15px;
 }
 
 .sector-edit-box {
+  flex: 1;
+  border: 1.6px solid #cccccc;
+  padding: 14px 16px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  border: 1.4px solid #ccc;
-  padding: 10px 12px;
-  border-radius: 12px;
+  gap: 10px;
   cursor: pointer;
-  flex: 1;
+  background: #fff;
+  transition: 0.2s ease-in-out;
 }
 
 .sector-edit-box:hover {
   border-color: #009688;
+  background: #f3fdfc;
 }
 
-.sector-edit-box input {
+.sector-edit-box input[type="radio"] {
   accent-color: #009688;
+  width: 18px;
+  height: 18px;
+}
+
+.sector-edit-box span {
+  font-size: 15px;
+  font-weight: 600;
 }
 
 /* ============================
@@ -212,22 +257,24 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  margin-top: 10px;
 }
 
 .save-btn {
   background: #009688;
   color: white;
-  padding: 10px 22px;
-  border-radius: 8px;
+  padding: 10px 24px;
+  border-radius: 10px;
   cursor: pointer;
   border: none;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .cancel-btn {
-  background: #ccc;
-  padding: 10px 22px;
-  border-radius: 8px;
+  background: #d3d3d3;
+  padding: 10px 24px;
+  border-radius: 10px;
   cursor: pointer;
   border: none;
+  font-weight: 700;
 }
