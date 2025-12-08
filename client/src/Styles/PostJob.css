@@ -8,15 +8,15 @@
   padding: 40px 20px;
 }
 
-/* Smaller Card */
+/* Card */
 .postjob-card {
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 30px 35px;
+  padding: 30px 35px; 
   width: 100%;
-  max-width: 900px;
+  max-width: 900px; 
 }
 
 .page-title {
@@ -36,7 +36,7 @@
   margin-bottom: 25px;
 }
 
-/* Inputs smaller */
+/* Inputs */
 .postjob-card input,
 .postjob-card select,
 .postjob-card textarea {
@@ -51,15 +51,16 @@ label {
   font-size: 14px;
   font-weight: 600;
   margin-top: 14px;
+  display: block;
 }
 
-/* Description same size as input */
+/* Textarea (Description) */
 .postjob-card textarea {
-  height: 45px !important;
-  resize: none;
+  height: 110px !important;  /* واضح ومناسب */
+  resize: vertical;
 }
 
-/* Row layout */
+/* Row Layout */
 .row-flex {
   display: flex;
   gap: 16px;
@@ -71,10 +72,11 @@ label {
   min-width: 300px;
 }
 
-/* Sector Boxes (smaller) */
+/* Sector Boxes */
 .sector-grid {
   display: flex;
   gap: 10px;
+  margin-top: 4px;
 }
 
 .sector-box {
@@ -118,7 +120,7 @@ label {
   gap: 20px;
 }
 
-/* Post Job button */
+/* Post Button */
 .btn-primary {
   background-color: #009688;
   color: white;
@@ -135,7 +137,7 @@ label {
   background-color: #00796b;
 }
 
-/* Clean button */
+/* Clean Button */
 .btn-clean {
   background: #e4e4e4;
   color: #333;
@@ -152,7 +154,7 @@ label {
   background: #cfcfcf;
 }
 
-/* Error text */
+/* Error message */
 .error {
   color: #d9534f;
   font-size: 12px;
