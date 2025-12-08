@@ -1,4 +1,4 @@
-/* Page */
+/* Page Layout */
 .postjob-page {
   background-color: #f5faf8;
   min-height: 100vh;
@@ -8,21 +8,25 @@
   padding: 40px 20px;
 }
 
+/* Smaller Card */
 .postjob-card {
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 40px 45px;
+  padding: 30px 35px; /* smaller */
   width: 100%;
-  max-width: 1050px;
+  max-width: 900px; /* smaller */
 }
 
-/* Titles */
 .page-title {
   font-size: 28px;
   font-weight: 800;
   text-align: center;
+}
+
+.accent {
+  color: #009688;
 }
 
 .page-sub {
@@ -32,7 +36,7 @@
   margin-bottom: 25px;
 }
 
-/* Smaller Inputs */
+/* Inputs smaller */
 .postjob-card input,
 .postjob-card select,
 .postjob-card textarea {
@@ -42,27 +46,31 @@
   font-size: 14px;
 }
 
-.postjob-card textarea {
-  height: 75px;
-}
-
-/* New Clean Button */
-.btn-clean {
-  background: #ffffff;
-  color: #555;
-  border: 1.5px solid #bbb;
-  border-radius: 30px;
-  padding: 10px 28px;
+label {
+  font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
+  margin-top: 14px;
 }
 
-.btn-clean:hover {
-  background: #eeeeee;
+/* Bigger Description Box */
+.postjob-card textarea {
+  height: 140px; 
+  resize: none;
 }
 
-/* Improved Sector Boxes */
+/* Row layout */
+.row-flex {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.col-half {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Sector Boxes */
 .sector-grid {
   display: flex;
   gap: 12px;
@@ -70,13 +78,13 @@
 
 .sector-box {
   flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   border: 1.5px solid #ccc;
   padding: 10px 15px;
   border-radius: 10px;
   cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
   transition: 0.2s;
 }
 
@@ -95,10 +103,50 @@
   accent-color: #009688;
 }
 
-/* Action buttons */
+/* Buttons */
 .actions {
-  margin-top: 25px;
+  margin-top: 28px;
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 20px;
+}
+
+/* Post Job button */
+.btn-primary {
+  background-color: #009688;
+  color: white;
+  border: none;
+  border-radius: 35px;
+  padding: 14px 40px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #00796b;
+}
+
+/* Clean button */
+.btn-clean {
+  background: #e4e4e4;
+  color: #333;
+  border: none;
+  border-radius: 35px;
+  padding: 14px 40px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-clean:hover {
+  background: #cfcfcf;
+}
+
+/* Error text */
+.error {
+  color: #d9534f;
+  font-size: 12px;
 }
