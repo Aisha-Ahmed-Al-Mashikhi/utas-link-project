@@ -11,7 +11,7 @@ const PostJob = () => {
 
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [sector, setSector] = useState(""); 
+  const [sector, setSector] = useState("");
   const [rate, setRate] = useState("");
   const [rateType, setRateType] = useState("");
   const [skills, setSkills] = useState("");
@@ -26,16 +26,6 @@ const PostJob = () => {
   } = useForm({
     resolver: yupResolver(postJobSchema),
     mode: "onChange",
-    defaultValues: {
-      jobTitle: "",
-      category: "",
-      sector: "",
-      rate: "",
-      rateType: "",
-      skills: "",
-      description: "",
-      payout: "",
-    },
   });
 
   const CATEGORIES = [
@@ -75,18 +65,22 @@ const PostJob = () => {
       .unwrap()
       .then(() => {
         alert("Job posted successfully!");
-
-        reset();
-        setJobTitle("");
-        setCategory("");
-        setSector("");
-        setRate("");
-        setRateType("");
-        setSkills("");
-        setDescription("");
-        setPayout("");
+        handleClean();
       })
       .catch(() => alert("Failed to post job"));
+  };
+
+  // ⭐ زر تنظيف الحقول
+  const handleClean = () => {
+    reset();
+    setJobTitle("");
+    setCategory("");
+    setSector("");
+    setRate("");
+    setRateType("");
+    setSkills("");
+    setDescription("");
+    setPayout("");
   };
 
   return (
@@ -99,6 +93,7 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+          
           {/* Job Title */}
           <label>Job Title</label>
           <input
@@ -110,7 +105,7 @@ const PostJob = () => {
           />
           <p className="error">{errors.jobTitle?.message}</p>
 
-          {/* Category & Sector */}
+          {/* Category + Sector */}
           <div className="row-flex">
             <div className="col-half">
               <label>Category</label>
@@ -128,21 +123,24 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
+            {/* ⭐ Sector اختيار بتصميم احترافي */}
             <div className="col-half">
               <label>Sector</label>
-              <div className="sector-inline">
+              <div className="sector-grid">
                 {SECTORS.map((s) => (
-                  <label key={s}>
+                  <div
+                    key={s}
+                    className={`sector-box ${sector === s ? "selected" : ""}`}
+                    onClick={() => setSector(s)}
+                  >
                     <input
                       type="radio"
                       value={s}
                       checked={sector === s}
-                      {...register("sector", {
-                        onChange: (e) => setSector(e.target.value),
-                      })}
+                      {...register("sector")}
                     />
-                    {s}
-                  </label>
+                    <span>{s}</span>
+                  </div>
                 ))}
               </div>
               <p className="error">{errors.sector?.message}</p>
@@ -211,9 +209,16 @@ const PostJob = () => {
             })}
           />
 
-          <button className="btn-primary" type="submit">
-            Post Job
-          </button>
+          {/* Action Buttons */}
+          <div className="actions">
+            <button className="btn-primary" type="submit">
+              Post Job
+            </button>
+
+            <button className="btn-clean" type="button" onClick={handleClean}>
+              Clean
+            </button>
+          </div>
         </form>
       </div>
     </div>
