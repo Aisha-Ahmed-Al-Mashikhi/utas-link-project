@@ -14,7 +14,7 @@
   border-radius: 20px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 30px 35px; 
+  padding: 30px 35px;
   width: 100%;
   max-width: 900px;
 }
@@ -55,7 +55,7 @@ label {
 
 /* Description same size as input */
 .postjob-card textarea {
-  height: 45px; 
+  height: 45px !important;
   resize: none;
 }
 
@@ -86,7 +86,7 @@ label {
   display: flex;
   gap: 8px;
   align-items: center;
-  height: 45px; /* same height as input */
+  height: 45px;
   transition: 0.2s;
 }
 
@@ -95,8 +95,8 @@ label {
 }
 
 .sector-box.selected {
-  border-color: #009688;
   background: #e0f7f4;
+  border-color: #009688;
 }
 
 .sector-box input {
