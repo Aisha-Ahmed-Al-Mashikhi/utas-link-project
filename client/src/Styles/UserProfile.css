@@ -3,7 +3,8 @@
   display: flex;
   gap: 25px;
   padding: 25px;
-  min-height: 100vh;
+  padding-bottom: 40px;   /* 🔥 تقلل المسافة قبل الفوتر */
+  min-height: calc(100vh - 120px); /* 🔥 تمنع وجود مساحة فاضية */
   background: #f4f5f7;
   position: relative;
 }
