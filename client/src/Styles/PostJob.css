@@ -55,11 +55,14 @@ label {
 
 /* Description same size as input */
 .postjob-card textarea {
-  width: 105%;      
-  margin-left: -2.5%;
-  height: 45px !important;
-  resize: none;
+  height: 110px !important;  
+  resize: vertical;           
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1.3px solid #ccc;
 }
+
 
 
 /* Row layout */
