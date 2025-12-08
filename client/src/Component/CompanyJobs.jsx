@@ -17,9 +17,7 @@ const CompanyJobs = () => {
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (savedUser?.email) {
-      dispatch(fetchCompanyJobs(savedUser.email));
-    }
+    if (savedUser?.email) dispatch(fetchCompanyJobs(savedUser.email));
   }, [dispatch]);
 
   const openEdit = (job) => {
@@ -49,66 +47,60 @@ const CompanyJobs = () => {
       {companyJobs.length === 0 ? (
         <p className="no-jobs">No jobs posted yet.</p>
       ) : (
-        companyJobs.map((job) => (
-          <div className="job-card" key={job._id}>
-            <h3>{job.jobTitle}</h3>
+        <div className="jobs-grid">
+          {companyJobs.map((job) => (
+            <div className="job-card" key={job._id}>
+              <h3>{job.jobTitle}</h3>
 
-            <p className="org">{job.organization}</p>
+              <p className="job-location">📍 {job.location || "Not specified"}</p>
 
-            <p className="job-location">📍 {job.location || "Not specified"}</p>
+              <p className="postedAt">
+                📅 Posted:{" "}
+                {new Date(job.postedAt).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </p>
 
-            <p className="postedAt">
-              📅 Posted:{" "}
-              {new Date(job.postedAt).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })}
-            </p>
+              <div className="tags">
+                <span className="tag">{job.category}</span>
+                <span className="tag">{job.sector}</span>
+              </div>
 
-            <div className="tags">
-              <span className="tag">{job.category}</span>
-              <span className="tag">{job.sector}</span>
+              <p className="desc">{job.description}</p>
+
+              <p className="skills">
+                <strong>Skills:</strong> {job.skills}
+              </p>
+
+              <p className="payout">
+                <strong>Payout Terms:</strong> {job.payout || "Not specified"}
+              </p>
+
+              <div className="job-actions">
+                <button className="edit-btn" onClick={() => openEdit(job)}>
+                  Edit
+                </button>
+                <button className="delete-btn" onClick={() => handleDelete(job._id)}>
+                  Delete
+                </button>
+                <button
+                  className="applicants-btn"
+                  onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
+                >
+                  Applicants 👥
+                </button>
+              </div>
             </div>
-
-            <p className="desc">{job.description}</p>
-
-            <p className="skills">
-              <strong>Skills:</strong> {job.skills}
-            </p>
-
-            <p className="payout">
-              <strong>Payout Terms:</strong> {job.payout || "Not specified"}
-            </p>
-
-            <div className="job-actions">
-              <button className="edit-btn" onClick={() => openEdit(job)}>
-                Edit
-              </button>
-
-              <button className="delete-btn" onClick={() => handleDelete(job._id)}>
-                Delete
-              </button>
-
-              <button
-                className="applicants-btn"
-                onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
-              >
-                Applicants 👥
-              </button>
-            </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
 
-      {/* ============================
-          EDIT MODAL (NEW DESIGN)
-      ============================ */}
+      {/* ========= EDIT MODAL ========= */}
       {showModal && (
         <div className="edit-overlay">
           <div className="edit-modal">
-
-            {/* X BUTTON */}
             <button className="edit-close" onClick={() => setShowModal(false)}>
               ✕
             </button>
@@ -222,11 +214,8 @@ const CompanyJobs = () => {
 
             <div className="modal-actions">
               <button className="save-btn" onClick={saveEdit}>Save</button>
-              <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                Cancel
-              </button>
+              <button className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
             </div>
-
           </div>
         </div>
       )}
