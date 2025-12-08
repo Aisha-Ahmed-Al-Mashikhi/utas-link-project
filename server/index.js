@@ -306,6 +306,22 @@ app.get("/jobs/company/:email", async (req, res) => {
     res.status(500).json({ error: "Failed loading company jobs" });
   }
 });
+/*───────────────────────────────────────────────
+ ░░ GET SINGLE JOB BY ID  ⭐ REQUIRED FOR EDIT PAGE
+───────────────────────────────────────────────*/
+app.get("/jobs/:id", async (req, res) => {
+  try {
+    const job = await JobModel.findById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    res.send(job);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching job" });
+  }
+});
 
 /*───────────────────────────────────────────────
  ░░ APPLY TO JOB  (UPDATED → Saves real company name)
