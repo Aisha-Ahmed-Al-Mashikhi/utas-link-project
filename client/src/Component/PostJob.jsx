@@ -121,7 +121,7 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector */}
+            {/* New Sector – small boxes */}
             <div className="col-half">
               <label>Sector</label>
               <div className="sector-grid">
@@ -135,7 +135,7 @@ const PostJob = () => {
                       type="radio"
                       value={s}
                       checked={sector === s}
-                      {...register("sector")}
+                      onChange={() => setSector(s)}
                     />
                     <span>{s}</span>
                   </div>
