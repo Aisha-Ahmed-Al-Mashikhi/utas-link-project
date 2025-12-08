@@ -13,7 +13,7 @@
 .companyjobs-title {
   font-size: 36px;
   font-weight: 800;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .accent {
@@ -21,24 +21,25 @@
 }
 
 /* ============================
-   JOB GRID (NEW)
+   GRID DESIGN (2 COLUMNS)
 ============================ */
 .jobs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 20px;
+  gap: 22px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1150px;
 }
 
 /* ============================
-   JOB CARD (NEW, SMALLER)
+   JOB CARD (SMALL & CLEAN)
 ============================ */
 .job-card {
   background: #fff;
   border-radius: 16px;
   padding: 22px;
-  box-shadow: 0px 3px 14px rgba(0,0,0,0.06);
+  width: 100%;
+  box-shadow: 0px 3px 12px rgba(0,0,0,0.06);
   transition: 0.2s ease;
 }
 
@@ -54,21 +55,21 @@
 
 .postedAt,
 .job-location {
-  color: #555;
   font-size: 14px;
+  color: #555;
 }
 
 .tags {
-  margin: 10px 0;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin: 10px 0;
 }
 
 .tag {
   background: #dff7f3;
   color: #009688;
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
@@ -79,51 +80,39 @@
   font-size: 14px;
   margin: 10px 0;
   line-height: 1.4;
-  max-height: 45px; /* 2–3 lines only */
+  max-height: 45px;
   overflow: hidden;
 }
 
 .skills,
 .payout {
   font-size: 13px;
-  margin: 4px 0;
+  margin-bottom: 6px;
 }
 
-/* ============================
-   BUTTONS (SMALLER)
-============================ */
+/* Buttons */
 .job-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .job-actions button {
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 10px;
   border: none;
   font-size: 13px;
-  font-weight: 600;
   cursor: pointer;
+  font-weight: 600;
 }
 
-.edit-btn {
-  background: #ffc107;
-}
-
-.delete-btn {
-  background: #ff6b6b;
-  color: #fff;
-}
-
-.applicants-btn {
-  background: #009688;
-  color: #fff;
-}
+.edit-btn { background: #ffc107; }
+.delete-btn { background: #ff6b6b; color: white; }
+.applicants-btn { background: #009688; color: white; }
 
 /* ============================
-   MODAL OVERLAY
+   MODAL (CENTERED + CLEAN)
 ============================ */
 .edit-overlay {
   position: fixed;
@@ -139,52 +128,48 @@
   z-index: 9999;
 }
 
-/* ============================
-   MODAL BOX – Clean UI
-============================ */
 .edit-modal {
-  background: #fff;
+  background: white;
   width: 95%;
   max-width: 540px;
   max-height: 88vh;
   padding: 32px;
-  border-radius: 20px;
   overflow-y: auto;
+  border-radius: 20px;
   position: relative;
   box-shadow: 0px 8px 25px rgba(0,0,0,0.2);
-  animation: fadeIn 0.25s ease;
+  animation: pop 0.25s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes pop {
+  from { transform: scale(0.94); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-/* close button */
+/* Close Button */
 .edit-close {
   position: absolute;
   top: 10px;
   right: 12px;
+  background: #efefef;
+  border: none;
   width: 34px;
   height: 34px;
-  background: #eaeaea;
   border-radius: 50%;
-  border: none;
-  cursor: pointer;
   font-size: 18px;
-  font-weight: bold;
+  cursor: pointer;
   transition: 0.2s;
 }
 
 .edit-close:hover {
-  background: #d6d6d6;
+  background: #dedede;
 }
 
 /* Inputs */
 .edit-modal label {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   display: block;
 }
 
@@ -195,7 +180,7 @@
   padding: 12px;
   border-radius: 12px;
   border: 1.5px solid #ccc;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   font-size: 14px;
 }
 
@@ -203,9 +188,7 @@
   min-height: 110px;
 }
 
-/* ============================
-   SECTOR – same style as Post Job
-============================ */
+/* Sector */
 .sector-edit-row {
   display: flex;
   gap: 10px;
@@ -213,33 +196,25 @@
 
 .sector-edit-box {
   flex: 1;
-  border: 1.5px solid #ccc;
-  padding: 12px 16px;
-  border-radius: 12px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: 0.2s ease;
+  border: 1.5px solid #ccc;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
 }
 
 .sector-edit-box:hover {
   border-color: #009688;
-  background: #f1fdfb;
+  background: #f0fdfa;
 }
 
 .sector-edit-box input {
-  width: 16px;
-  height: 16px;
   accent-color: #009688;
 }
 
-.sector-edit-box span {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Modal buttons */
+/* Modal Buttons */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -249,16 +224,12 @@
 .save-btn {
   background: #009688;
   padding: 10px 20px;
-  color: white;
   border-radius: 10px;
-  border: none;
-  font-weight: 700;
+  color: white;
 }
 
 .cancel-btn {
   background: #e0e0e0;
   padding: 10px 20px;
   border-radius: 10px;
-  font-weight: 700;
-  border: none;
 }
