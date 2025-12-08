@@ -108,6 +108,12 @@ const CompanyJobs = () => {
         {showModal && (
           <div className="modal-overlay">
             <div className="modal-box">
+
+              {/* Close Button */}
+              <button className="close-btn" onClick={() => setShowModal(false)}>
+                ✕
+              </button>
+
               <h2>Edit Job</h2>
 
               <label>Job Title</label>
@@ -219,10 +225,7 @@ const CompanyJobs = () => {
                 <button className="save-btn" onClick={saveEdit}>
                   Save
                 </button>
-                <button
-                  className="cancel-btn"
-                  onClick={() => setShowModal(false)}
-                >
+                <button className="cancel-btn" onClick={() => setShowModal(false)}>
                   Cancel
                 </button>
               </div>
