@@ -70,7 +70,6 @@ const PostJob = () => {
       .catch(() => alert("Failed to post job"));
   };
 
-  // ⭐ زر تنظيف الحقول
   const handleClean = () => {
     reset();
     setJobTitle("");
@@ -93,7 +92,6 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          
           {/* Job Title */}
           <label>Job Title</label>
           <input
@@ -123,7 +121,7 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* ⭐ Sector اختيار بتصميم احترافي */}
+            {/* Sector */}
             <div className="col-half">
               <label>Sector</label>
               <div className="sector-grid">
@@ -209,12 +207,11 @@ const PostJob = () => {
             })}
           />
 
-          {/* Action Buttons */}
+          {/* Buttons */}
           <div className="actions">
             <button className="btn-primary" type="submit">
               Post Job
             </button>
-
             <button className="btn-clean" type="button" onClick={handleClean}>
               Clean
             </button>
