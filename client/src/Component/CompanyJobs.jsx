@@ -1,240 +1,225 @@
-// src/Component/CompanyJobs.js
+import React, { useState } from "react";
+import "../Styles/PostJob.css";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { postJobSchema } from "../Validations/PostJobValidation";
+import { useDispatch } from "react-redux";
+import { addJob } from "../Features/JobSlice";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCompanyJobs, deleteJob, updateJob } from "../Features/JobSlice";
-import "../Styles/CompanyJobs.css";
-import { useNavigate } from "react-router-dom";
-
-const CompanyJobs = () => {
+const PostJob = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const { companyJobs, isLoading } = useSelector((state) => state.jobs);
+  const [jobTitle, setJobTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [sector, setSector] = useState("");
+  const [rate, setRate] = useState("");
+  const [rateType, setRateType] = useState("");
+  const [skills, setSkills] = useState("");
+  const [description, setDescription] = useState("");
+  const [payout, setPayout] = useState("");
 
-  const [showModal, setShowModal] = useState(false);
-  const [editedJob, setEditedJob] = useState({});
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(postJobSchema),
+    mode: "onChange",
+  });
 
-  // Load company jobs
-  useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (savedUser?.email) {
-      dispatch(fetchCompanyJobs(savedUser.email));
-    }
-  }, [dispatch]);
+  const CATEGORIES = [
+    "Design / Marketing",
+    "Technology / IT",
+    "Business / Finance",
+    "Education / Training",
+    "Logistics / Operations",
+    "Hospitality / Coffee Shops",
+    "Food & Beverage",
+    "Customer Service",
+    "Retail / Store",
+    "Other",
+  ];
 
-  const openEdit = (job) => {
-    setEditedJob(job);
-    setShowModal(true);
+  const SECTORS = ["Private Company", "Government"];
+  const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
+
+  const onSubmit = () => {
+    const company = JSON.parse(localStorage.getItem("loggedUser"));
+    if (!company) return alert("Please log in first.");
+
+    dispatch(
+      addJob({
+        jobTitle,
+        category,
+        sector,
+        rate,
+        rateType,
+        skills,
+        description,
+        payout,
+        organization: company.companyName,
+        postedBy: company.email,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        alert("Job posted successfully!");
+        handleClean();
+      })
+      .catch(() => alert("Failed to post job"));
   };
 
-  const saveEdit = () => {
-    dispatch(updateJob(editedJob));
-    setShowModal(false);
+  const handleClean = () => {
+    reset();
+    setJobTitle("");
+    setCategory("");
+    setSector("");
+    setRate("");
+    setRateType("");
+    setSkills("");
+    setDescription("");
+    setPayout("");
   };
-
-  const handleDelete = (id) => {
-    if (window.confirm("Delete this job?")) {
-      dispatch(deleteJob(id));
-    }
-  };
-
-  if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="companyjobs-page">
-      <div className="jobs-container">
-        <h1 className="companyjobs-title">
-          My <span className="accent">Jobs</span>
+    <div className="postjob-page">
+      <div className="postjob-card">
+        <h1 className="page-title">
+          Post a <span className="accent">Job</span>
         </h1>
 
-        {companyJobs.length === 0 ? (
-          <p className="no-jobs">No jobs posted yet.</p>
-        ) : (
-          companyJobs.map((job) => (
-            <div className="job-card" key={job._id}>
-              <h3>{job.jobTitle}</h3>
+        <p className="page-sub">Add a new job listing for students</p>
 
-              <p className="job-location">📍 {job.location || "Not specified"}</p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Job Title */}
+          <label>Job Title</label>
+          <input
+            type="text"
+            value={jobTitle}
+            {...register("jobTitle", {
+              onChange: (e) => setJobTitle(e.target.value),
+            })}
+          />
+          <p className="error">{errors.jobTitle?.message}</p>
 
-              <p className="postedAt">
-                📅 Posted:{" "}
-                {new Date(job.postedAt).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
-
-              <div className="tags">
-                <span className="tag">{job.category}</span>
-                <span className="tag">{job.sector}</span>
-              </div>
-
-              <p className="desc">{job.description}</p>
-
-              <p className="skills">
-                <strong>Skills:</strong> {job.skills}
-              </p>
-
-              <p className="payout">
-                <strong>Payout Terms:</strong> {job.payout || "Not specified"}
-              </p>
-
-              <div className="job-actions">
-                <button className="edit-btn" onClick={() => openEdit(job)}>
-                  Edit
-                </button>
-
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(job._id)}
-                >
-                  Delete
-                </button>
-
-                <button
-                  className="applicants-btn"
-                  onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
-                >
-                  Applicants 👥
-                </button>
-              </div>
-            </div>
-          ))
-        )}
-
-        {/* EDIT MODAL */}
-        {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-box">
-
-              {/* Close Button */}
-              <button className="close-btn" onClick={() => setShowModal(false)}>
-                ✕
-              </button>
-
-              <h2>Edit Job</h2>
-
-              <label>Job Title</label>
-              <input
-                value={editedJob.jobTitle}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, jobTitle: e.target.value })
-                }
-              />
-
+          {/* Category + Sector */}
+          <div className="row-flex">
+            <div className="col-half">
               <label>Category</label>
               <select
-                value={editedJob.category}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, category: e.target.value })
-                }
+                value={category}
+                {...register("category", {
+                  onChange: (e) => setCategory(e.target.value),
+                })}
               >
-                <option value="">Select</option>
-                <option>Design / Marketing</option>
-                <option>Technology / IT</option>
-                <option>Business / Finance</option>
-                <option>Education / Training</option>
-                <option>Logistics / Operations</option>
-                <option>Hospitality / Coffee Shops</option>
-                <option>Customer Service</option>
+                <option value="">Select category</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
               </select>
+              <p className="error">{errors.category?.message}</p>
+            </div>
 
+            {/* Sector */}
+            <div className="col-half">
               <label>Sector</label>
-              <div className="sector-edit-row">
-                <label className="sector-edit-box">
-                  <input
-                    type="radio"
-                    value="Private Company"
-                    checked={editedJob.sector === "Private Company"}
-                    onChange={(e) =>
-                      setEditedJob({ ...editedJob, sector: e.target.value })
-                    }
-                  />
-                  <span>Private Company</span>
-                </label>
-
-                <label className="sector-edit-box">
-                  <input
-                    type="radio"
-                    value="Government"
-                    checked={editedJob.sector === "Government"}
-                    onChange={(e) =>
-                      setEditedJob({ ...editedJob, sector: e.target.value })
-                    }
-                  />
-                  <span>Government</span>
-                </label>
+              <div className="sector-grid">
+                {SECTORS.map((s) => (
+                  <div
+                    key={s}
+                    className={`sector-box ${sector === s ? "selected" : ""}`}
+                    onClick={() => setSector(s)}
+                  >
+                    <input
+                      type="radio"
+                      value={s}
+                      checked={sector === s}
+                      onChange={() => setSector(s)}
+                    />
+                    <span>{s}</span>
+                  </div>
+                ))}
               </div>
-
-              <label>Rate (OMR)</label>
-              <input
-                value={editedJob.rate}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, rate: e.target.value })
-                }
-              />
-
-              <label>Rate Type</label>
-              <select
-                value={editedJob.rateType}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, rateType: e.target.value })
-                }
-              >
-                <option value="">Select</option>
-                <option>Per Hour</option>
-                <option>Per Task</option>
-                <option>Per Day</option>
-              </select>
-
-              <label>Skills Required</label>
-              <input
-                value={editedJob.skills}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, skills: e.target.value })
-                }
-              />
-
-              <label>Description</label>
-              <textarea
-                value={editedJob.description}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, description: e.target.value })
-                }
-              />
-
-              <label>Payout Terms</label>
-              <input
-                value={editedJob.payout}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, payout: e.target.value })
-                }
-              />
-
-              <label>Location</label>
-              <input
-                value={editedJob.location || ""}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, location: e.target.value })
-                }
-              />
-
-              <div className="modal-actions">
-                <button className="save-btn" onClick={saveEdit}>
-                  Save
-                </button>
-                <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                  Cancel
-                </button>
-              </div>
+              <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
-        )}
+
+          {/* Rate + RateType */}
+          <div className="row-flex">
+            <div className="col-half">
+              <label>Rate (OMR)</label>
+              <input
+                type="number"
+                value={rate}
+                {...register("rate", {
+                  onChange: (e) => setRate(e.target.value),
+                })}
+              />
+              <p className="error">{errors.rate?.message}</p>
+            </div>
+
+            <div className="col-half">
+              <label>Rate Type</label>
+              <select
+                value={rateType}
+                {...register("rateType", {
+                  onChange: (e) => setRateType(e.target.value),
+                })}
+              >
+                <option value="">Select type</option>
+                {RATE_TYPES.map((r) => (
+                  <option key={r}>{r}</option>
+                ))}
+              </select>
+              <p className="error">{errors.rateType?.message}</p>
+            </div>
+          </div>
+
+          {/* Skills */}
+          <label>Skills Required</label>
+          <input
+            type="text"
+            value={skills}
+            {...register("skills", {
+              onChange: (e) => setSkills(e.target.value),
+            })}
+          />
+          <p className="error">{errors.skills?.message}</p>
+
+          {/* Description */}
+          <label>Description</label>
+          <textarea
+            value={description}
+            {...register("description", {
+              onChange: (e) => setDescription(e.target.value),
+            })}
+          />
+          <p className="error">{errors.description?.message}</p>
+
+          {/* Payout */}
+          <label>Payout (optional)</label>
+          <input
+            type="text"
+            value={payout}
+            {...register("payout", {
+              onChange: (e) => setPayout(e.target.value),
+            })}
+          />
+
+          {/* Buttons */}
+          <div className="actions">
+            <button className="btn-primary" type="submit">
+              Post Job
+            </button>
+            <button className="btn-clean" type="button" onClick={handleClean}>
+              Clean
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default CompanyJobs;
+export default PostJob;
