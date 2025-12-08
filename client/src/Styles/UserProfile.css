@@ -1,8 +1,8 @@
 /* ---------- General Page Style ---------- */
 .profile-page {
   background-color: #f7fbfa;
-  min-height: 100vh;
-  padding: 30px 12%;
+  padding: 30px 12% 40px;  /* ↓↓ قللنا المسافة من الأسفل */
+  min-height: auto;        /* ↓↓ تمنع الفراغ الكبير */
   font-family: "Quicksand", sans-serif;
 }
 
@@ -15,7 +15,7 @@
   border-radius: 16px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   padding: 20px 30px;
-  margin-bottom: 30px;
+  margin-bottom: 20px; /* تقليل المسافة بين الكارد اللي بعده */
 }
 
 .profile-left {
@@ -87,7 +87,7 @@
   border-radius: 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   padding: 20px 30px;
-  margin-bottom: 25px;
+  margin-bottom: 20px; /* تقليل المسافة */
 }
 
 .history-box h3,
@@ -173,25 +173,15 @@
   gap: 10px;
   margin-top: 10px;
 }
-/* ---------------- Modal Overlay ---------------- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25); /* شفافية أنيقة */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  backdrop-filter: blur(3px); /* ضبابية خفيفة للخلفية */
-}
 
+/* ---------------- Modal Overlay ---------------- */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(245, 250, 247, 0.75); /* خلفية شبه شفافة */
+  background: rgba(245, 250, 247, 0.75);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
