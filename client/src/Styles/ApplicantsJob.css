@@ -1,13 +1,16 @@
 /* PAGE */
 .applicants-page {
   padding: 40px;
-  font-family: "Quicksand", sans-serif;
+  max-width: 1200px;
+  margin: auto;
+  font-family: "Poppins", sans-serif;
 }
 
 .app-title {
   font-size: 32px;
   font-weight: 800;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .accent {
@@ -21,27 +24,27 @@
   text-align: center;
 }
 
-/* GRID */
+/* GRID (same like CompanyJobs) */
 .applicants-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
   gap: 25px;
+  margin-top: 20px;
 }
 
-/* CARD */
+/* CARD (Same CompanyJobs style) */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
+  background: #ffffff;
   padding: 22px;
-  border-radius: 18px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  transition: 0.2s ease-in-out;
+  border-radius: 16px;
+  border: 1px solid #e4e4e4;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  transition: 0.25s ease;
 }
 
 .glass-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
 
 /* PROFILE ROW */
@@ -53,8 +56,8 @@
 }
 
 .icon-circle {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   background: #009688;
   color: white;
   border-radius: 50%;
@@ -75,18 +78,17 @@
   margin: 3px 0;
 }
 
+/* STATUS */
 .status {
   margin: 12px 0;
   font-size: 15px;
   color: #444;
 }
 
-/* STATUS TAG COLORS */
 .status-tag {
-  padding: 5px 12px;
-  border-radius: 10px;
+  padding: 6px 14px;
+  border-radius: 8px;
   font-weight: 600;
-  margin-left: 5px;
 }
 
 .status-tag.accepted {
@@ -104,25 +106,25 @@
   color: #8d6e63;
 }
 
-/* ACTION BUTTONS */
+/* ACTION BUTTONS (Same design as View / Edit / Delete) */
 .action-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 18px;
 }
 
 .chat-btn,
 .accept-btn,
 .reject-btn {
   padding: 8px 14px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
-/* INDIVIDUAL BUTTON COLORS */
+/* Individual button styles */
 .chat-btn {
   background: #009688;
   color: white;
