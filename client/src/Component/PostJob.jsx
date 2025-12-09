@@ -132,13 +132,7 @@ const PostJob = () => {
                     key={s}
                     className={`sector-box ${sector === s ? "selected" : ""}`}
                   >
-                    <input
-                      type="radio"
-                      value={s}
-                      {...register("sector")}
-                      checked={sector === s}
-                      onChange={(e) => setSector(e.target.value)}
-                    />
+                    <input type="hidden" {...register("sector")} value={sector} />
                     <span>{s}</span>
                   </label>
                 ))}
