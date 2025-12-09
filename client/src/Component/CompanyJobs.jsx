@@ -15,6 +15,23 @@ const CompanyJobs = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
 
+  // ========================= PAGINATION =========================
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 6;
+
+  const totalPages = Math.ceil(companyJobs.length / jobsPerPage);
+
+  const indexOfLast = currentPage * jobsPerPage;
+  const indexOfFirst = indexOfLast - jobsPerPage;
+  const currentJobs = companyJobs.slice(indexOfFirst, indexOfLast);
+
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
+
+  // ===============================================================
+
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
     if (savedUser?.email) dispatch(fetchCompanyJobs(savedUser.email));
@@ -47,57 +64,101 @@ const CompanyJobs = () => {
       {companyJobs.length === 0 ? (
         <p className="no-jobs">No jobs posted yet.</p>
       ) : (
-        <div className="jobs-grid">
-          {companyJobs.map((job) => (
-            <div className="job-card" key={job._id}>
-              <h3>{job.jobTitle}</h3>
+        <>
+          <div className="jobs-grid">
+            {currentJobs.map((job) => (
+              <div className="job-card" key={job._id}>
+                <h3>{job.jobTitle}</h3>
 
-              <p className="job-location">📍 {job.location || "Not specified"}</p>
+                <p className="job-location">
+                  📍 {job.location || "Not specified"}
+                </p>
 
-              <p className="postedAt">
-                📅 Posted:{" "}
-                {new Date(job.postedAt).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
+                <p className="postedAt">
+                  📅 Posted:{" "}
+                  {new Date(job.postedAt).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </p>
 
-              <div className="tags">
-                <span className="tag">{job.category}</span>
-                <span className="tag">{job.sector}</span>
+                <div className="tags">
+                  <span className="tag">{job.category}</span>
+                  <span className="tag">{job.sector}</span>
+                </div>
+
+                <p className="desc">{job.description}</p>
+
+                <p className="skills">
+                  <strong>Skills:</strong> {job.skills}
+                </p>
+
+                <p className="payout">
+                  <strong>Payout Terms:</strong> {job.payout || "Not specified"}
+                </p>
+
+                <div className="job-actions">
+                  <button className="edit-btn" onClick={() => openEdit(job)}>
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(job._id)}
+                  >
+                    Delete
+                  </button>
+
+                  <button
+                    className="applicants-btn"
+                    onClick={() =>
+                      navigate(`/applicants-job?jobId=${job._id}`)
+                    }
+                  >
+                    Applicants 👥
+                  </button>
+                </div>
               </div>
+            ))}
+          </div>
 
-              <p className="desc">{job.description}</p>
+          {/* ====================== PAGINATION ====================== */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn"
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                ← Previous
+              </button>
 
-              <p className="skills">
-                <strong>Skills:</strong> {job.skills}
-              </p>
-
-              <p className="payout">
-                <strong>Payout Terms:</strong> {job.payout || "Not specified"}
-              </p>
-
-              <div className="job-actions">
-                <button className="edit-btn" onClick={() => openEdit(job)}>
-                  Edit
-                </button>
-                <button className="delete-btn" onClick={() => handleDelete(job._id)}>
-                  Delete
-                </button>
+              {[...Array(totalPages)].map((_, i) => (
                 <button
-                  className="applicants-btn"
-                  onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
+                  key={i}
+                  className={`page-number ${
+                    currentPage === i + 1 ? "active" : ""
+                  }`}
+                  onClick={() => goToPage(i + 1)}
                 >
-                  Applicants 👥
+                  {i + 1}
                 </button>
-              </div>
+              ))}
+
+              <button
+                className="page-btn"
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next →
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
 
-      {/* ========= EDIT MODAL ========= */}
+      {/* ============== EDIT MODAL ============== */}
       {showModal && (
         <div className="edit-overlay">
           <div className="edit-modal">
@@ -213,8 +274,15 @@ const CompanyJobs = () => {
             />
 
             <div className="modal-actions">
-              <button className="save-btn" onClick={saveEdit}>Save</button>
-              <button className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
+              <button className="save-btn" onClick={saveEdit}>
+                Save
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
