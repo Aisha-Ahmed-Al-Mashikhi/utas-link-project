@@ -7,27 +7,31 @@
   justify-content: center;
 }
 
-/* BIG CARD WRAPPER – NOW GLASS */
+/* GLASS BIG CARD */
 .companyjobs-wrapper {
-  background: rgba(255, 255, 255, 0.35);  /* شفافية */
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
   width: 100%;
   max-width: 1250px;
   padding: 40px 40px 60px;
   border-radius: 22px;
-
-  /*✨ GLASS EFFECT */
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 4px 25px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,255,255,0.4);
 }
 
 .companyjobs-title {
   font-size: 36px;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 30px;
+  line-height: 1.6;
 }
 
 .accent {
@@ -54,70 +58,20 @@
   transform: translateY(-3px);
 }
 
-.job-card h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.postedAt,
-.job-location {
-  font-size: 14px;
-  color: #555;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 10px 0;
-}
-
-.tag {
-  background: #dff7f3;
-  color: #009688;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.desc {
-  max-height: 60px;
-  overflow: hidden;
-  color: #333;
-  margin: 10px 0;
-}
-
-/* Buttons */
-.job-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.edit-btn {
-  background: #ffc107;
-  border-radius: 10px;
-  padding: 8px 16px;
-}
-
-.delete-btn {
-  background: #ff6b6b;
-  color: white;
-  border-radius: 10px;
-  padding: 8px 16px;
-}
-
+/* Buttons — no borders */
+.edit-btn,
+.delete-btn,
 .applicants-btn {
-  background: #009688;
-  color: white;
-  border-radius: 10px;
-  padding: 8px 16px;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-/* PAGINATION */
+.edit-btn { background: #ffc107; border-radius: 10px; padding: 8px 16px; }
+.delete-btn { background: #ff6b6b; color: white; border-radius: 10px; padding: 8px 16px; }
+.applicants-btn { background: #009688; color: white; border-radius: 10px; padding: 8px 16px; }
+
+/* Pagination */
 .pagination {
   margin-top: 35px;
   display: flex;
@@ -164,45 +118,23 @@
 }
 
 .edit-modal {
-  background: rgba(255, 255, 255, 0.4);
-  padding: 32px;
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  background: #fff;
   width: 95%;
   max-width: 520px;
+  padding: 32px;
+  border-radius: 20px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  border: 1px solid rgba(255,255,255,0.5);
 }
 
 .edit-close {
   position: absolute;
   top: 12px; right: 12px;
-  background: rgba(255,255,255,0.6);
+  background: #eee;
   border: none;
   width: 34px;
   height: 34px;
   border-radius: 50%;
   cursor: pointer;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.save-btn {
-  background: #009688;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-}
-
-.cancel-btn {
-  background: #ccc;
-  padding: 10px 20px;
-  border-radius: 10px;
 }
