@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx (Final Version with Details Modal)
+// FindJob.jsx (Final Version with Details Modal + Pagination)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -15,13 +15,15 @@ const FindJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { jobList, isLoading } = useSelector((state) => state.jobs);
+  const { jobList } = useSelector((state) => state.jobs);
   const { user } = useSelector((state) => state.users);
 
   const [searchTerm, setSearchTerm] = useState("");
-
-  // NEW — Modal State
   const [selectedJob, setSelectedJob] = useState(null);
+
+  // 🔥 Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 4; // <<=== كل صفحة 4 وظائف
 
   useEffect(() => {
     dispatch(fetchJobs());
@@ -32,6 +34,7 @@ const FindJob = () => {
     if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
   }, [dispatch]);
 
+  // FILTER
   const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -41,6 +44,20 @@ const FindJob = () => {
     );
   });
 
+  // 🔥 PAGINATION LOGIC
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+
+  const changePage = (pageNum) => {
+    if (pageNum >= 1 && pageNum <= totalPages) {
+      setCurrentPage(pageNum);
+    }
+  };
+
+  // APPLY
   const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
@@ -77,7 +94,10 @@ const FindJob = () => {
             type="text"
             placeholder="Search skills, companies"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1); // يرجع للصفحة 1 إذا المستخدم عمل بحث
+            }}
             className="search-box"
           />
         </div>
@@ -86,13 +106,12 @@ const FindJob = () => {
 
       {/* JOB LIST */}
       <div className="job-list">
-        {filteredJobs.length === 0 ? (
+        {currentJobs.length === 0 ? (
           <p>No jobs found.</p>
         ) : (
-          filteredJobs.map((job) => (
+          currentJobs.map((job) => (
             <div key={job._id} className="job-card">
 
-              {/* 🔥 Simplified card (Title + Location + Rate) */}
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
                 <span className="rate">
@@ -102,7 +121,6 @@ const FindJob = () => {
 
               <p className="job-location">📍 {job.location || "Not specified"}</p>
 
-              {/* Buttons */}
               <div className="job-actions-between">
                 <button
                   className="btn-details"
@@ -123,7 +141,36 @@ const FindJob = () => {
         )}
       </div>
 
-      {/* 🔥 Modal (Job Details) */}
+      {/* 🔥 PAGINATION */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => changePage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            ◀ Prev
+          </button>
+
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              className={currentPage === index + 1 ? "active-page" : ""}
+              onClick={() => changePage(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => changePage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
+      )}
+
+      {/* 🔥 Modal */}
       {selectedJob && (
         <div className="modal-overlay">
           <div className="modal-card">
