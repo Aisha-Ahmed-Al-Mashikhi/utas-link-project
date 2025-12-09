@@ -50,7 +50,7 @@
 label {
   font-size: 14px;
   font-weight: 600;
-  margin-top: 14px;
+  margin-bottom: 4px;           /* 🔥 يسوي محاذاة ممتازة مع القطاع */
   display: block;
 }
 
@@ -63,7 +63,7 @@ label {
 /* Row Layout */
 .row-flex {
   display: flex;
-  align-items: center;     /* 🔥 محاذاة Category + Sector */
+  align-items: center;          /* 🔥 سحب الكاتيجوري + القطاع لنفس الخط */
   gap: 20px;
   flex-wrap: wrap;
 }
@@ -73,27 +73,27 @@ label {
   min-width: 300px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;   /* 🔥 يمنع نزول القطاع */
+  justify-content: flex-start;  /* 🔥 يمنع القطاع ينزل لتحت */
 }
 
 /* Sector Boxes */
 .sector-grid {
   display: flex;
   gap: 12px;
-  margin-top: 6px;          /* 🔥 محاذاة مع Category */
-  align-items: center;      /* 🔥 الراديو بنفس الخط */
+  margin-top: 0px;              /* 🔥 الآن بنفس ارتفاع الكاتيجوري */
+  align-items: center;          /* 🔥 يوسّط الراديو */
 }
 
 .sector-box {
   flex: 1;
   border: 1.3px solid #ccc;
-  padding: 8px 12px;
+  height: 48px;                 /* 🔥 نفس ارتفاع Select */
   border-radius: 8px;
   cursor: pointer;
   display: flex;
   gap: 8px;
   align-items: center;
-  height: 45px;
+  padding: 0 14px;              /* 🔥 وسّط النص */
   transition: 0.2s;
 }
 
@@ -109,7 +109,7 @@ label {
 .sector-box input {
   width: 16px;
   height: 16px;
-  accent-color: #009688;
+  accent-color: #009688;        /* 🔥 اللون الفيروزي */
 }
 
 .sector-box span {
