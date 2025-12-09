@@ -128,13 +128,17 @@ const PostJob = () => {
 
               <div className="sector-grid">
                 {SECTORS.map((s) => (
-                  <label
-                    key={s}
-                    className={`sector-box ${sector === s ? "selected" : ""}`}
-                  >
-                    <input type="hidden" {...register("sector")} value={sector} />
-                    <span>{s}</span>
-                  </label>
+                  <label className={`sector-box ${sector === s ? "selected" : ""}`}>
+  <input
+    type="radio"
+    value={s}
+    {...register("sector")}
+    checked={sector === s}
+    onChange={(e) => setSector(e.target.value)}
+  />
+  <span>{s}</span>
+</label>
+
                 ))}
               </div>
 
