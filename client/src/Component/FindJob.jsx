@@ -37,7 +37,7 @@ const FindJob = () => {
     const term = searchTerm.toLowerCase();
     return (
       job.jobTitle.toLowerCase().includes(term) ||
-      (job.organization || "").toLowerCase().includes(term) ||
+      (job.companyName || "").toLowerCase().includes(term) ||
       (job.skills || "").toString().toLowerCase().includes(term)
     );
   });
