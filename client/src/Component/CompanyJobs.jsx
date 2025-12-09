@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCompanyJobs, deleteJob } from "../Features/JobSlice";
+import { fetchCompanyJobs, deleteJob, updateJob } from "../Features/JobSlice";
 import "../Styles/CompanyJobs.css";
 import { useNavigate } from "react-router-dom";
 
@@ -13,9 +13,10 @@ const CompanyJobs = () => {
   const { companyJobs, isLoading } = useSelector((state) => state.jobs);
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [editedJob, setEditedJob] = useState({});
+  const [viewJob, setViewJob] = useState(null);
 
-  // PAGINATION RESTORED
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 6;
 
@@ -24,114 +25,185 @@ const CompanyJobs = () => {
     if (savedUser?.email) dispatch(fetchCompanyJobs(savedUser.email));
   }, [dispatch]);
 
-  const handleView = (job) => {
-    setSelectedJob(job);
+  const openEdit = (job) => {
+    setEditedJob(job);
     setShowModal(true);
+  };
+
+  const openView = (job) => {
+    setViewJob(job);
+  };
+
+  const saveEdit = () => {
+    dispatch(updateJob(editedJob));
+    setShowModal(false);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Delete this job?")) {
+      dispatch(deleteJob(id));
+    }
   };
 
   if (isLoading) return <p>Loading...</p>;
 
-  // Pagination calculations
+  // Pagination
   const indexOfLast = currentPage * jobsPerPage;
   const indexOfFirst = indexOfLast - jobsPerPage;
   const currentJobs = companyJobs.slice(indexOfFirst, indexOfLast);
-
   const totalPages = Math.ceil(companyJobs.length / jobsPerPage);
 
   return (
     <div className="companyjobs-page">
       <div className="companyjobs-wrapper">
-        
-        <h1 className="companyjobs-title">
-          My <span className="accent">Jobs</span>
-        </h1>
 
+        <h1 className="companyjobs-title">My <span className="accent">Jobs</span></h1>
         <p className="subtitle">
-          View your posted jobs in a clean and simple layout.<br />
-          Click the view button to see full job details.
+          Manage your posted opportunities effortlessly.<br />
+          Keep track of applicants and job details in one place.
         </p>
 
-        {/* JOB LIST */}
-        <div className="simple-grid">
-          {currentJobs.map((job) => (
-            <div className="simple-card" key={job._id}>
-              <h3 className="simple-title">{job.jobTitle}</h3>
+        {companyJobs.length === 0 ? (
+          <p className="no-jobs">No jobs posted yet.</p>
+        ) : (
+          <>
+            {/* JOB CARDS */}
+            <div className="jobs-grid">
+              {currentJobs.map((job) => (
+                <div className="job-card" key={job._id}>
+                  
+                  <h3>{job.jobTitle}</h3>
 
-              <p className="simple-text">📍 {job.location || "No location"}</p>
-              <p className="simple-text">💰 {job.rate} OMR — {job.rateType}</p>
+                  <p className="job-location">📍 {job.location || "Not specified"}</p>
 
-              <button className="view-btn" onClick={() => handleView(job)}>
-                View
+                  <div className="tag-row">
+                    <span className="tag">{job.category}</span>
+                    <span className="tag">{job.sector}</span>
+                  </div>
+
+                  <p className="price">{job.rate} OMR • {job.rateType}</p>
+
+                  <div className="job-actions">
+                    <button className="view-btn" onClick={() => openView(job)}>View</button>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+
+            {/* PAGINATION */}
+            <div className="pagination-container">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Prev
+              </button>
+
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  className={currentPage === i + 1 ? "active" : ""}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
               </button>
             </div>
-          ))}
-        </div>
-
-        {/* PAGINATION RETURNS HERE */}
-        {companyJobs.length > jobsPerPage && (
-          <div className="pagination">
-            
-            <button 
-              className="page-btn" 
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Prev
-            </button>
-
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index}
-                className={`page-number ${currentPage === index + 1 ? "active" : ""}`}
-                onClick={() => setCurrentPage(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-
-            <button 
-              className="page-btn" 
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
+          </>
         )}
 
         {/* VIEW MODAL */}
-        {showModal && selectedJob && (
-          <div className="view-overlay">
+        {viewJob && (
+          <div className="overlay">
             <div className="view-modal">
-              <button className="close-view" onClick={() => setShowModal(false)}>
-                ✕
-              </button>
 
-              <h2>{selectedJob.jobTitle}</h2>
+              <button className="close-btn" onClick={() => setViewJob(null)}>✕</button>
 
-              <p><strong>Category:</strong> {selectedJob.category}</p>
-              <p><strong>Sector:</strong> {selectedJob.sector}</p>
-              <p><strong>Rate:</strong> {selectedJob.rate} OMR ({selectedJob.rateType})</p>
-              <p><strong>Location:</strong> {selectedJob.location}</p>
-              <p><strong>Skills:</strong> {selectedJob.skills}</p>
-              <p><strong>Description:</strong> {selectedJob.description}</p>
-              <p><strong>Payout:</strong> {selectedJob.payout || "Not specified"}</p>
+              <h2>{viewJob.jobTitle}</h2>
 
-              <div className="view-actions">
-                <button className="edit-btn" onClick={() => navigate(`/edit-job?id=${selectedJob._id}`)}>
-                  Edit
-                </button>
+              <p><strong>Location:</strong> {viewJob.location}</p>
+              <p><strong>Sector:</strong> {viewJob.sector}</p>
+              <p><strong>Category:</strong> {viewJob.category}</p>
+              <p><strong>Rate:</strong> {viewJob.rate} OMR / {viewJob.rateType}</p>
+              <p><strong>Skills:</strong> {viewJob.skills}</p>
+              <p><strong>Description:</strong> {viewJob.description}</p>
+              <p><strong>Payout Terms:</strong> {viewJob.payout}</p>
 
-                <button className="delete-btn" onClick={() => dispatch(deleteJob(selectedJob._id))}>
-                  Delete
-                </button>
+              <div className="modal-actions">
+                <button className="edit-btn" onClick={() => { openEdit(viewJob); setViewJob(null); }}>Edit</button>
+                <button className="delete-btn" onClick={() => handleDelete(viewJob._id)}>Delete</button>
+              </div>
 
-                <button
-                  className="applicants-btn"
-                  onClick={() => navigate(`/applicants-job?jobId=${selectedJob._id}`)}
-                >
-                  Applicants 👥
-                </button>
+            </div>
+          </div>
+        )}
+
+        {/* EDIT MODAL */}
+        {showModal && (
+          <div className="overlay">
+            <div className="edit-modal">
+
+              <button className="close-btn" onClick={() => setShowModal(false)}>✕</button>
+
+              <h2>Edit Job</h2>
+
+              <label>Job Title</label>
+              <input value={editedJob.jobTitle} onChange={(e) => setEditedJob({ ...editedJob, jobTitle: e.target.value })} />
+
+              <label>Category</label>
+              <input value={editedJob.category} onChange={(e) => setEditedJob({ ...editedJob, category: e.target.value })} />
+
+              <label>Sector</label>
+              <div className="sector-row">
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    value="Private Company"
+                    checked={editedJob.sector === "Private Company"}
+                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
+                  />
+                  Private Company
+                </label>
+
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    value="Government"
+                    checked={editedJob.sector === "Government"}
+                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
+                  />
+                  Government
+                </label>
+              </div>
+
+              <label>Rate</label>
+              <input value={editedJob.rate} onChange={(e) => setEditedJob({ ...editedJob, rate: e.target.value })} />
+
+              <label>Rate Type</label>
+              <input value={editedJob.rateType} onChange={(e) => setEditedJob({ ...editedJob, rateType: e.target.value })} />
+
+              <label>Skills</label>
+              <input value={editedJob.skills} onChange={(e) => setEditedJob({ ...editedJob, skills: e.target.value })} />
+
+              <label>Description</label>
+              <textarea value={editedJob.description} onChange={(e) => setEditedJob({ ...editedJob, description: e.target.value })} />
+
+              <label>Payout Terms</label>
+              <input value={editedJob.payout} onChange={(e) => setEditedJob({ ...editedJob, payout: e.target.value })} />
+
+              <label>Location</label>
+              <input value={editedJob.location} onChange={(e) => setEditedJob({ ...editedJob, location: e.target.value })} />
+
+              <div className="modal-actions">
+                <button className="save-btn" onClick={saveEdit}>Save</button>
               </div>
 
             </div>
