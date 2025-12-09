@@ -13,7 +13,6 @@ import {
   FiBriefcase,
   FiBookOpen,
   FiMessageCircle,
-  FiPlusCircle,
   FiLogOut,
 } from "react-icons/fi";
 
@@ -47,9 +46,8 @@ const Header = () => {
           </div>
         </div>
 
-        {/* ===== HEADER NAV LINKS — ONLY MAIN PAGES ===== */}
+        {/* ===== HEADER NAV LINKS ===== */}
         <div className="header-links">
-          {/* Student */}
           {role === "student" && (
             <>
               <Link to="/">Home</Link>
@@ -58,7 +56,6 @@ const Header = () => {
             </>
           )}
 
-          {/* Company */}
           {role === "company" && (
             <>
               <Link to="/">Home</Link>
@@ -74,8 +71,13 @@ const Header = () => {
         </button>
       </header>
 
-      {/* ===== OVERLAY ===== */}
-      {open && <div className="overlay" onClick={() => setOpen(false)}></div>}
+      {/* ===== FIXED OVERLAY ===== */}
+      {open && (
+        <div
+          className="drawer-overlay"
+          onClick={() => setOpen(false)}
+        ></div>
+      )}
 
       {/* ===== DRAWER ===== */}
       <div className={`drawer ${open ? "drawer-open" : ""}`}>
@@ -83,7 +85,6 @@ const Header = () => {
           ×
         </button>
 
-        {/* ===== WELCOME—ONLY IF LOGGED IN ===== */}
         {role && (
           <div className="welcome-box">
             <p className="welcome-title">Welcome,</p>
@@ -93,9 +94,9 @@ const Header = () => {
           </div>
         )}
 
-        {/* ===== NAVIGATION ===== */}
+        {/* NAVIGATION */}
         <nav className="drawer-links">
-          {/* ======================= GUEST ======================= */}
+          {/* Guest */}
           {!role && (
             <>
               <Link to="/" onClick={() => setOpen(false)}>
@@ -116,7 +117,7 @@ const Header = () => {
             </>
           )}
 
-          {/* ======================= STUDENT ======================= */}
+          {/* Student */}
           {role === "student" && (
             <>
               <Link to="/student-profile" onClick={() => setOpen(false)}>
@@ -141,7 +142,7 @@ const Header = () => {
             </>
           )}
 
-          {/* ======================= COMPANY ======================= */}
+          {/* Company */}
           {role === "company" && (
             <>
               <Link to="/company-profile" onClick={() => setOpen(false)}>
@@ -152,7 +153,6 @@ const Header = () => {
                 <FiMessageCircle className="icon" /> Chats
               </Link>
 
-              {/* ⭐ NEW: Applicants shortcut */}
               <Link to="/company-jobs" onClick={() => setOpen(false)}>
                 <FiBriefcase className="icon" /> Applicants
               </Link>
