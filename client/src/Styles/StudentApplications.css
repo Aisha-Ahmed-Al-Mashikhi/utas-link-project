@@ -144,31 +144,40 @@
 /* -------------------- EMPTY STATE -------------------- */
 .empty-state {
   background: #fff;
-  padding: 40px;
-  border-radius: 20px;
+  padding: 55px 40px;
+  border-radius: 25px;
   text-align: center;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.06);
   border: 1px solid #e8e8e8;
-  max-width: 420px;
-  margin: auto;
+
+  /* الحجم الجديد */
+  max-width: 550px;
+  width: 100%;
+
+  /* الوســط */
+  margin: 60px auto; 
 }
 
 .empty-state p {
   color: #444;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .findjob-btn {
   background: #009688;
   color: white;
-  padding: 12px 24px;
-  border-radius: 10px;
+  padding: 14px 28px;
+  border-radius: 12px;
   border: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s;
 }
-.findjob-btn:hover {
-  background: #007c6c;
-}
+
+
 /* ===========================
    Pagination — Styled Buttons
    =========================== */
