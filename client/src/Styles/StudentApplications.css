@@ -169,3 +169,52 @@
 .findjob-btn:hover {
   background: #007c6c;
 }
+/* ===========================
+   Pagination — Styled Buttons
+   =========================== */
+.apps-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+.apps-pagination button {
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 2px solid #009688;
+  border-radius: 10px;
+  color: #009688;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 55px;
+  transition: 0.2s ease;
+}
+
+/* Hover */
+.apps-pagination button:hover {
+  background: #e0f5f3;
+  transform: translateY(-2px);
+}
+
+/* Disabled state */
+.apps-pagination button:disabled {
+  background: #f3f3f3;
+  border-color: #cccccc;
+  color: #9a9a9a;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Active Page */
+.apps-pagination .active-page {
+  background: #009688;
+  color: white;
+  border-color: #007f72;
+}
+.apps-pagination .active-page:hover {
+  background: #009688;
+  transform: none;
+}
+
