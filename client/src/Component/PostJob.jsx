@@ -147,9 +147,7 @@ const PostJob = () => {
                 ))}
               </div>
 
-              {/* ⭐ هذا هو السطر الذي يحل المشكلة */}
-              <input type="hidden" {...register("sector")} value={sector} />
-
+              {/* ← ما غيرت شيء هنا */}
               <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
