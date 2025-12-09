@@ -83,7 +83,7 @@ app.post("/registerUser", async (req, res) => {
 /*───────────────────────────────────────────────
  ░░ UPDATE COMPANY PROFILE
 ───────────────────────────────────────────────*/
-app.put("/company/update/:email", async (req, res) => {
+app.put("/updateCompany/:email", async (req, res) => {
   try {
     const updated = await CompanyModel.findOneAndUpdate(
       { email: req.params.email },
