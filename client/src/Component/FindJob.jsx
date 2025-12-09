@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx (Final Version with Details Modal + Pagination)
+// FindJob.jsx (Final Version with Date, Right Buttons, Pagination Styling)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -21,9 +21,9 @@ const FindJob = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
 
-  // 🔥 Pagination state
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 4; // <<=== كل صفحة 4 وظائف
+  const jobsPerPage = 4;
 
   useEffect(() => {
     dispatch(fetchJobs());
@@ -44,17 +44,14 @@ const FindJob = () => {
     );
   });
 
-  // 🔥 PAGINATION LOGIC
+  // PAGINATION
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
-
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
-  const changePage = (pageNum) => {
-    if (pageNum >= 1 && pageNum <= totalPages) {
-      setCurrentPage(pageNum);
-    }
+  const changePage = (num) => {
+    if (num >= 1 && num <= totalPages) setCurrentPage(num);
   };
 
   // APPLY
@@ -96,7 +93,7 @@ const FindJob = () => {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setCurrentPage(1); // يرجع للصفحة 1 إذا المستخدم عمل بحث
+              setCurrentPage(1);
             }}
             className="search-box"
           />
@@ -111,7 +108,6 @@ const FindJob = () => {
         ) : (
           currentJobs.map((job) => (
             <div key={job._id} className="job-card">
-
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
                 <span className="rate">
@@ -121,18 +117,22 @@ const FindJob = () => {
 
               <p className="job-location">📍 {job.location || "Not specified"}</p>
 
+              {/* ⭐ NEW — Date & Time */}
+              <p className="job-date">
+                📅 {new Date(job.postedAt).toLocaleDateString()} — ⏰{" "}
+                {new Date(job.postedAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+
+              {/* Buttons on RIGHT */}
               <div className="job-actions-between">
-                <button
-                  className="btn-details"
-                  onClick={() => setSelectedJob(job)}
-                >
+                <button className="btn-details" onClick={() => setSelectedJob(job)}>
                   View details
                 </button>
 
-                <button
-                  className="btn-apply"
-                  onClick={() => handleApply(job)}
-                >
+                <button className="btn-apply" onClick={() => handleApply(job)}>
                   Apply ➜
                 </button>
               </div>
@@ -141,13 +141,10 @@ const FindJob = () => {
         )}
       </div>
 
-      {/* 🔥 PAGINATION */}
+      {/* PAGINATION */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button
-            onClick={() => changePage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
+          <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
             ◀ Prev
           </button>
 
@@ -170,11 +167,10 @@ const FindJob = () => {
         </div>
       )}
 
-      {/* 🔥 Modal */}
+      {/* MODAL */}
       {selectedJob && (
         <div className="modal-overlay">
           <div className="modal-card">
-
             <button className="close-btn" onClick={() => setSelectedJob(null)}>
               ✖
             </button>
@@ -183,7 +179,9 @@ const FindJob = () => {
             <p className="modal-org">{selectedJob.organization}</p>
 
             <p>📍 {selectedJob.location}</p>
-            <p>💰 {selectedJob.rate} OMR · {selectedJob.rateType}</p>
+            <p>
+              💰 {selectedJob.rate} OMR · {selectedJob.rateType}
+            </p>
 
             <p className="modal-desc">{selectedJob.description}</p>
 
@@ -195,7 +193,6 @@ const FindJob = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
