@@ -7,7 +7,7 @@ import {
   deleteCvThunk,
 } from "../Features/UserSlice";
 import { useNavigate } from "react-router-dom";
-import "../Styles/StudentProfile.css";
+import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 import profileImg from "../Images/profile.png";
 
