@@ -5,25 +5,34 @@ import {
   fetchUser,
   uploadCv,
   deleteCvThunk,
+  updateStudentProfile,
 } from "../Features/UserSlice";
 import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
 import * as ENV from "../config";
+
 import profileImg from "../Images/profile.png";
+
+const MAJORS = [
+  "",
+  "Information Technology",
+  "Business Administration",
+  "Engineering",
+  "Mass Communication",
+];
 
 const StudentProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { user } = useSelector((state) => state.users);
 
-  // ⭐ Toast
-  const [toastMsg, setToastMsg] = useState("");
+  const [showEdit, setShowEdit] = useState(false);
 
-  const showToast = (msg) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(""), 2000);
-  };
+  const [formData, setFormData] = useState({
+    name: "",
+    major: "",
+    age: "",
+  });
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
@@ -32,33 +41,34 @@ const StudentProfile = () => {
     dispatch(fetchUser(saved.email));
   }, [dispatch, navigate]);
 
-  if (!user) return <p>Loading...</p>;
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        major: user.major || "",
+        age: user.age || "",
+      });
+    }
+  }, [user]);
 
-  // ⭐ Upload CV
   const handleCvUpload = (e) => {
     if (!e.target.files[0]) return;
-
-    dispatch(uploadCv({ file: e.target.files[0], email: user.email }))
-      .unwrap()
-      .then(() => showToast("CV uploaded successfully!"));
+    dispatch(uploadCv({ file: e.target.files[0], email: user.email }));
   };
 
-  // ⭐ Delete CV
-  const handleDelete = () => {
-    dispatch(deleteCvThunk(user.email))
-      .unwrap()
-      .then(() => showToast("CV deleted successfully!"));
+  const handleSave = () => {
+    dispatch(updateStudentProfile({ email: user.email, data: formData }));
+    setShowEdit(false);
   };
+
+  if (!user) return <p>Loading...</p>;
 
   return (
     <div className="profile-page">
 
-      {/* ⭐ Toast message */}
-      {toastMsg && <div className="toast-success">{toastMsg}</div>}
-
-      {/* LEFT — Profile Card */}
+      {/* LEFT PROFILE CARD */}
       <div className="left-column">
-        <div className="profile-card-modern glass-card">
+        <div className="glass-card profile-card-modern">
           <img
             src={user.profileImage || profileImg}
             className="profile-avatar"
@@ -68,30 +78,30 @@ const StudentProfile = () => {
           <div className="profile-info">
             <h2>{user.name}</h2>
             <p>{user.email}</p>
-          </div>
 
-          <button className="edit-profile-btn">Edit Profile</button>
+            <button className="edit-profile-btn" onClick={() => setShowEdit(true)}>
+              Edit Profile
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* RIGHT — Information + CV */}
+      {/* RIGHT SIDE */}
       <div className="right-column">
 
-        {/* Student Information */}
+        {/* Academic Info */}
         <div className="glass-card info-card">
-          <h3>Student Information</h3>
+          <h3>Academic Information</h3>
 
           <p><strong>Major:</strong> {user.major}</p>
           <p><strong>Age:</strong> {user.age}</p>
-          <p><strong>Role:</strong> {user.role}</p>
-
           <p>
             <strong>Status:</strong>{" "}
             <span className="status-dot green"></span> Active
           </p>
         </div>
 
-        {/* CV SECTION */}
+        {/* CV Card */}
         <div className="glass-card info-card">
           <h3>Curriculum Vitae (CV)</h3>
 
@@ -103,25 +113,18 @@ const StudentProfile = () => {
                 <a
                   href={`${ENV.SERVER_URL}${user.cvLink}`}
                   target="_blank"
-                  rel="noreferrer"
                   className="cv-btn view"
                 >
                   View
                 </a>
 
-                {/* HIDDEN REPLACE INPUT */}
                 <input
                   type="file"
                   id="cvReplaceInput"
                   accept=".pdf"
-                  hidden
+                  style={{ display: "none" }}
                   onChange={(e) =>
-                    dispatch(uploadCv({
-                      file: e.target.files[0],
-                      email: user.email
-                    }))
-                      .unwrap()
-                      .then(() => showToast("CV replaced successfully!"))
+                    dispatch(uploadCv({ file: e.target.files[0], email: user.email }))
                   }
                 />
 
@@ -134,7 +137,7 @@ const StudentProfile = () => {
 
                 <button
                   className="cv-btn delete"
-                  onClick={handleDelete}
+                  onClick={() => dispatch(deleteCvThunk(user.email))}
                 >
                   Delete
                 </button>
@@ -146,10 +149,9 @@ const StudentProfile = () => {
                 type="file"
                 id="cvUpload"
                 accept=".pdf"
-                hidden
+                style={{ display: "none" }}
                 onChange={handleCvUpload}
               />
-
               <label htmlFor="cvUpload" className="upload-cv-btn">
                 Upload CV (PDF)
               </label>
@@ -157,6 +159,64 @@ const StudentProfile = () => {
           )}
         </div>
       </div>
+
+      {/* -------- EDIT MODAL -------- */}
+      {showEdit && (
+        <div className="overlay">
+          <div className="edit-modal">
+            <h2>Edit Profile</h2>
+
+            {/* FULL NAME */}
+            <label>Full Name</label>
+            <input
+              type="text"
+              placeholder="Your name"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+
+            {/* MAJOR (Dropdown like register page) */}
+            <label>Major</label>
+            <select
+              value={formData.major}
+              onChange={(e) =>
+                setFormData({ ...formData, major: e.target.value })
+              }
+            >
+              <option value="">Select your major</option>
+              {MAJORS.map((m, i) => (
+                <option key={i} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+
+            {/* AGE number input */}
+            <label>Age</label>
+            <input
+              type="number"
+              placeholder="Your age"
+              value={formData.age}
+              onChange={(e) =>
+                setFormData({ ...formData, age: e.target.value })
+              }
+            />
+
+            <div className="actions">
+              <button className="cancel-btn" onClick={() => setShowEdit(false)}>
+                Cancel
+              </button>
+
+              <button className="save-btn" onClick={handleSave}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
