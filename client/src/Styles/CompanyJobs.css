@@ -61,10 +61,6 @@
 }
 
 .tag-row {
-  margin: 10px 0;
-}
-
-.tag-row {
   display: flex;
   flex-wrap: wrap;     /* ⭐ يسمح للتاقات إنها تنزل لو احتاجت */
   gap: 8px;            /* ⭐ بدل margin-right */
