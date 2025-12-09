@@ -15,7 +15,7 @@ const CompanyJobs = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
 
-  // Pagination state
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 4;
 
@@ -42,7 +42,7 @@ const CompanyJobs = () => {
 
   if (isLoading) return <p>Loading...</p>;
 
-  // PAGINATION calculations
+  // Pagination logic
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = companyJobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -51,15 +51,15 @@ const CompanyJobs = () => {
   return (
     <div className="companyjobs-page">
       <div className="companyjobs-wrapper">
-        
+
         <h1 className="companyjobs-title">
           My <span className="accent">Jobs</span>
         </h1>
 
-        {/* Subtitle */}
         <p className="subtitle">
-          Manage all your posted opportunities in one place.<br />
-          Track applicants, edit job details, and keep your listings up to date.
+          Manage your posted opportunities in one place.
+          <br />
+          Edit job details, track applicants, and keep listings updated.
         </p>
 
         {companyJobs.length === 0 ? (
@@ -98,16 +98,9 @@ const CompanyJobs = () => {
                   </p>
 
                   <div className="job-actions">
-                    <button className="edit-btn" onClick={() => openEdit(job)}>
-                      Edit
-                    </button>
-                    <button className="delete-btn" onClick={() => handleDelete(job._id)}>
-                      Delete
-                    </button>
-                    <button
-                      className="applicants-btn"
-                      onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
-                    >
+                    <button className="edit-btn" onClick={() => openEdit(job)}>Edit</button>
+                    <button className="delete-btn" onClick={() => handleDelete(job._id)}>Delete</button>
+                    <button className="applicants-btn" onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}>
                       Applicants 👥
                     </button>
                   </div>
@@ -115,7 +108,7 @@ const CompanyJobs = () => {
               ))}
             </div>
 
-            {/* PAGINATION */}
+            {/* Pagination */}
             <div className="pagination">
               <button
                 className="page-btn"
@@ -146,30 +139,25 @@ const CompanyJobs = () => {
           </>
         )}
 
-        {/* ========= EDIT MODAL ========= */}
+        {/* Edit Modal */}
         {showModal && (
           <div className="edit-overlay">
             <div className="edit-modal">
-              <button className="edit-close" onClick={() => setShowModal(false)}>
-                ✕
-              </button>
+
+              <button className="edit-close" onClick={() => setShowModal(false)}>✕</button>
 
               <h2>Edit Job</h2>
 
               <label>Job Title</label>
               <input
                 value={editedJob.jobTitle}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, jobTitle: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, jobTitle: e.target.value })}
               />
 
               <label>Category</label>
               <select
                 value={editedJob.category}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, category: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, category: e.target.value })}
               >
                 <option value="">Select</option>
                 <option>Design / Marketing</option>
@@ -188,9 +176,7 @@ const CompanyJobs = () => {
                     type="radio"
                     value="Private Company"
                     checked={editedJob.sector === "Private Company"}
-                    onChange={(e) =>
-                      setEditedJob({ ...editedJob, sector: e.target.value })
-                    }
+                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
                   />
                   <span>Private Company</span>
                 </label>
@@ -200,9 +186,7 @@ const CompanyJobs = () => {
                     type="radio"
                     value="Government"
                     checked={editedJob.sector === "Government"}
-                    onChange={(e) =>
-                      setEditedJob({ ...editedJob, sector: e.target.value })
-                    }
+                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
                   />
                   <span>Government</span>
                 </label>
@@ -211,17 +195,13 @@ const CompanyJobs = () => {
               <label>Rate (OMR)</label>
               <input
                 value={editedJob.rate}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, rate: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, rate: e.target.value })}
               />
 
               <label>Rate Type</label>
               <select
                 value={editedJob.rateType}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, rateType: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, rateType: e.target.value })}
               >
                 <option value="">Select</option>
                 <option>Per Hour</option>
@@ -232,43 +212,33 @@ const CompanyJobs = () => {
               <label>Skills Required</label>
               <input
                 value={editedJob.skills}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, skills: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, skills: e.target.value })}
               />
 
               <label>Description</label>
               <textarea
                 value={editedJob.description}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, description: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, description: e.target.value })}
               />
 
               <label>Payout Terms</label>
               <input
                 value={editedJob.payout}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, payout: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, payout: e.target.value })}
               />
 
               <label>Location</label>
               <input
                 value={editedJob.location || ""}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, location: e.target.value })
-                }
+                readOnly
+                className="readonly-input"
               />
 
               <div className="modal-actions">
-                <button className="save-btn" onClick={saveEdit}>
-                  Save
-                </button>
-                <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                  Cancel
-                </button>
+                <button className="save-btn" onClick={saveEdit}>Save</button>
+                <button className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
               </div>
+
             </div>
           </div>
         )}
