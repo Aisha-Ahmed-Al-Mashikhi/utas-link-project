@@ -38,7 +38,7 @@ const StudentApplications = () => {
   // PAGINATION
   // -------------------------------
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 4;
+  const cardsPerPage = 6;
 
   const indexOfLast = currentPage * cardsPerPage;
   const indexOfFirst = indexOfLast - cardsPerPage;
