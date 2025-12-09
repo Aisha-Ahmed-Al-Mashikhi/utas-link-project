@@ -29,6 +29,24 @@ export const registerCompany = createAsyncThunk(
 );
 
 /* =============================
+    UPDATE COMPANY PROFILE
+============================= */
+export const updateCompany = createAsyncThunk(
+  "companies/updateCompany",
+  async ({ email, data }, thunkAPI) => {
+    try {
+      const res = await axios.put(
+        `${ENV.SERVER_URL}/company/update/${email}`,
+        data
+      );
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || "Update failed");
+    }
+  }
+);
+
+/* =============================
     FETCH COMPANY
 ============================= */
 export const fetchCompany = createAsyncThunk(
@@ -123,7 +141,19 @@ const companySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-      })
+      }).addCase(updateCompany.pending, (state) => {
+  state.isLoading = true;
+})
+.addCase(updateCompany.fulfilled, (state, action) => {
+  state.isLoading = false;
+  state.company = action.payload;
+})
+.addCase(updateCompany.rejected, (state, action) => {
+  state.isLoading = false;
+  state.isError = true;
+  state.message = action.payload;
+});
+
 
       /* FETCH */
       .addCase(fetchCompany.pending, (state) => {
