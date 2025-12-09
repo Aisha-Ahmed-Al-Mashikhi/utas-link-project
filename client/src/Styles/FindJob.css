@@ -1,25 +1,31 @@
-/* ===========================
-   MAIN PAGE
-=========================== */
+/* ============================
+   General Page Style
+============================ */
 .findjob-page {
   background: #f9fcfb;
   min-height: 100vh;
   padding: 40px 70px;
   font-family: "Quicksand", sans-serif;
+  overflow-y: auto;
 }
 
-/* Title */
+/* ============================
+   Title
+============================ */
 .findjob-title {
   font-size: 34px;
   font-weight: 800;
   margin-bottom: 20px;
   text-align: center;
 }
+
 .accent {
   color: #009688;
 }
 
-/* Search */
+/* ============================
+   Search Bar
+============================ */
 .search-container {
   display: flex;
   justify-content: center;
@@ -27,42 +33,80 @@
   margin: 0 auto 35px;
   width: 70%;
 }
+
 .search-wrapper {
-  width: 100%;
   position: relative;
-}
-.search-box {
   width: 100%;
-  padding: 14px 20px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-}
-.search-btn {
-  margin-left: 10px;
-  background: #009688;
-  border: none;
-  color: white;
-  padding: 14px 25px;
-  border-radius: 12px;
-  cursor: pointer;
 }
 
-/* Job Cards */
+.search-wrapper::before {
+  content: "🔍";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.5;
+}
+
+.search-box {
+  width: 100%;
+  border-radius: 12px;
+  padding: 12px 16px 12px 40px;
+  border: 1px solid #d3d3d3;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.search-box:focus {
+  outline: none;
+  border-color: #009688;
+  box-shadow: 0 3px 12px rgba(0, 150, 136, 0.15);
+}
+
+.search-btn {
+  background-color: #009688;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: 0.2s;
+}
+
+.search-btn:hover {
+  background-color: #007d73;
+}
+
+/* ============================
+   Job List
+============================ */
 .job-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
   gap: 25px;
+  width: 100%;
 }
 
+/* ============================
+   Job Card
+============================ */
 .job-card {
   background: white;
-  padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  padding: 24px 28px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   transition: 0.2s;
 }
+
 .job-card:hover {
   transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
 }
 
 .job-header {
@@ -70,147 +114,218 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.job-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+}
+
 .rate {
   color: #009688;
-  font-weight: bold;
+  font-weight: 700;
 }
+
 .job-location,
 .job-date {
-  margin-top: 10px;
+  margin-top: 8px;
   color: #555;
 }
 
-.job-actions {
+/* ============================
+   Buttons Row (View + Apply)
+============================ */
+.job-actions-between {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 12px;
   margin-top: 20px;
 }
 
 .btn-details {
   background: #e8f6f4;
   color: #009688;
-  padding: 9px 20px;
+  padding: 8px 18px;
   border-radius: 10px;
   border: none;
-}
-.btn-apply {
-  background: #009688;
-  color: white;
-  padding: 9px 20px;
-  border-radius: 10px;
-  border: none;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-/* Pagination */
+.btn-details:hover {
+  background: #d0efea;
+}
+
+.btn-apply {
+  background-color: #009688;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 22px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-apply:hover {
+  background-color: #007a6a;
+}
+
+/* ============================
+   Pagination
+============================ */
 .pagination {
   display: flex;
   justify-content: center;
-  gap: 8px;
   margin-top: 30px;
+  gap: 6px;
 }
 
-.active-page {
+.pagination button {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination .active-page {
   background: #009688;
   color: white;
+  font-weight: bold;
 }
 
-/* ===========================
-   MODAL — TEACHING ASSISTANT STYLE
-=========================== */
-
+/* ============================
+   Modal Overlay
+============================ */
 .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 30px;
-  overflow-y: auto;
+  align-items: center;
   z-index: 999;
+  backdrop-filter: blur(2px);
 }
 
-.modal-card-ta {
-  width: 650px;
-  background: white;
-  padding: 35px;
-  border-radius: 18px;
+/* ============================
+   Modal Card — Updated
+============================ */
+.modal-card {
+  width: 750px;
+  max-height: 90vh;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 22px;
   position: relative;
-  animation: fadeIn 0.2s ease-in-out;
+  overflow-y: auto;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: showModal 0.25s ease-out;
+
+  font-family: "Quicksand", sans-serif;
+
+  scrollbar-width: thin;
+  scrollbar-color: #009688 transparent;
 }
 
-.close-btn-ta {
+/* Scrollbar Webkit */
+.modal-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-card::-webkit-scrollbar-thumb {
+  background: #009688;
+  border-radius: 10px;
+}
+
+/* Animation */
+@keyframes showModal {
+  from { opacity: 0; transform: translateY(25px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Close Button */
+.close-btn {
   position: absolute;
-  top: 15px;
+  top: 14px;
   right: 18px;
-  background: #eee;
+  background: #f3f3f3;
   border: none;
-  border-radius: 50%;
   width: 34px;
   height: 34px;
-  font-size: 18px;
+  border-radius: 50%;
   cursor: pointer;
-}
-
-.modal-header-ta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-rate {
-  color: #009688;
-  font-weight: bold;
-}
-
-.modal-info-row {
-  margin-top: 15px;
-  display: flex;
-  gap: 18px;
+  font-size: 18px;
   color: #444;
+  transition: 0.2s;
 }
 
-.modal-section-title {
-  margin-top: 25px;
-  font-weight: 700;
+.close-btn:hover {
+  background: #e3e3e3;
 }
 
-.modal-desc-ta {
-  background: #f8f8f8;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 5px;
-}
-
-.skills-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-}
-.skill-tag {
-  background: #e8f6f4;
-  padding: 6px 14px;
-  border-radius: 10px;
+/* Modal Title */
+.modal-card h2 {
+  margin-bottom: 10px;
   color: #009688;
-  font-weight: 600;
-  font-size: 14px;
+  font-size: 26px;
+  font-weight: 800;
 }
 
-/* Apply button */
-.modal-apply-btn-ta {
-  width: 100%;
-  margin-top: 30px;
-  padding: 15px;
+/* Info Box */
+.modal-box {
+  background: #e8f6f4;
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #009688;
+}
+
+/* Description Section */
+.modal-desc-title {
+  margin-top: 20px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.modal-desc {
+  background: #fafafa;
+  padding: 14px;
+  border-radius: 12px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+/* Skills Tags */
+.skill-tag {
   background: #009688;
   color: white;
+  padding: 6px 12px;
+  border-radius: 10px;
+  margin-right: 8px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* Modal Apply Button */
+.modal-apply-btn {
+  width: 100%;
+  background: #009688;
   border: none;
-  border-radius: 12px;
+  color: white;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
+  padding: 14px 0;
+  border-radius: 12px;
   cursor: pointer;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: scale(1); }
+.modal-apply-btn:hover {
+  background: #007a6a;
 }
