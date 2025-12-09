@@ -80,6 +80,25 @@ app.post("/registerUser", async (req, res) => {
     res.status(500).json({ error: "Error registering user" });
   }
 });
+/*───────────────────────────────────────────────
+ ░░ UPDATE COMPANY PROFILE
+───────────────────────────────────────────────*/
+app.put("/company/update/:email", async (req, res) => {
+  try {
+    const updated = await CompanyModel.findOneAndUpdate(
+      { email: req.params.email },
+      req.body,
+      { new: true }
+    );
+
+    if (!updated)
+      return res.status(404).json({ error: "Company not found" });
+
+    res.send(updated);
+  } catch (err) {
+    res.status(500).json({ error: "Error updating profile" });
+  }
+});
 
 /*───────────────────────────────────────────────
  ░░ REGISTER COMPANY
