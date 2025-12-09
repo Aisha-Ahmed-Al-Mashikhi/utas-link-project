@@ -92,7 +92,6 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-
           {/* Job Title */}
           <label>Job Title</label>
           <input
@@ -106,7 +105,6 @@ const PostJob = () => {
 
           {/* Category + Sector */}
           <div className="row-flex">
-
             {/* Category */}
             <div className="col-half">
               <label>Category</label>
@@ -124,7 +122,7 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector — CLEAN + FIXED */}
+            {/* Sector – YOUR ORIGINAL VERSION + FIXED CLASSNAME */}
             <div className="col-half">
               <label>Sector</label>
 
@@ -137,22 +135,20 @@ const PostJob = () => {
                     <input
                       type="radio"
                       value={s}
+                      {...register("sector")}
                       checked={sector === s}
-                      onChange={(e) => setSector(e.target.value)} 
+                      onChange={(e) => setSector(e.target.value)}
                     />
                     <span>{s}</span>
                   </label>
                 ))}
               </div>
 
-              {/* Hidden RHF sync fix */}
-              <input type="hidden" {...register("sector")} value={sector} />
-
               <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
 
-          {/* Rate + Rate Type */}
+          {/* Rate + RateType */}
           <div className="row-flex">
             <div className="col-half">
               <label>Rate (OMR)</label>
@@ -223,7 +219,6 @@ const PostJob = () => {
               Clean
             </button>
           </div>
-
         </form>
       </div>
     </div>
