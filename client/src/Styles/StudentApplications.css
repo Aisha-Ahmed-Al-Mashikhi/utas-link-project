@@ -6,6 +6,12 @@
   font-family: "Quicksand", sans-serif;
 }
 
+/* Center the title + subtitle */
+.applications-title,
+.applications-sub {
+  text-align: center;
+}
+
 .applications-title {
   font-size: 34px;
   font-weight: 800;
@@ -22,27 +28,13 @@
   margin-bottom: 25px;
 }
 
-/* -------------------- HORIZONTAL SCROLL -------------------- */
-.applications-scroll {
-  display: flex;
-  gap: 25px;
-  overflow-x: auto;
-  padding-bottom: 15px;
-  scroll-behavior: smooth;
-}
-
-.applications-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-
-.applications-scroll::-webkit-scrollbar-thumb {
-  background: #009688;
-  border-radius: 10px;
-}
-
-.applications-scroll::-webkit-scrollbar-track {
-  background: #e8f6f4;
-  border-radius: 10px;
+/* -------------------- GRID (3 PER ROW) -------------------- */
+.applications-grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 25px;
+  width: 100%;
 }
 
 /* -------------------- APPLICATION CARD -------------------- */
@@ -55,15 +47,16 @@
   transition: 0.2s;
 }
 
+/* Hover effect */
 .application-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* Bigger Width */
+/* REMOVE FIXED WIDTH — allow grid to place 3 per row */
 .small-card {
-  width: 420px;
-  min-width: 420px;
+  width: 100%;
+  min-width: 0;
 }
 
 /* -------------------- INFO -------------------- */
@@ -166,7 +159,9 @@
   box-shadow: 0 4px 25px rgba(0,0,0,0.05);
   border: 1px solid #e8e8e8;
   max-width: 420px;
+  margin: 0 auto;
 }
+
 .empty-state p {
   color: #444;
   margin-bottom: 10px;
@@ -183,17 +178,8 @@
 .findjob-btn:hover {
   background: #007c6c;
 }
-/* GRID 3 per row */
-.applications-grid-three {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-  margin-top: 25px;
-  width: 100%;
-}
 
-
-/* Pagination */
+/* -------------------- PAGINATION -------------------- */
 .apps-pagination {
   display: flex;
   justify-content: center;
@@ -218,4 +204,3 @@
   background: #009688;
   color: white;
 }
-
