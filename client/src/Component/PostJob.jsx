@@ -134,19 +134,33 @@ const PostJob = () => {
                     key={s}
                     className={`sector-box ${sector === s ? "selected" : ""}`}
                   >
-                    <input
-                      type="radio"
-                      value={s}
-                      {...register("sector")}     // ✔ now RHF captures value
-                      checked={sector === s}
-                      onChange={(e) => setSector(e.target.value)} // ✔ UI state sync
-                    />
-                    <span>{s}</span>
-                  </label>
-                ))}
-              </div>
+                    {/* Sector */}
+<div className="col-half">
+  <label>Sector</label>
 
-              <p className="error">{errors.sector?.message}</p>
+  <div className="sector-grid">
+    {SECTORS.map((s) => (
+      <label
+        key={s}
+        className={`sector-box ${sector === s ? "selected" : ""}`}
+      >
+        <input
+          type="radio"
+          value={s}
+          checked={sector === s}
+          onChange={(e) => setSector(e.target.value)} // UI state
+        />
+        <span>{s}</span>
+      </label>
+    ))}
+  </div>
+
+  {/* 🔥 Fix: Send value to React Hook Form */}
+  <input type="hidden" {...register("sector")} value={sector} />
+
+  <p className="error">{errors.sector?.message}</p>
+</div>
+
             </div>
 
           </div>
