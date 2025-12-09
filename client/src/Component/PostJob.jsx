@@ -5,11 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
 import { useDispatch } from "react-redux";
 import { addJob } from "../Features/JobSlice";
-import { useNavigate } from "react-router-dom";   // ⭐ تمت إضافتها
+import { useNavigate } from "react-router-dom";
 
 const PostJob = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // ⭐ تمت إضافتها
+  const navigate = useNavigate();
 
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -67,10 +67,7 @@ const PostJob = () => {
       .unwrap()
       .then(() => {
         alert("Job posted successfully!");
-
-        // ⭐ الانتقال لصفحة My Jobs بعد النجاح
         navigate("/my-jobs");
-
         handleClean();
       })
       .catch(() => alert("Failed to post job"));
@@ -149,6 +146,9 @@ const PostJob = () => {
                   </label>
                 ))}
               </div>
+
+              {/* ⭐ هذا هو السطر الذي يحل المشكلة */}
+              <input type="hidden" {...register("sector")} value={sector} />
 
               <p className="error">{errors.sector?.message}</p>
             </div>
