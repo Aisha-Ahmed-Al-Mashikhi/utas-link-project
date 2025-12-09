@@ -1,224 +1,158 @@
-// src/Component/StudentProfile.js
+// ===============================
+// StudentApplications.jsx — 3x3 Layout
+// ===============================
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchUser,
-  uploadCv,
-  deleteCvThunk,
-  updateStudent,
-} from "../Features/UserSlice";
+  fetchStudentApplications,
+  cancelStudentApplication,
+} from "../Features/ApplicationSlice";
+
+import "../Styles/StudentApplications.css";
 import { useNavigate } from "react-router-dom";
-import "../Styles/UserProfile.css";
-import * as ENV from "../config";
 
-import profileImg from "../Images/profile.png";
-
-const MAJORS = [
-  "",
-  "Information Technology",
-  "Business Administration",
-  "Engineering",
-  "Mass Communication",
-];
-
-const StudentProfile = () => {
+const StudentApplications = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { user } = useSelector((state) => state.users);
-
-  const [showEdit, setShowEdit] = useState(false);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    major: "",
-    age: "",
-  });
+  const { studentApplications, isLoading } = useSelector(
+    (state) => state.applications
+  );
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("loggedUser"));
-    if (!saved?.email) return navigate("/login");
-
-    dispatch(fetchUser(saved.email));
-  }, [dispatch, navigate]);
-
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || "",
-        major: user.major || "",
-        age: user.age || "",
-      });
+    if (user?.email) {
+      dispatch(fetchStudentApplications(user.email));
     }
-  }, [user]);
+  }, [dispatch, user]);
 
-  const handleCvUpload = (e) => {
-    if (!e.target.files[0]) return;
-    dispatch(uploadCv({ file: e.target.files[0], email: user.email }));
+  const handleCancel = (id) => {
+    dispatch(cancelStudentApplication(id))
+      .unwrap()
+      .then(() => alert("Application removed successfully."))
+      .catch(() => alert("Error deleting application."));
   };
 
-  const handleSave = () => {
-    dispatch(updateStudent({ email: user.email, data: formData }));
-    setShowEdit(false);
-  };
+  // -------------------------------
+  // PAGINATION — 6 cards per page
+  // -------------------------------
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 6;
 
-  if (!user) return <p>Loading...</p>;
+  const indexOfLast = currentPage * cardsPerPage;
+  const indexOfFirst = indexOfLast - cardsPerPage;
+
+  const currentCards = studentApplications.slice(indexOfFirst, indexOfLast);
+
+  const totalPages = Math.ceil(studentApplications.length / cardsPerPage);
+
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
 
   return (
-    <div className="profile-page">
+    <div className="applications-page">
+      <h1 className="applications-title">
+        My <span className="accent">Applications</span>
+      </h1>
 
-      {/* LEFT PROFILE CARD */}
-      <div className="left-column">
-        <div className="glass-card profile-card-modern">
-          <img
-            src={user.profileImage || profileImg}
-            className="profile-avatar"
-            alt="profile"
-          />
+      <p className="applications-sub">
+        Track the status of your submitted job applications.
+      </p>
 
-          <div className="profile-info">
-            <h2>{user.name}</h2>
-            <p>{user.email}</p>
-
-            <button className="edit-profile-btn" onClick={() => setShowEdit(true)}>
-              Edit Profile
+      {/* GRID LAYOUT 3 per row */}
+      <div className="applications-grid-three">
+        {currentCards.length === 0 ? (
+          <div className="empty-state">
+            <p>No applications yet.</p>
+            <button
+              className="findjob-btn"
+              onClick={() => navigate("/find-job")}
+            >
+              Browse Jobs
             </button>
           </div>
-        </div>
-      </div>
+        ) : (
+          currentCards.map((app) => (
+            <div className="application-card small-card" key={app._id}>
+              <div className="app-info">
+                <div className="app-icon">🏢</div>
 
-      {/* RIGHT SIDE */}
-      <div className="right-column">
+                <div>
+                  <h3 className="job-title">{app.jobTitle}</h3>
+                  <p className="company">Company: {app.organization}</p>
+                  <p className="details">Email: {app.companyEmail}</p>
 
-        {/* Academic Info */}
-        <div className="glass-card info-card">
-          <h3>Academic Information</h3>
+                  <p className="details">
+                    Applied:{" "}
+                    {app.createdAt
+                      ? new Date(app.createdAt).toLocaleString()
+                      : "N/A"}
+                  </p>
 
-          <p><strong>Major:</strong> {user.major}</p>
-          <p><strong>Age:</strong> {user.age}</p>
-          <p>
-            <strong>Status:</strong>{" "}
-            <span className="status-dot green"></span> Active
-          </p>
-        </div>
+                  {app.jobDeleted && (
+                    <p className="deleted-warning">Job no longer available.</p>
+                  )}
+                </div>
+              </div>
 
-        {/* CV Card */}
-        <div className="glass-card info-card">
-          <h3>Curriculum Vitae (CV)</h3>
-
-          {user.cvLink ? (
-            <div className="cv-section">
-              <p className="cv-success">CV Uploaded Successfully</p>
-
-              <div className="cv-actions">
-                <a
-                  href={`${ENV.SERVER_URL}${user.cvLink}`}
-                  target="_blank"
-                  className="cv-btn view"
-                >
-                  View
-                </a>
-
-                <input
-                  type="file"
-                  id="cvReplaceInput"
-                  accept=".pdf"
-                  style={{ display: "none" }}
-                  onChange={(e) =>
-                    dispatch(uploadCv({ file: e.target.files[0], email: user.email }))
-                  }
-                />
+              <div className="app-actions-row">
+                {!app.jobDeleted && (
+                  <button
+                    className="chat-btn"
+                    onClick={() => navigate(`/student-chat/${app._id}`)}
+                  >
+                    Chat 💬
+                  </button>
+                )}
 
                 <button
-                  className="cv-btn replace"
-                  onClick={() => document.getElementById("cvReplaceInput").click()}
+                  className="withdraw-btn"
+                  onClick={() => handleCancel(app._id)}
                 >
-                  Replace
+                  Remove
                 </button>
 
-                <button
-                  className="cv-btn delete"
-                  onClick={() => dispatch(deleteCvThunk(user.email))}
-                >
-                  Delete
-                </button>
+                <span className={`status-badge ${app.status?.toLowerCase()}`}>
+                  {app.status || "Pending"}
+                </span>
               </div>
             </div>
-          ) : (
-            <>
-              <input
-                type="file"
-                id="cvUpload"
-                accept=".pdf"
-                style={{ display: "none" }}
-                onChange={handleCvUpload}
-              />
-              <label htmlFor="cvUpload" className="upload-cv-btn">
-                Upload CV (PDF)
-              </label>
-            </>
-          )}
-        </div>
+          ))
+        )}
       </div>
 
-      {/* -------- EDIT MODAL -------- */}
-      {showEdit && (
-        <div className="overlay">
-          <div className="edit-modal">
-            <h2>Edit Profile</h2>
+      {/* PAGINATION */}
+      {totalPages > 1 && (
+        <div className="apps-pagination">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            ◀ Prev
+          </button>
 
-            {/* FULL NAME */}
-            <label>Full Name</label>
-            <input
-              type="text"
-              placeholder="Your name"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
-
-            {/* MAJOR (Dropdown like register page) */}
-            <label>Major</label>
-            <select
-              value={formData.major}
-              onChange={(e) =>
-                setFormData({ ...formData, major: e.target.value })
-              }
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              className={currentPage === index + 1 ? "active-page" : ""}
+              onClick={() => goToPage(index + 1)}
             >
-              <option value="">Select your major</option>
-              {MAJORS.map((m, i) => (
-                <option key={i} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
+              {index + 1}
+            </button>
+          ))}
 
-            {/* AGE number input */}
-            <label>Age</label>
-            <input
-              type="number"
-              placeholder="Your age"
-              value={formData.age}
-              onChange={(e) =>
-                setFormData({ ...formData, age: e.target.value })
-              }
-            />
-
-            <div className="actions">
-              <button className="cancel-btn" onClick={() => setShowEdit(false)}>
-                Cancel
-              </button>
-
-              <button className="save-btn" onClick={handleSave}>
-                Save
-              </button>
-            </div>
-          </div>
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
         </div>
       )}
-
     </div>
   );
 };
 
-export default StudentProfile;
+export default StudentApplications;
