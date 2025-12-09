@@ -5,11 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
 import { useDispatch } from "react-redux";
 import { addJob } from "../Features/JobSlice";
-import { useNavigate } from "react-router-dom";   // ⭐ NEW
+import { useNavigate } from "react-router-dom";   // ⭐ تمت إضافتها
 
 const PostJob = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();   // ⭐ NEW
+  const navigate = useNavigate(); // ⭐ تمت إضافتها
 
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -66,9 +66,12 @@ const PostJob = () => {
     )
       .unwrap()
       .then(() => {
-        alert("Job posted successfully!");    // ✔ Success message
+        alert("Job posted successfully!");
+
+        // ⭐ الانتقال لصفحة My Jobs بعد النجاح
+        navigate("/my-jobs");
+
         handleClean();
-        navigate("/company/my-jobs");         // ⭐ Redirect to My Jobs
       })
       .catch(() => alert("Failed to post job"));
   };
