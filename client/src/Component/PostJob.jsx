@@ -69,7 +69,7 @@ const PostJob = () => {
         alert("Job posted successfully!");
 
         // ⭐ الانتقال لصفحة My Jobs بعد النجاح
-        navigate("/my-jobs");
+        navigate("/company-jobs");
 
         handleClean();
       })
