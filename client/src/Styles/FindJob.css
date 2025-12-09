@@ -57,13 +57,6 @@
   background: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
   font-size: 15px;
-  transition: 0.2s;
-}
-
-.search-box:focus {
-  outline: none;
-  border-color: #009688;
-  box-shadow: 0 3px 12px rgba(0, 150, 136, 0.15);
 }
 
 .search-btn {
@@ -74,12 +67,6 @@
   padding: 12px 24px;
   font-weight: 600;
   cursor: pointer;
-  margin-left: 10px;
-  transition: 0.2s;
-}
-
-.search-btn:hover {
-  background-color: #007d73;
 }
 
 /* ============================
@@ -109,35 +96,26 @@
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Header */
 .job-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.job-header h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #222;
-}
-
-.rate {
-  color: #009688;
-  font-weight: 700;
-}
-
-.job-location {
-  margin-top: 8px;
-  color: #555;
+/* NEW — Date under location */
+.job-date {
+  margin-top: 4px;
+  color: #777;
+  font-size: 14px;
 }
 
 /* ============================
-   Buttons Row
+   Buttons Row (Right Aligned)
 ============================ */
 .job-actions-between {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 12px;
   margin-top: 20px;
 }
 
@@ -151,10 +129,6 @@
   font-weight: 600;
 }
 
-.btn-details:hover {
-  background: #d0efea;
-}
-
 .btn-apply {
   background-color: #009688;
   color: white;
@@ -163,36 +137,40 @@
   border-radius: 10px;
   padding: 8px 22px;
   cursor: pointer;
+}
+
+/* ============================
+   Pagination
+============================ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+  gap: 10px;
+}
+
+.pagination button {
+  background: white;
+  border: 1px solid #009688;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #009688;
+  font-weight: 600;
   transition: 0.2s;
 }
 
-.btn-apply:hover {
-  background-color: #007a6a;
+.pagination button:hover {
+  background: #e0f3f1;
+}
+
+.pagination .active-page {
+  background: #009688 !important;
+  color: white !important;
 }
 
 /* ============================
-   Custom Scrollbar
-============================ */
-.findjob-page::-webkit-scrollbar {
-  width: 6px;
-}
-
-.findjob-page::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.findjob-page::-webkit-scrollbar-thumb {
-  background: #bdbdbd;
-  border-radius: 10px;
-}
-
-.findjob-page::-webkit-scrollbar-thumb:hover {
-  background: #009688;
-}
-
-/* ============================
-   Modal Overlay
+   Modal
 ============================ */
 .modal-overlay {
   position: fixed;
@@ -202,122 +180,4 @@
   justify-content: center;
   align-items: center;
   z-index: 999;
-  backdrop-filter: blur(2px);
-}
-
-/* ============================
-   Modal Card Design (Elegant)
-============================ */
-.modal-card {
-  width: 520px;
-  background: #ffffff;
-  padding: 35px 30px;
-  border-radius: 22px;
-  position: relative;
-
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  animation: showModal 0.25s ease-out;
-
-  font-family: "Quicksand", sans-serif;
-}
-
-/* Animation */
-@keyframes showModal {
-  from { opacity: 0; transform: translateY(25px) scale(0.95); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Close Button */
-.close-btn {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  background: #f3f3f3;
-  border: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 18px;
-  color: #444;
-  transition: 0.2s;
-}
-
-.close-btn:hover {
-  background: #e3e3e3;
-}
-
-/* Titles */
-.modal-card h2 {
-  margin-bottom: 6px;
-  color: #009688;
-  font-size: 26px;
-  font-weight: 800;
-}
-
-.modal-org {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 15px;
-}
-
-/* Info Box */
-.modal-info {
-  background: #e8f6f4;
-  padding: 12px 16px;
-  border-radius: 14px;
-  margin-bottom: 18px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #009688;
-}
-
-/* Description */
-.modal-desc {
-  font-size: 15px;
-  line-height: 1.6;
-  margin: 15px 0 12px;
-  color: #444;
-}
-
-/* Skills box */
-.skills-box {
-  margin-top: 15px;
-  padding: 12px 15px;
-  background: #fafafa;
-  border-radius: 12px;
-  font-size: 14px;
-  color: #555;
-  border-left: 3px solid #009688;
-}
-
-/* Apply Button inside modal */
-.modal-apply-btn {
-  margin-top: 20px;
-  width: 100%;
-  background: #009688;
-  border: none;
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
-  padding: 12px 0;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.modal-apply-btn:hover {
-  background: #007a6a;
-}
-
-/* ============================
-   Responsive
-============================ */
-@media (max-width: 900px) {
-  .job-list {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-card {
-    width: 90%;
-  }
 }
