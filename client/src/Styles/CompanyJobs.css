@@ -7,7 +7,7 @@
   justify-content: center;
 }
 
-/* GLASS BIG CARD */
+/* GLASS CARD */
 .companyjobs-wrapper {
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(10px);
@@ -19,6 +19,7 @@
   border: 1px solid rgba(255,255,255,0.4);
 }
 
+/* Title */
 .companyjobs-title {
   font-size: 36px;
   font-weight: 800;
@@ -38,14 +39,14 @@
   color: #009688;
 }
 
-/* GRID */
+/* Grid */
 .jobs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
   gap: 25px;
 }
 
-/* JOB CARD */
+/* Job Card */
 .job-card {
   background: #fff;
   border-radius: 16px;
@@ -58,7 +59,7 @@
   transform: translateY(-3px);
 }
 
-/* Job Action Buttons Container */
+/* Action Buttons */
 .job-actions {
   display: flex;
   justify-content: flex-end;
@@ -67,35 +68,30 @@
   margin-top: 12px;
 }
 
-/* Buttons — no borders */
 .edit-btn,
 .delete-btn,
 .applicants-btn {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 10px;
   font-weight: 600;
+  cursor: pointer;
 }
 
-.edit-btn { 
-  background: #ffc107; 
-  border-radius: 10px; 
-  padding: 8px 16px; 
+.edit-btn {
+  background: #ffc107;
 }
 
-.delete-btn { 
-  background: #ff6b6b; 
-  color: white; 
-  border-radius: 10px; 
-  padding: 8px 16px; 
+.delete-btn {
+  background: #ff6b6b;
+  color: white;
 }
 
-.applicants-btn { 
-  background: #009688; 
-  color: white; 
-  border-radius: 10px; 
-  padding: 8px 16px; 
+.applicants-btn {
+  background: #009688;
+  color: white;
 }
 
 /* Pagination */
@@ -113,7 +109,7 @@
   border-radius: 8px;
   cursor: pointer;
   background: white;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .page-number.active {
@@ -122,20 +118,7 @@
   border-color: #009688;
 }
 
-.page-btn:hover:not(:disabled),
-.page-number:hover {
-  background: #e8faf7;
-  border-color: #009688;
-}
-
-.page-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* ============================
-   EDIT OVERLAY (IMPORTANT)
-============================ */
+/* Modal Overlay */
 .edit-overlay {
   position: fixed;
   top: 0;
@@ -149,9 +132,7 @@
   z-index: 9999;
 }
 
-/* ============================
-   EDIT MODAL (Post Job style)
-============================ */
+/* Modal */
 .edit-modal {
   background: #ffffff;
   width: 95%;
@@ -165,20 +146,9 @@
   animation: pop .25s ease-out;
 }
 
-/* Title */
-.edit-modal h2 {
-  font-size: 26px;
-  font-weight: 800;
-  margin-bottom: 20px;
-}
-
-/* Labels */
-.edit-modal label {
-  font-size: 14px;
-  font-weight: 700;
-  margin-top: 18px;
-  margin-bottom: 6px;
-  display: block;
+@keyframes pop {
+  from { transform: scale(0.94); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 /* Inputs */
@@ -201,12 +171,12 @@
   outline: none;
 }
 
-/* Textarea */
-.edit-modal textarea {
-  min-height: 120px;
+.readonly-input {
+  background: #f0f0f0 !important;
+  cursor: not-allowed;
 }
 
-/* SECTOR RADIO */
+/* Sector Radios */
 .sector-edit-row {
   display: flex;
   gap: 12px;
@@ -217,23 +187,19 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   border: 1.5px solid #ccc;
-  padding: 10px 12px;
+  padding: 12px;
   border-radius: 10px;
   cursor: pointer;
-  transition: .2s;
-}
-
-.sector-edit-box:hover {
-  border-color: #009688;
 }
 
 .sector-edit-box input {
+  margin: 0;
   accent-color: #009688;
 }
 
-/* Buttons */
+/* Modal Actions */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -263,7 +229,7 @@
   cursor: pointer;
 }
 
-/* Close button */
+/* Close Icon */
 .edit-close {
   position: absolute;
   top: 12px;
