@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx (Final Improved Version)
+// FindJob.jsx (Final Improved Version with Elegant Modal)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -98,7 +98,7 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* Job List */}
+      {/* Job Cards */}
       <div className="job-list">
         {currentJobs.length === 0 ? (
           <p>No jobs found.</p>
@@ -112,13 +112,13 @@ const FindJob = () => {
                 </span>
               </div>
 
-              <p className="job-location">📍 {job.location || "Not specified"}</p>
+              <p className="job-location">📍 {job.location}</p>
 
               <p className="job-date">
                 📅 {job.postedAt?.slice(0, 10)} — ⏰ {job.postedAt?.slice(11, 16)}
               </p>
 
-              <div className="job-actions-between">
+              <div className="job-actions-left">
                 <button
                   className="btn-details"
                   onClick={() => setSelectedJob(job)}
@@ -126,7 +126,10 @@ const FindJob = () => {
                   View details
                 </button>
 
-                <button className="btn-apply" onClick={() => handleApply(job)}>
+                <button
+                  className="btn-apply"
+                  onClick={() => handleApply(job)}
+                >
                   Apply ➜
                 </button>
               </div>
@@ -167,30 +170,36 @@ const FindJob = () => {
       {/* Modal */}
       {selectedJob && (
         <div className="modal-overlay">
-          <div className="modal-card">
+          <div className="modal-card modal-elegant">
+
             <button className="close-btn" onClick={() => setSelectedJob(null)}>
               ✖
             </button>
 
-            <h2>{selectedJob.jobTitle}</h2>
+            <div className="modal-header-top">
+              <h2 className="modal-job-title">{selectedJob.jobTitle}</h2>
+              <span className="modal-rate">
+                {selectedJob.rate} OMR · {selectedJob.rateType}
+              </span>
+            </div>
 
-            <div className="modal-box">
+            <div className="modal-info-box">
               📍 {selectedJob.location}
             </div>
 
-            <div className="modal-box">
-              💰 {selectedJob.rate} OMR · {selectedJob.rateType}
+            <div className="modal-info-box">
+              📅 {selectedJob.postedAt?.slice(0, 10)}
+              &nbsp;—&nbsp;
+              ⏰ {selectedJob.postedAt?.slice(11, 16)}
             </div>
 
-            <div className="modal-box">
-              📅 {selectedJob.postedAt?.slice(0, 10)} — ⏰ {selectedJob.postedAt?.slice(11, 16)}
-            </div>
-
-            <p className="modal-desc-title">Description</p>
-            <div className="modal-desc-box">{selectedJob.description}</div>
+            <p className="modal-section-title">Description</p>
+            <p className="modal-description-box">
+              {selectedJob.description}
+            </p>
 
             {selectedJob.skills && (
-              <div className="modal-box">
+              <div className="modal-skills-box">
                 <strong>Skills:</strong> {selectedJob.skills}
               </div>
             )}
@@ -204,6 +213,7 @@ const FindJob = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
