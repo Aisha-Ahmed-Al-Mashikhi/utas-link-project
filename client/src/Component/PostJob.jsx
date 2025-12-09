@@ -5,11 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
 import { useDispatch } from "react-redux";
 import { addJob } from "../Features/JobSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";   // ⭐ تمت إضافتها
 
 const PostJob = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ⭐ تمت إضافتها
 
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -24,7 +24,6 @@ const PostJob = () => {
     register,
     handleSubmit,
     reset,
-    setValue,          // ⭐ مهم لإصلاح المشكلة
     formState: { errors },
   } = useForm({
     resolver: yupResolver(postJobSchema),
@@ -68,7 +67,10 @@ const PostJob = () => {
       .unwrap()
       .then(() => {
         alert("Job posted successfully!");
+
+        // ⭐ الانتقال لصفحة My Jobs بعد النجاح
         navigate("/my-jobs");
+
         handleClean();
       })
       .catch(() => alert("Failed to post job"));
@@ -126,7 +128,7 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector – FIXED 100% */}
+            {/* Sector */}
             <div className="col-half">
               <label>Sector</label>
 
@@ -141,10 +143,7 @@ const PostJob = () => {
                       value={s}
                       {...register("sector")}
                       checked={sector === s}
-                      onChange={(e) => {
-                        setSector(e.target.value);
-                        setValue("sector", e.target.value);  // ⭐ الحل الحقيقي
-                      }}
+                      onChange={(e) => setSector(e.target.value)}
                     />
                     <span>{s}</span>
                   </label>
