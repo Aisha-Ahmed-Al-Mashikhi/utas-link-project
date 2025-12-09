@@ -6,8 +6,6 @@
   min-height: 100vh;
   padding: 40px 70px;
   font-family: "Quicksand", sans-serif;
-
-  /* Scrollbar inside page */
   overflow-y: auto;
 }
 
@@ -85,7 +83,7 @@
 }
 
 /* ============================
-   Job List — Auto Fit Grid
+   Job List Grid
 ============================ */
 .job-list {
   display: grid;
@@ -129,70 +127,32 @@
   font-weight: 700;
 }
 
-.org-name {
-  color: #666;
-  font-size: 15px;
-  margin-bottom: 10px;
+.job-location {
+  margin-top: 8px;
+  color: #555;
 }
 
 /* ============================
-   Tags
+   Buttons Row
 ============================ */
-.tags {
+.job-actions-between {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
-.tag {
-  background-color: #e8f6f4;
+.btn-details {
+  background: #e8f6f4;
   color: #009688;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
   font-weight: 600;
 }
 
-/* ============================
-   Description (Collapsible)
-============================ */
-.desc {
-  color: #333;
-  font-size: 14px;
-  line-height: 1.5;
-  max-height: 60px;
-  overflow: hidden;
-  transition: 0.3s;
-}
-
-.desc.expanded {
-  max-height: 500px;
-}
-
-.skills {
-  color: #555;
-  font-size: 13.5px;
-  margin: 10px 0;
-}
-
-/* Show More Button */
-.show-more {
-  background: none;
-  border: none;
-  color: #009688;
-  cursor: pointer;
-  font-size: 13px;
-  margin-top: -6px;
-  margin-bottom: 6px;
-}
-
-/* ============================
-   Apply Button
-============================ */
-.job-actions {
-  display: flex;
-  justify-content: flex-end;
+.btn-details:hover {
+  background: #d0efea;
 }
 
 .btn-apply {
@@ -211,7 +171,7 @@
 }
 
 /* ============================
-   Custom Scrollbar (FindJob Only)
+   Custom Scrollbar
 ============================ */
 .findjob-page::-webkit-scrollbar {
   width: 6px;
@@ -232,10 +192,132 @@
 }
 
 /* ============================
+   Modal Overlay
+============================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+/* ============================
+   Modal Card Design (Elegant)
+============================ */
+.modal-card {
+  width: 520px;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 22px;
+  position: relative;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: showModal 0.25s ease-out;
+
+  font-family: "Quicksand", sans-serif;
+}
+
+/* Animation */
+@keyframes showModal {
+  from { opacity: 0; transform: translateY(25px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: #f3f3f3;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  color: #444;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  background: #e3e3e3;
+}
+
+/* Titles */
+.modal-card h2 {
+  margin-bottom: 6px;
+  color: #009688;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.modal-org {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* Info Box */
+.modal-info {
+  background: #e8f6f4;
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #009688;
+}
+
+/* Description */
+.modal-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 15px 0 12px;
+  color: #444;
+}
+
+/* Skills box */
+.skills-box {
+  margin-top: 15px;
+  padding: 12px 15px;
+  background: #fafafa;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #555;
+  border-left: 3px solid #009688;
+}
+
+/* Apply Button inside modal */
+.modal-apply-btn {
+  margin-top: 20px;
+  width: 100%;
+  background: #009688;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.modal-apply-btn:hover {
+  background: #007a6a;
+}
+
+/* ============================
    Responsive
 ============================ */
 @media (max-width: 900px) {
   .job-list {
     grid-template-columns: 1fr;
+  }
+
+  .modal-card {
+    width: 90%;
   }
 }
