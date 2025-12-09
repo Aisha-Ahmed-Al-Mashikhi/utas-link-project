@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx — FINAL VERSION (With Company Name + Email)
+// FindJob.jsx — UPDATED with Company Name + Email
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -20,8 +20,8 @@ const FindJob = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
-
   const [currentPage, setCurrentPage] = useState(1);
+
   const jobsPerPage = 6;
 
   useEffect(() => {
@@ -33,7 +33,6 @@ const FindJob = () => {
     if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
   }, [dispatch]);
 
-  // ---------------- FILTER ----------------
   const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -53,7 +52,6 @@ const FindJob = () => {
     if (pageNum >= 1 && pageNum <= totalPages) setCurrentPage(pageNum);
   };
 
-  // ---------------- APPLY ----------------
   const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
@@ -66,7 +64,6 @@ const FindJob = () => {
       jobId: job._id,
       jobTitle: job.jobTitle,
       organization: job.organization || "Unknown Company",
-      companyEmail: job.companyEmail || "",
       applicantEmail: loggedUser.email,
       applicantName: loggedUser.name,
       cvLink: user.cvLink,
@@ -84,7 +81,7 @@ const FindJob = () => {
         Find <span className="accent">Job</span>
       </h1>
 
-      {/* Search */}
+      {/* Search Bar */}
       <div className="search-container">
         <div className="search-wrapper">
           <input
@@ -101,24 +98,24 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* ---------------- JOB LIST ---------------- */}
+      {/* Job List */}
       <div className="job-list">
         {currentJobs.length === 0 ? (
           <p>No jobs found.</p>
         ) : (
           currentJobs.map((job) => (
             <div key={job._id} className="job-card">
-              {/* HEADER */}
+              
+              {/* ⭐ JOB TITLE + COMPANY */}
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
-
-                {/* ⭐ COMPANY NAME */}
-                <p className="company-name">{job.organization}</p>
-
                 <span className="rate">
                   {job.rate} OMR · {job.rateType}
                 </span>
               </div>
+
+              {/* ⭐ NEW — COMPANY NAME */}
+              <p className="company-name">🏢 {job.organization || "Company"}</p>
 
               <p className="job-location">📍 {job.location}</p>
 
@@ -126,7 +123,6 @@ const FindJob = () => {
                 📅 {job.postedAt?.slice(0, 10)} — ⏰ {job.postedAt?.slice(11, 16)}
               </p>
 
-              {/* ACTIONS */}
               <div className="job-actions">
                 <button
                   className="btn-details"
@@ -144,7 +140,7 @@ const FindJob = () => {
         )}
       </div>
 
-      {/* ---------------- PAGINATION ---------------- */}
+      {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination">
           <button
@@ -173,33 +169,33 @@ const FindJob = () => {
         </div>
       )}
 
-      {/* =====================================================
-          MODAL WITH COMPANY INFO
-      ===================================================== */}
+      {/* ============================
+          Modal — Teaching Assistant Style
+         ============================ */}
       {selectedJob && (
         <div className="modal-overlay">
           <div className="modal-card-ta">
 
+            {/* Close */}
             <button className="close-btn-ta" onClick={() => setSelectedJob(null)}>
               ✖
             </button>
 
-            {/* HEADER */}
+            {/* Title & Price */}
             <div className="modal-header-ta">
               <h2>{selectedJob.jobTitle}</h2>
-
               <span className="modal-rate">
                 {selectedJob.rate} OMR · {selectedJob.rateType}
               </span>
             </div>
 
-            {/* ⭐ NEW — COMPANY INFO SECTION */}
-            <div className="company-info">
-              <p><strong>Company:</strong> {selectedJob.organization}</p>
-              <p><strong>Email:</strong> {selectedJob.companyEmail || "Not provided"}</p>
+            {/* ⭐ COMPANY INFO */}
+            <div className="modal-company-block">
+              <p><strong>Company:</strong> {selectedJob.organization || "Not provided"}</p>
+              <p><strong>Email:</strong> {selectedJob.postedBy || "Not provided"}</p>
             </div>
 
-            {/* Location & Date */}
+            {/* Location & Date Row */}
             <div className="modal-info-row">
               <p>📍 {selectedJob.location}</p>
               <p>📅 {selectedJob.postedAt?.slice(0, 10)}</p>
@@ -220,7 +216,7 @@ const FindJob = () => {
               ))}
             </div>
 
-            {/* APPLY */}
+            {/* Apply */}
             <button
               className="modal-apply-btn-ta"
               onClick={() => handleApply(selectedJob)}
