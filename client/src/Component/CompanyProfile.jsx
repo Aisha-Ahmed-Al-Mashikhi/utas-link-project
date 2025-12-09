@@ -90,7 +90,7 @@ const CompanyProfile = () => {
     <div className="profile-page">
 
       {/* SUCCESS MESSAGE */}
-      {message && <p className="success-msg">{message}</p>}
+      {message && <div className="toast-success">{message}</div>}
 
       {/* LEFT COLUMN */}
       <div className="left-column">
