@@ -5,11 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
 import { useDispatch } from "react-redux";
 import { addJob } from "../Features/JobSlice";
-import { useNavigate } from "react-router-dom";   // ⭐ تمت إضافتها
+import { useNavigate } from "react-router-dom";
 
 const PostJob = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // ⭐ تمت إضافتها
+  const navigate = useNavigate();
 
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -24,6 +24,7 @@ const PostJob = () => {
     register,
     handleSubmit,
     reset,
+    setValue,   // ⭐ مهم لإخفاء الخطأ مباشرة
     formState: { errors },
   } = useForm({
     resolver: yupResolver(postJobSchema),
@@ -67,10 +68,7 @@ const PostJob = () => {
       .unwrap()
       .then(() => {
         alert("Job posted successfully!");
-
-        // ⭐ الانتقال لصفحة My Jobs بعد النجاح
-        navigate("/company-jobs");
-
+        navigate("/company-jobs"); // ⭐ بعد النجاح
         handleClean();
       })
       .catch(() => alert("Failed to post job"));
@@ -143,7 +141,10 @@ const PostJob = () => {
                       value={s}
                       {...register("sector")}
                       checked={sector === s}
-                      onChange={(e) => setSector(e.target.value)}
+                      onChange={(e) => {
+                        setSector(e.target.value);
+                        setValue("sector", e.target.value, { shouldValidate: true }); 
+                      }}
                     />
                     <span>{s}</span>
                   </label>
