@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx — Final Version With Clean Card + TA Modal
+// FindJob.jsx (FINAL VERSION)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -76,30 +76,30 @@ const FindJob = () => {
   };
 
   return (
-    <div className="findjob-page">
+    <div className="findjob-page scroll-page">
 
       <h1 className="findjob-title">
         Find <span className="accent">Job</span>
       </h1>
 
-      {/* Search Bar */}
+      {/* ---------------- Search ---------------- */}
       <div className="search-container">
         <div className="search-wrapper">
           <input
             type="text"
             placeholder="Search skills, companies"
             value={searchTerm}
+            className="search-box"
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            className="search-box"
           />
         </div>
         <button className="search-btn">Search</button>
       </div>
 
-      {/* Job Cards */}
+      {/* ---------------- Job List ---------------- */}
       <div className="job-list">
         {currentJobs.length === 0 ? (
           <p>No jobs found.</p>
@@ -107,117 +107,108 @@ const FindJob = () => {
           currentJobs.map((job) => (
             <div key={job._id} className="job-card">
 
-              <h3 className="card-title">{job.jobTitle}</h3>
+              {/* Header */}
+              <div className="job-card-header">
+                <h3 className="job-title">{job.jobTitle}</h3>
+                <span className="job-rate">
+                  {job.rate} OMR · {job.rateType}
+                </span>
+              </div>
 
-              <p className="card-organization">{job.organization}</p>
+              {/* Location */}
+              <p className="job-location">📍 {job.location}</p>
 
-              <p className="card-location">📍 {job.location}</p>
-
-              <p className="card-datetime">
-                📅 {job.postedAt?.slice(0, 10)}  
-                &nbsp;—&nbsp; 
-                ⏰ {job.postedAt?.slice(11, 16)}
+              {/* Date */}
+              <p className="job-date">
+                📅 {job.postedAt?.slice(0, 10)} — ⏰ {job.postedAt?.slice(11, 16)}
               </p>
 
-              <div className="card-rate">
-                💰 {job.rate} OMR / {job.rateType}
-              </div>
-
-              <div className="job-actions">
-                <button className="apply-btn" onClick={() => handleApply(job)}>
-                  Apply
+              {/* Buttons */}
+              <div className="job-actions-left">
+                <button className="btn-details" onClick={() => setSelectedJob(job)}>
+                  View details
                 </button>
 
-                <button className="view-btn" onClick={() => setSelectedJob(job)}>
-                  View
+                <button className="btn-apply" onClick={() => handleApply(job)}>
+                  Apply ➜
                 </button>
               </div>
-
             </div>
           ))
         )}
       </div>
 
-      {/* Pagination */}
+      {/* ---------------- Pagination ---------------- */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button
-            onClick={() => changePage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            ◀
+          <button disabled={currentPage === 1} onClick={() => changePage(currentPage - 1)}>
+            ◀ Prev
           </button>
 
-          {[...Array(totalPages)].map((_, index) => (
+          {[...Array(totalPages)].map((_, i) => (
             <button
-              key={index}
-              className={currentPage === index + 1 ? "active-page" : ""}
-              onClick={() => changePage(index + 1)}
+              key={i}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => changePage(i + 1)}
             >
-              {index + 1}
+              {i + 1}
             </button>
           ))}
 
-          <button
-            onClick={() => changePage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            ▶
+          <button disabled={currentPage === totalPages} onClick={() => changePage(currentPage + 1)}>
+            Next ▶
           </button>
         </div>
       )}
 
-      {/* MODAL (Teaching Assistant Style) */}
+      {/* ---------------- Modal ---------------- */}
       {selectedJob && (
         <div className="modal-overlay">
-          <div className="modal-ta">
+          <div className="modal-card wide-modal">
 
-            <button className="modal-close" onClick={() => setSelectedJob(null)}>
-              ✖
-            </button>
+            <button className="close-btn" onClick={() => setSelectedJob(null)}>✖</button>
 
             <h2 className="modal-title">{selectedJob.jobTitle}</h2>
 
-            <div className="modal-box green-box">
-              💰 {selectedJob.rate} OMR / {selectedJob.rateType}
-            </div>
-
-            <div className="modal-box">📍 {selectedJob.location}</div>
-
+            {/* Price */}
             <div className="modal-box">
-              📅 {selectedJob.postedAt?.slice(0, 10)}  
-              &nbsp;—&nbsp; 
-              ⏰ {selectedJob.postedAt?.slice(11, 16)}
+              💰 {selectedJob.rate} OMR · {selectedJob.rateType}
             </div>
 
-            <p className="modal-section-title">Description</p>
-            <div className="modal-description">
+            {/* Location + Date/Time */}
+            <div className="modal-row">
+              <div className="modal-box half">
+                📍 {selectedJob.location}
+              </div>
+
+              <div className="modal-box half">
+                📅 {selectedJob.postedAt?.slice(0, 10)} — ⏰ {selectedJob.postedAt?.slice(11, 16)}
+              </div>
+            </div>
+
+            {/* Description */}
+            <p className="modal-desc-title">Description</p>
+            <div className="modal-desc-container">
               {selectedJob.description}
             </div>
 
-            {selectedJob.skills && (
-              <>
-                <p className="modal-section-title">Skills</p>
-                <div className="skills-container">
-                  {selectedJob.skills.split(",").map((skill, i) => (
-                    <span className="skill-tag" key={i}>
-                      {skill.trim()}
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
+            {/* Skills */}
+            <p className="modal-desc-title">Skills</p>
+            <div className="skills-wrapper">
+              {selectedJob.skills.split(",").map((skill, idx) => (
+                <span key={idx} className="skill-badge">{skill.trim()}</span>
+              ))}
+            </div>
 
-            <button
-              className="modal-apply"
-              onClick={() => handleApply(selectedJob)}
-            >
+            {/* Apply button */}
+            <button className="modal-apply-btn" onClick={() => handleApply(selectedJob)}>
               Apply Now
             </button>
 
           </div>
         </div>
       )}
+
     </div>
   );
 };
