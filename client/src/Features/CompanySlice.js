@@ -1,3 +1,4 @@
+// src/Features/CompanySlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
@@ -17,31 +18,10 @@ export const registerCompany = createAsyncThunk(
   "companies/registerCompany",
   async (companyData, thunkAPI) => {
     try {
-      const res = await axios.post(
-        `${ENV.SERVER_URL}/registerCompany`,
-        companyData
-      );
+      const res = await axios.post(`${ENV.SERVER_URL}/registerCompany`, companyData);
       return res.data.company;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || "Server error");
-    }
-  }
-);
-
-/* =============================
-    UPDATE COMPANY PROFILE
-============================= */
-export const updateCompany = createAsyncThunk(
-  "companies/updateCompany",
-  async ({ email, data }, thunkAPI) => {
-    try {
-      const res = await axios.put(
-        `${ENV.SERVER_URL}/company/update/${email}`,
-        data
-      );
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Update failed");
     }
   }
 );
@@ -62,6 +42,21 @@ export const fetchCompany = createAsyncThunk(
 );
 
 /* =============================
+    UPDATE COMPANY PROFILE ✔
+============================= */
+export const updateCompany = createAsyncThunk(
+  "companies/updateCompany",
+  async ({ email, data }, thunkAPI) => {
+    try {
+      const res = await axios.put(`${ENV.SERVER_URL}/updateCompany/${email}`, data);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || "Update error");
+    }
+  }
+);
+
+/* =============================
     UPLOAD LICENSE (PDF)
 ============================= */
 export const uploadLicense = createAsyncThunk(
@@ -76,14 +71,9 @@ export const uploadLicense = createAsyncThunk(
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      return {
-        ...res.data,
-        email,
-      };
+      return { ...res.data, email };
     } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data || "License upload failed"
-      );
+      return thunkAPI.rejectWithValue(err.response?.data || "License upload failed");
     }
   }
 );
@@ -95,18 +85,10 @@ export const deleteLicense = createAsyncThunk(
   "companies/deleteLicense",
   async (email, thunkAPI) => {
     try {
-      const res = await axios.put(`${ENV.SERVER_URL}/deleteLicense`, {
-        email,
-      });
-
-      return {
-        ...res.data,
-        email,
-      };
+      const res = await axios.put(`${ENV.SERVER_URL}/deleteLicense`, { email });
+      return { ...res.data, email };
     } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data || "Failed to delete license"
-      );
+      return thunkAPI.rejectWithValue(err.response?.data || "Failed to delete license");
     }
   }
 );
@@ -141,19 +123,7 @@ const companySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-      }).addCase(updateCompany.pending, (state) => {
-  state.isLoading = true;
-})
-.addCase(updateCompany.fulfilled, (state, action) => {
-  state.isLoading = false;
-  state.company = action.payload;
-})
-.addCase(updateCompany.rejected, (state, action) => {
-  state.isLoading = false;
-  state.isError = true;
-  state.message = action.payload;
-});
-
+      })
 
       /* FETCH */
       .addCase(fetchCompany.pending, (state) => {
@@ -164,6 +134,21 @@ const companySlice = createSlice({
         state.company = action.payload;
       })
       .addCase(fetchCompany.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      /* UPDATE COMPANY ✔ */
+      .addCase(updateCompany.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.company = action.payload; // update UI
+        state.isSuccess = true;
+      })
+      .addCase(updateCompany.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -190,12 +175,9 @@ const companySlice = createSlice({
       .addCase(deleteLicense.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteLicense.fulfilled, (state, action) => {
+      .addCase(deleteLicense.fulfilled, (state) => {
         state.isLoading = false;
-        state.company = {
-          ...state.company,
-          businessLicense: null,
-        };
+        state.company = { ...state.company, businessLicense: null };
       })
       .addCase(deleteLicense.rejected, (state, action) => {
         state.isLoading = false;
