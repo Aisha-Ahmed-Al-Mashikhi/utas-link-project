@@ -79,7 +79,7 @@ const PostJob = () => {
     setRateType("");
     setSkills("");
     setDescription("");
-   	setPayout("");
+    setPayout("");
   };
 
   return (
@@ -106,6 +106,8 @@ const PostJob = () => {
 
           {/* Category + Sector */}
           <div className="row-flex">
+
+            {/* Category */}
             <div className="col-half">
               <label>Category</label>
               <select
@@ -122,32 +124,34 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector */}
+            {/* Sector – FIXED */}
             <div className="col-half">
               <label>Sector</label>
+
               <div className="sector-grid">
                 {SECTORS.map((s) => (
-                  <div
+                  <label
                     key={s}
                     className={`sector-box ${sector === s ? "selected" : ""}`}
-                    onClick={() => setSector(s)}
                   >
                     <input
                       type="radio"
                       value={s}
-                      {...register("sector")}   // 🔥 FIXED: now linked to form validation
+                      {...register("sector")}     // ✔ now RHF captures value
                       checked={sector === s}
-                      onChange={() => setSector(s)}
+                      onChange={(e) => setSector(e.target.value)} // ✔ UI state sync
                     />
                     <span>{s}</span>
-                  </div>
+                  </label>
                 ))}
               </div>
+
               <p className="error">{errors.sector?.message}</p>
             </div>
+
           </div>
 
-          {/* Rate + Rate Type */}
+          {/* Rate + RateType */}
           <div className="row-flex">
             <div className="col-half">
               <label>Rate (OMR)</label>
@@ -218,6 +222,7 @@ const PostJob = () => {
               Clean
             </button>
           </div>
+
         </form>
       </div>
     </div>
