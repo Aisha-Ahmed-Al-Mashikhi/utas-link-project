@@ -108,7 +108,7 @@ const FindJob = () => {
                   className="btn-details"
                   onClick={() => setSelectedJob(job)}
                 >
-                  عرض التفاصيل
+                  View details
                 </button>
 
                 <button
