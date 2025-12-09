@@ -4,7 +4,6 @@ import { logout } from "../Features/UserSlice";
 import { useState } from "react";
 import "../Styles/Header.css";
 
-/* ====== IMPORT ICONS ====== */
 import {
   FiHome,
   FiLogIn,
@@ -14,6 +13,7 @@ import {
   FiBookOpen,
   FiMessageCircle,
   FiLogOut,
+  FiPlusCircle,
 } from "react-icons/fi";
 
 const Header = () => {
@@ -21,8 +21,6 @@ const Header = () => {
   const navigate = useNavigate();
 
   const { user, role: reduxRole } = useSelector((state) => state.users);
-
-  // Final role
   const role = reduxRole || user?.role || localStorage.getItem("role");
 
   const handleLogout = () => {
@@ -52,15 +50,22 @@ const Header = () => {
             <>
               <Link to="/">Home</Link>
               <Link to="/find-job">Find Job</Link>
-              <Link to="/create-post">Create Post</Link>
+
+              {/* ❌ Create Post removed from header */}
+              {/* <Link to="/create-post">Create Post</Link> */}
+
+              <Link to="/student-applications">My Applications</Link>
             </>
           )}
 
           {role === "company" && (
             <>
               <Link to="/">Home</Link>
-              <Link to="/post-job">Post Job</Link>
-              <Link to="/company-jobs">My Jobs</Link>
+
+              {/* ✅ My Applicants moved to Header */}
+              <Link to="/company-jobs">Applicants</Link>
+
+              {/* ❌ Post Job removed from header */}
             </>
           )}
         </div>
@@ -124,8 +129,9 @@ const Header = () => {
                 <FiUser className="icon" /> Profile
               </Link>
 
-              <Link to="/student-applications" onClick={() => setOpen(false)}>
-                <FiBookOpen className="icon" /> My Applications
+              {/* ❗ Create Post moved HERE */}
+              <Link to="/create-post" onClick={() => setOpen(false)}>
+                <FiPlusCircle className="icon" /> Create Post
               </Link>
 
               <Link to="/student-chats" onClick={() => setOpen(false)}>
@@ -149,12 +155,13 @@ const Header = () => {
                 <FiUser className="icon" /> Company Profile
               </Link>
 
-              <Link to="/company-chats" onClick={() => setOpen(false)}>
-                <FiMessageCircle className="icon" /> Chats
+              {/* ❗ Post Job moved into drawer ONLY */}
+              <Link to="/post-job" onClick={() => setOpen(false)}>
+                <FiPlusCircle className="icon" /> Post Job
               </Link>
 
-              <Link to="/company-jobs" onClick={() => setOpen(false)}>
-                <FiBriefcase className="icon" /> Applicants
+              <Link to="/company-chats" onClick={() => setOpen(false)}>
+                <FiMessageCircle className="icon" /> Chats
               </Link>
 
               <Link to="/developers" onClick={() => setOpen(false)}>
