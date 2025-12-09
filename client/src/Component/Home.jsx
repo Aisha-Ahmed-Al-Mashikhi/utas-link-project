@@ -1,9 +1,21 @@
 import React from "react";
 import "../Styles/Home.css";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Posts from "./Posts.jsx";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.users);
+
+  const handleStart = () => {
+    if (user) {
+      navigate("/find-job"); // إذا مسجل دخول
+    } else {
+      navigate("/login"); // إذا غير مسجل دخول
+    }
+  };
+
   return (
     <div className="home">
       {/* ------------ HERO SECTION ------------ */}
@@ -21,9 +33,9 @@ const Home = () => {
           access flexible, part-time work opportunities.
         </p>
 
-        <Link to="/login">
-          <button className="hero-btn">Get Start</button>
-        </Link>
+        <button className="hero-btn" onClick={handleStart}>
+          {user ? "Welcome" : "Get Start"}
+        </button>
       </section>
 
       {/* ------------ POSTS BOX SECTION ------------ */}
@@ -31,43 +43,33 @@ const Home = () => {
         <h2 className="section-title">Recent Posts</h2>
         <Posts />
       </section>
+
       <section className="features-section">
         <h2 className="features-title">Why Choose UTASLink?</h2>
 
         <div className="features-grid">
-          {" "}
-          {/* ← مهمة جداً */}
           <div className="feature-card">
             <div className="feature-icon">💼</div>
             <h3>Verified Local Jobs</h3>
-            <p>
-              All job opportunities come from trusted companies and ministries
-              within Dhofar.
-            </p>
+            <p>All job opportunities come from trusted companies and ministries within Dhofar.</p>
           </div>
+
           <div className="feature-card">
             <div className="feature-icon">⏱️</div>
             <h3>Flexible Work Options</h3>
-            <p>
-              Part-time, per-task, and hourly jobs designed for UTAS students’
-              schedules.
-            </p>
+            <p>Part-time, per-task, and hourly jobs designed for UTAS students’ schedules.</p>
           </div>
+
           <div className="feature-card">
             <div className="feature-icon">📱</div>
             <h3>Fast Application Process</h3>
-            <p>
-              Apply instantly and communicate directly with employers using the
-              built-in chat.
-            </p>
+            <p>Apply instantly and communicate directly with employers using the built-in chat.</p>
           </div>
+
           <div className="feature-card">
             <div className="feature-icon">⭐</div>
             <h3>Student-Focused Platform</h3>
-            <p>
-              Built exclusively for UTAS students to gain experience and earn
-              income.
-            </p>
+            <p>Built exclusively for UTAS students to gain experience and earn income.</p>
           </div>
         </div>
       </section>
