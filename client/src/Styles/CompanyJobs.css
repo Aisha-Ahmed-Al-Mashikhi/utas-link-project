@@ -114,35 +114,130 @@
   cursor: not-allowed;
 }
 
-/* MODAL */
-.edit-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+/* ============================
+   EDIT MODAL (Post Job style)
+============================ */
 .edit-modal {
-  background: #fff;
+  background: #ffffff;
   width: 95%;
-  max-width: 520px;
-  padding: 32px;
-  border-radius: 20px;
+  max-width: 600px;
+  padding: 35px;
+  border-radius: 22px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  box-shadow: 0px 6px 25px rgba(0,0,0,0.15);
+  animation: pop .25s ease-out;
 }
 
+/* Title */
+.edit-modal h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+/* Labels */
+.edit-modal label {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Inputs */
+.edit-modal input,
+.edit-modal select,
+.edit-modal textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #cfcfcf;
+  font-size: 14px;
+  margin-bottom: 6px;
+  transition: 0.2s;
+}
+
+.edit-modal input:focus,
+.edit-modal select:focus,
+.edit-modal textarea:focus {
+  border-color: #009688;
+  outline: none;
+}
+
+/* Textarea */
+.edit-modal textarea {
+  min-height: 120px;
+}
+
+/* SECTOR (radio buttons) — same as PostJob */
+.sector-edit-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.sector-edit-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid #ccc;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.sector-edit-box:hover {
+  border-color: #009688;
+}
+
+.sector-edit-box input {
+  accent-color: #009688;
+}
+
+/* Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.save-btn {
+  background: #009688;
+  color: white;
+  padding: 12px 26px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #e4e4e4;
+  color: #333;
+  padding: 12px 26px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+/* Close button */
 .edit-close {
   position: absolute;
-  top: 12px; right: 12px;
-  background: #eee;
+  top: 12px;
+  right: 12px;
+  background: #f0f0f0;
   border: none;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   cursor: pointer;
+  font-size: 18px;
 }
