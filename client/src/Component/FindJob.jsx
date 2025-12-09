@@ -22,7 +22,7 @@ const FindJob = () => {
   const [selectedJob, setSelectedJob] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 4;
+  const jobsPerPage = 6;
 
   useEffect(() => {
     dispatch(fetchJobs());
