@@ -7,7 +7,7 @@ import {
   uploadCv,
   deleteCvThunk,
 } from "../Features/UserSlice";
-import "../Styles/StudentProfile.css";
+import "../Styles/UserProfile.css";
 
 const StudentProfile = () => {
   const dispatch = useDispatch();
