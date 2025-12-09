@@ -57,7 +57,7 @@ const StudentProfile = () => {
   };
 
   const handleSave = () => {
-    dispatch(updateStudentProfile({ email: user.email, data: formData }));
+    dispatch(updateStudent({ email: user.email, data: formData }));
     setShowEdit(false);
   };
 
