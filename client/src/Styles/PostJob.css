@@ -14,9 +14,9 @@
   border-radius: 20px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 30px 35px; 
+  padding: 30px 35px;
   width: 100%;
-  max-width: 900px; 
+  max-width: 900px;
 }
 
 .page-title {
@@ -56,27 +56,32 @@ label {
 
 /* Textarea (Description) */
 .postjob-card textarea {
-  height: 110px !important;  /* واضح ومناسب */
+  height: 110px !important;
   resize: vertical;
 }
 
 /* Row Layout */
 .row-flex {
   display: flex;
-  gap: 16px;
+  align-items: center;     /* 🔥 محاذاة Category + Sector */
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .col-half {
   flex: 1;
   min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;   /* 🔥 يمنع نزول القطاع */
 }
 
 /* Sector Boxes */
 .sector-grid {
   display: flex;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 12px;
+  margin-top: 6px;          /* 🔥 محاذاة مع Category */
+  align-items: center;      /* 🔥 الراديو بنفس الخط */
 }
 
 .sector-box {
