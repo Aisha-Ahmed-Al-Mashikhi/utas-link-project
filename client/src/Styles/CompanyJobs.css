@@ -1,6 +1,4 @@
-/* =========================================
-   PAGE
-========================================= */
+/* PAGE */
 .companyjobs-page {
   background: #f5faf8;
   min-height: 100vh;
@@ -9,9 +7,7 @@
   justify-content: center;
 }
 
-/* =========================================
-   GLASS WRAPPER
-========================================= */
+/* GLASS BIG CARD */
 .companyjobs-wrapper {
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(10px);
@@ -38,22 +34,16 @@
   line-height: 1.6;
 }
 
-.accent {
-  color: #009688;
-}
+.accent { color: #009688; }
 
-/* =========================================
-   GRID
-========================================= */
+/* GRID */
 .jobs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
   gap: 25px;
 }
 
-/* =========================================
-   JOB CARD
-========================================= */
+/* JOB CARD */
 .job-card {
   background: #fff;
   border-radius: 16px;
@@ -62,13 +52,9 @@
   transition: 0.2s;
 }
 
-.job-card:hover {
-  transform: translateY(-3px);
-}
+.job-card:hover { transform: translateY(-3px); }
 
-/* =========================================
-   BUTTONS ROW
-========================================= */
+/* JOB ACTION BUTTONS */
 .job-actions {
   display: flex;
   justify-content: flex-end;
@@ -77,40 +63,19 @@
   margin-top: 12px;
 }
 
-/* Buttons — no border */
 .edit-btn,
 .delete-btn,
 .applicants-btn {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  font-weight: 600;
 }
 
-/* Button Styles */
-.edit-btn {
-  background: #ffc107;
-  border-radius: 10px;
-  padding: 8px 16px;
-}
+.edit-btn { background: #ffc107; border-radius: 10px; padding: 8px 16px; }
+.delete-btn { background: #ff6b6b; color: white; border-radius: 10px; padding: 8px 16px; }
+.applicants-btn { background: #009688; color: white; border-radius: 10px; padding: 8px 16px; }
 
-.delete-btn {
-  background: #ff6b6b;
-  color: white;
-  border-radius: 10px;
-  padding: 8px 16px;
-}
-
-.applicants-btn {
-  background: #009688;
-  color: white;
-  border-radius: 10px;
-  padding: 8px 16px;
-}
-
-/* =========================================
-   PAGINATION
-========================================= */
+/* PAGINATION */
 .pagination {
   margin-top: 35px;
   display: flex;
@@ -145,57 +110,47 @@
   cursor: not-allowed;
 }
 
-/* =========================================
-   EDIT MODAL
-========================================= */
-
+/* ==== EDIT MODAL ==== */
 .edit-overlay {
   position: fixed;
-  top: 0; 
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.45);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
 }
 
-/* Modal box – lifted + wider */
+/* FIXED CENTER MODAL */
 .edit-modal {
   background: #ffffff;
-  width: 95%;
-  max-width: 720px;      /* ⬅️ wider */
+  width: 90%;
+  max-width: 620px;
   padding: 35px;
   border-radius: 22px;
-  max-height: 85vh;
+  max-height: 90vh;
   overflow-y: auto;
-  position: relative;
-  box-shadow: 0px 8px 30px rgba(0,0,0,0.18);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  box-shadow: 0px 6px 25px rgba(0,0,0,0.15);
   animation: pop .25s ease-out;
-
-  /* elevation */
-  margin-top: -50px;     /* ⬅️ raised upward */
 }
 
-/* Title */
 .edit-modal h2 {
   font-size: 26px;
   font-weight: 800;
   margin-bottom: 20px;
 }
 
-/* Labels */
 .edit-modal label {
   font-size: 14px;
   font-weight: 700;
   margin-top: 18px;
-  margin-bottom: 6px;
   display: block;
 }
 
-/* Inputs */
 .edit-modal input,
 .edit-modal select,
 .edit-modal textarea {
@@ -204,9 +159,10 @@
   border-radius: 10px;
   border: 1.5px solid #cfcfcf;
   font-size: 14px;
-  margin-bottom: 6px;
   transition: 0.2s;
 }
+
+.edit-modal textarea { min-height: 120px; }
 
 .edit-modal input:focus,
 .edit-modal select:focus,
@@ -215,44 +171,29 @@
   outline: none;
 }
 
-/* Textarea */
-.edit-modal textarea {
-  min-height: 120px;
-}
-
-/* =========================================
-   SECTOR RADIO – inline with label
-========================================= */
+/* FIX RADIO BUTTONS */
 .sector-edit-row {
   display: flex;
   gap: 12px;
-  margin-top: 6px;
 }
 
 .sector-edit-box {
   flex: 1;
   display: flex;
+  flex-direction: row;        /* FIX */
   align-items: center;
   gap: 10px;
   border: 1.5px solid #ccc;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: .2s;
-}
-
-.sector-edit-box:hover {
-  border-color: #009688;
 }
 
 .sector-edit-box input {
   accent-color: #009688;
-  margin-top: 0;
 }
 
-/* =========================================
-   MODAL BUTTONS
-========================================= */
+/* MODAL BUTTONS */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -265,24 +206,18 @@
   color: white;
   padding: 12px 26px;
   border-radius: 12px;
-  font-size: 15px;
   font-weight: 700;
   border: none;
-  cursor: pointer;
 }
 
 .cancel-btn {
   background: #e4e4e4;
-  color: #333;
   padding: 12px 26px;
   border-radius: 12px;
-  font-size: 15px;
   font-weight: 700;
   border: none;
-  cursor: pointer;
 }
 
-/* Close button */
 .edit-close {
   position: absolute;
   top: 12px;
