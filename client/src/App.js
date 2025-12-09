@@ -71,7 +71,7 @@ function App() {
         <Route path="/company-profile" element={<CompanyProfile />} />
         <Route path="/post-job" element={<PostJob />} />
         <Route path="/company-jobs" element={<CompanyJobs />} />
-        <Route path="/applicants-job" element={<ApplicantsJob />} />
+        <Route path="/applicants-job/:jobId" element={<ApplicantsJob />} />
         {/* Company chat list */}
         <Route path="/company-chats" element={<ChatListCompany />} />
         <Route path="/posts" element={<Post />} />
