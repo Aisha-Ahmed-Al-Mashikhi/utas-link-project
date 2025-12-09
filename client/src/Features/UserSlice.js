@@ -26,6 +26,18 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+// ===================== UPDATE STUDENT PROFILE =====================
+export const updateStudent = createAsyncThunk(
+  "users/updateStudent",
+  async ({ email, data }, thunkAPI) => {
+    try {
+      const res = await axios.put(`${ENV.SERVER_URL}/updateStudent/${email}`, data);
+      return res.data; // updated student
+    } catch (err) {
+      return thunkAPI.rejectWithValue("Update failed");
+    }
+  }
+);
 
 // ===================== LOGIN =====================
 export const login = createAsyncThunk("users/login", async (data, thunkAPI) => {
@@ -121,6 +133,12 @@ const userSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+.addCase(updateStudent.fulfilled, (state, action) => {
+  state.user = action.payload; // update UI live
+  state.isSuccess = true;
+  state.message = "Profile updated";
+})// UPDATE STUDENT
+
 
       // LOGIN
       .addCase(login.pending, (state) => {
