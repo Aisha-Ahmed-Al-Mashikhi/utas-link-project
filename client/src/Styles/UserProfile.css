@@ -192,3 +192,26 @@
 .upload-cv-btn:hover {
   opacity: 0.85;
 }
+
+.edit-profile-btn {
+  margin-top: 15px;
+  padding: 10px 18px;
+  background: #009688;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-profile-btn:hover {
+  background: #007d6f;
+  transform: translateY(-2px);
+}
+
+.edit-profile-btn:active {
+  transform: scale(0.97);
+}
