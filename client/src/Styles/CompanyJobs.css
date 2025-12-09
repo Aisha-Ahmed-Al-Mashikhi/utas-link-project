@@ -64,14 +64,24 @@
   margin: 10px 0;
 }
 
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;     /* ⭐ يسمح للتاقات إنها تنزل لو احتاجت */
+  gap: 8px;            /* ⭐ بدل margin-right */
+  margin: 10px 0;
+}
+
 .tag {
-  background: #e8faf7;
+  display: inline-flex;  /* ⭐ يخلي المحتوى يتمدد */
+  width: auto;           /* ⭐ يمنع العرض الثابت */
+  white-space: nowrap;   /* ⭐ يمنع التاق من الانقسام على سطرين */
   padding: 6px 12px;
+  background: #e8faf7;
   border-radius: 8px;
-  margin-right: 6px;
   font-size: 13px;
   color: #009688;
 }
+
 
 .price {
   font-weight: 600;
