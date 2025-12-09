@@ -7,35 +7,37 @@
   justify-content: center;
 }
 
-/* GLASS WRAPPER */
+/* GLASS CARD */
 .companyjobs-wrapper {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255,255,255,0.25);
   backdrop-filter: blur(10px);
   width: 100%;
   max-width: 1250px;
   padding: 40px 40px 60px;
   border-radius: 22px;
   box-shadow: 0px 4px 25px rgba(0,0,0,0.08);
-  border: 1px solid rgba(255,255,255,0.4);
 }
 
 .companyjobs-title {
   font-size: 36px;
   font-weight: 800;
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .subtitle {
   text-align: center;
+  font-size: 15px;
   color: #555;
   margin-bottom: 30px;
+  line-height: 1.6;
 }
 
 .accent {
   color: #009688;
 }
 
-/* JOB GRID */
+/* GRID */
 .jobs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
@@ -45,43 +47,42 @@
 /* JOB CARD */
 .job-card {
   background: #fff;
-  border-radius: 16px;
   padding: 22px;
+  border-radius: 16px;
   box-shadow: 0px 3px 12px rgba(0,0,0,0.06);
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .job-card:hover {
   transform: translateY(-3px);
 }
 
-/* Category / Sector */
-.job-details-group p {
-  margin: 4px 0;
+.job-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.job-rate,
+.job-time,
+.job-location {
   font-size: 14px;
-  color: #333;
+  color: #444;
+  margin: 4px 0;
 }
 
-/* Buttons */
-.job-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.edit-btn,
-.delete-btn,
-.applicants-btn {
+.view-btn {
+  margin-top: 12px;
+  background: #009688;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 12px;
   border: none;
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-weight: 600;
   cursor: pointer;
+  width: 100%;
+  font-weight: 700;
+  font-size: 14px;
 }
-
-.edit-btn { background: #ffc107; }
-.delete-btn { background: #ff6b6b; color: white; }
-.applicants-btn { background: #009688; color: white; }
 
 /* PAGINATION */
 .pagination {
@@ -91,64 +92,150 @@
   gap: 10px;
 }
 
-/* MODAL */
-.edit-overlay {
+.page-btn,
+.page-number {
+  padding: 8px 14px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+  transition: .2s;
+}
+
+.page-number.active {
+  background: #009688;
+  color: white;
+  border-color: #009688;
+}
+
+.page-number:hover,
+.page-btn:hover:not(:disabled) {
+  background: #e7faf7;
+  border-color: #009688;
+}
+
+/* ---------------------- VIEW MODAL --------------------------- */
+.view-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 0; left: 0;
+  width: 100%; 
   height: 100%;
   background: rgba(0,0,0,0.35);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
   padding-top: 60px;
+  overflow-y: auto;
+  z-index: 10000;
 }
 
-.edit-modal {
-  background: #fff;
+.view-modal {
+  background: #ffffff;
   width: 95%;
   max-width: 650px;
-  margin-top: 40px;
-  padding: 35px;
   border-radius: 22px;
-  max-height: 85vh;
-  overflow-y: auto;
-  position: relative;
+  padding: 35px;
   box-shadow: 0px 6px 25px rgba(0,0,0,0.15);
+  position: relative;
 }
 
-/* Close Button */
-.edit-close {
+.close-view {
   position: absolute;
   top: 12px;
   right: 12px;
+  background: #eee;
+  border: none;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #eee;
-  border: none;
   cursor: pointer;
   font-size: 18px;
 }
 
-/* Labels */
-.edit-modal label {
+.view-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.desc-box {
+  background: #f4f4f4;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.view-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.edit-btn,
+.delete-btn,
+.applicants-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
   font-weight: 700;
-  margin-top: 16px;
-  margin-bottom: 6px;
+}
+
+.edit-btn { background: #ffc107; }
+.delete-btn { background: #ff6b6b; color: white; }
+.applicants-btn { background: #009688; color: white; }
+
+/* ---------------------- EDIT MODAL --------------------------- */
+.edit-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  z-index: 10000;
+}
+
+.edit-modal {
+  background: #ffffff;
+  width: 95%;
+  max-width: 600px;
+  padding: 35px;
+  border-radius: 22px;
+  box-shadow: 0px 6px 25px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.edit-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f0f0f0;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.edit-modal label {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 18px;
   display: block;
 }
 
-/* Inputs */
 .edit-modal input,
 .edit-modal select,
 .edit-modal textarea {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
-  border: 1.5px solid #ccc;
-  margin-bottom: 8px;
+  border: 1.5px solid #cfcfcf;
+  margin-top: 4px;
   font-size: 14px;
 }
 
@@ -156,51 +243,47 @@
   min-height: 120px;
 }
 
-/* Sector Radio Buttons */
-.sector-options {
+/* Radio Sector */
+.sector-edit-row {
   display: flex;
-  gap: 20px;
-  margin: 10px 0;
+  gap: 12px;
+  margin-top: 6px;
 }
 
-.sector-choice {
+.sector-edit-box {
+  flex: 1;
+  border: 1.5px solid #ccc;
+  padding: 10px 12px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1.5px solid #ccc;
-  padding: 12px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
 }
 
-.sector-choice:hover {
-  border-color: #009688;
-}
-
-.sector-choice input {
+.sector-edit-box input { 
   accent-color: #009688;
-  transform: scale(1.2);
-}
+ }
 
-/* Save / Cancel Buttons */
+/* Edit Modal Buttons */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .save-btn {
   background: #009688;
   color: white;
-  padding: 12px 26px;
-  border-radius: 12px;
+  padding: 10px 22px;
+  border-radius: 10px;
   font-weight: 700;
+  border: none;
 }
 
 .cancel-btn {
-  background: #eee;
-  padding: 12px 26px;
-  border-radius: 12px;
+  background: #ccc;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 700;
 }
