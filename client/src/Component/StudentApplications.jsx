@@ -1,6 +1,4 @@
-// src/Component/StudentApplications.js
-
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchStudentApplications,
@@ -17,6 +15,10 @@ const StudentApplications = () => {
   const { user } = useSelector((state) => state.users);
   const { studentApplications } = useSelector((state) => state.applications);
 
+  // PAGINATION STATES
+  const [currentPage, setCurrentPage] = useState(1);
+  const appsPerPage = 6; // ← فقط 6 في كل صفحة
+
   useEffect(() => {
     if (user?.email) {
       dispatch(fetchStudentApplications(user.email));
@@ -30,6 +32,13 @@ const StudentApplications = () => {
       .catch(() => alert("Error deleting application."));
   };
 
+  // PAGINATION CALCULATIONS
+  const indexOfLast = currentPage * appsPerPage;
+  const indexOfFirst = indexOfLast - appsPerPage;
+  const currentApps = studentApplications.slice(indexOfFirst, indexOfLast);
+
+  const totalPages = Math.ceil(studentApplications.length / appsPerPage);
+
   return (
     <div className="applications-page">
       <h1 className="applications-title">
@@ -40,9 +49,9 @@ const StudentApplications = () => {
         Track the status of your submitted job applications.
       </p>
 
-      {/* GRID — 3 CARDS PER ROW */}
+      {/* GRID — 3 CARDS PER ROW, 6 TOTAL */}
       <div className="applications-grid-three">
-        {studentApplications.length === 0 ? (
+        {currentApps.length === 0 ? (
           <div className="empty-state">
             <p>No applications yet.</p>
             <button
@@ -53,7 +62,7 @@ const StudentApplications = () => {
             </button>
           </div>
         ) : (
-          studentApplications.map((app) => (
+          currentApps.map((app) => (
             <div className="application-card small-card" key={app._id}>
               <div className="app-info">
                 <div className="app-icon">🏢</div>
@@ -76,7 +85,6 @@ const StudentApplications = () => {
                 </div>
               </div>
 
-              {/* Buttons Row */}
               <div className="app-actions-row">
                 {!app.jobDeleted && (
                   <button
@@ -102,6 +110,35 @@ const StudentApplications = () => {
           ))
         )}
       </div>
+
+      {/* PAGINATION */}
+      {totalPages > 1 && (
+        <div className="apps-pagination">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
