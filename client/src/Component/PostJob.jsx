@@ -79,7 +79,7 @@ const PostJob = () => {
     setRateType("");
     setSkills("");
     setDescription("");
-    setPayout("");
+   	setPayout("");
   };
 
   return (
@@ -92,6 +92,7 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+
           {/* Job Title */}
           <label>Job Title</label>
           <input
@@ -121,7 +122,7 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* New Sector – small boxes */}
+            {/* Sector */}
             <div className="col-half">
               <label>Sector</label>
               <div className="sector-grid">
@@ -134,6 +135,7 @@ const PostJob = () => {
                     <input
                       type="radio"
                       value={s}
+                      {...register("sector")}   // 🔥 FIXED: now linked to form validation
                       checked={sector === s}
                       onChange={() => setSector(s)}
                     />
@@ -145,7 +147,7 @@ const PostJob = () => {
             </div>
           </div>
 
-          {/* Rate + RateType */}
+          {/* Rate + Rate Type */}
           <div className="row-flex">
             <div className="col-half">
               <label>Rate (OMR)</label>
