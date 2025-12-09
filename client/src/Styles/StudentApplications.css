@@ -1,21 +1,16 @@
 /* -------------------- PAGE LAYOUT -------------------- */
 .applications-page {
   background-color: #f9fcfb;
-  padding: 50px 80px;
+  padding: 40px 80px;
   min-height: 90vh;
   font-family: "Quicksand", sans-serif;
-}
-
-/* Center the title + subtitle */
-.applications-title,
-.applications-sub {
   text-align: center;
 }
 
 .applications-title {
-  font-size: 34px;
+  font-size: 36px;
   font-weight: 800;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .accent {
@@ -23,18 +18,17 @@
 }
 
 .applications-sub {
-  color: #444;
+  color: #555;
   font-size: 15px;
   margin-bottom: 25px;
 }
 
-/* -------------------- GRID (3 PER ROW) -------------------- */
+/* ---------------- GRID (3 CARDS PER ROW) ---------------- */
 .applications-grid-three {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
+  gap: 25px;
   margin-top: 25px;
-  width: 100%;
 }
 
 /* -------------------- APPLICATION CARD -------------------- */
@@ -47,16 +41,13 @@
   transition: 0.2s;
 }
 
-/* Hover effect */
 .application-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* REMOVE FIXED WIDTH — allow grid to place 3 per row */
 .small-card {
   width: 100%;
-  min-width: 0;
 }
 
 /* -------------------- INFO -------------------- */
@@ -67,7 +58,7 @@
 }
 
 .app-icon {
-  font-size: 34px;
+  font-size: 36px;
   color: #009688;
 }
 
@@ -113,7 +104,7 @@
   margin-top: 8px;
 }
 
-/* -------------------- ACTION BUTTONS ROW -------------------- */
+/* -------------------- BUTTONS ROW -------------------- */
 .app-actions-row {
   display: flex;
   gap: 12px;
@@ -130,7 +121,7 @@
   text-align: center;
 }
 
-/* Chat Button */
+/* Chat */
 .chat-btn {
   background-color: #009688;
   color: white;
@@ -140,7 +131,7 @@
   background-color: #007c6c;
 }
 
-/* Remove Button */
+/* Remove */
 .withdraw-btn {
   background: #e57373;
   color: white;
@@ -159,7 +150,7 @@
   box-shadow: 0 4px 25px rgba(0,0,0,0.05);
   border: 1px solid #e8e8e8;
   max-width: 420px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .empty-state p {
@@ -177,30 +168,4 @@
 }
 .findjob-btn:hover {
   background: #007c6c;
-}
-
-/* -------------------- PAGINATION -------------------- */
-.apps-pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  gap: 10px;
-}
-
-.apps-pagination button {
-  padding: 8px 14px;
-  border: 1px solid #009688;
-  background: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.apps-pagination button:hover {
-  background: #e0f5f3;
-}
-
-.apps-pagination .active-page {
-  background: #009688;
-  color: white;
 }
