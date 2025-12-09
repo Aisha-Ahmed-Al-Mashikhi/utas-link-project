@@ -5,9 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
 import { useDispatch } from "react-redux";
 import { addJob } from "../Features/JobSlice";
+import { useNavigate } from "react-router-dom";   // ⭐ NEW
 
 const PostJob = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();   // ⭐ NEW
 
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -64,8 +66,9 @@ const PostJob = () => {
     )
       .unwrap()
       .then(() => {
-        alert("Job posted successfully!");
+        alert("Job posted successfully!");    // ✔ Success message
         handleClean();
+        navigate("/company/my-jobs");         // ⭐ Redirect to My Jobs
       })
       .catch(() => alert("Failed to post job"));
   };
@@ -122,23 +125,25 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector – YOUR ORIGINAL VERSION + FIXED CLASSNAME */}
+            {/* Sector */}
             <div className="col-half">
               <label>Sector</label>
 
               <div className="sector-grid">
                 {SECTORS.map((s) => (
-                  <label className={`sector-box ${sector === s ? "selected" : ""}`}>
-  <input
-    type="radio"
-    value={s}
-    {...register("sector")}
-    checked={sector === s}
-    onChange={(e) => setSector(e.target.value)}
-  />
-  <span>{s}</span>
-</label>
-
+                  <label
+                    key={s}
+                    className={`sector-box ${sector === s ? "selected" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      value={s}
+                      {...register("sector")}
+                      checked={sector === s}
+                      onChange={(e) => setSector(e.target.value)}
+                    />
+                    <span>{s}</span>
+                  </label>
                 ))}
               </div>
 
