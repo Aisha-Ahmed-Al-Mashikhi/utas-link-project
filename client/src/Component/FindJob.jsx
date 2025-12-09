@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx (Clean Version + Custom Scrollbar)
+// FindJob.jsx (Final Version with Details Modal)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -19,6 +19,9 @@ const FindJob = () => {
   const { user } = useSelector((state) => state.users);
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  // NEW — Modal State
+  const [selectedJob, setSelectedJob] = useState(null);
 
   useEffect(() => {
     dispatch(fetchJobs());
@@ -88,34 +91,30 @@ const FindJob = () => {
         ) : (
           filteredJobs.map((job) => (
             <div key={job._id} className="job-card">
+
+              {/* 🔥 Simplified card (Title + Location + Rate) */}
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
-                <span className="rate">{job.rate} OMR · {job.rateType}</span>
+                <span className="rate">
+                  {job.rate} OMR · {job.rateType}
+                </span>
               </div>
 
-              <p className="org-name">{job.organization}</p>
               <p className="job-location">📍 {job.location || "Not specified"}</p>
 
-              <p className="postedAt">
-                📅 Posted:{" "}
-                {new Date(job.postedAt).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
+              {/* Buttons */}
+              <div className="job-actions-between">
+                <button
+                  className="btn-details"
+                  onClick={() => setSelectedJob(job)}
+                >
+                  عرض التفاصيل
+                </button>
 
-              <div className="tags">
-                <span className="tag">{job.sector}</span>
-                <span className="tag">{job.category}</span>
-                {job.payout && <span className="tag">{job.payout}</span>}
-              </div>
-
-              <p className="desc">{job.description}</p>
-              <p className="skills">Skills: {job.skills}</p>
-
-              <div className="job-actions">
-                <button className="btn-apply" onClick={() => handleApply(job)}>
+                <button
+                  className="btn-apply"
+                  onClick={() => handleApply(job)}
+                >
                   Apply ➜
                 </button>
               </div>
@@ -123,6 +122,33 @@ const FindJob = () => {
           ))
         )}
       </div>
+
+      {/* 🔥 Modal (Job Details) */}
+      {selectedJob && (
+        <div className="modal-overlay">
+          <div className="modal-card">
+
+            <button className="close-btn" onClick={() => setSelectedJob(null)}>
+              ✖
+            </button>
+
+            <h2>{selectedJob.jobTitle}</h2>
+            <p className="modal-org">{selectedJob.organization}</p>
+
+            <p>📍 {selectedJob.location}</p>
+            <p>💰 {selectedJob.rate} OMR · {selectedJob.rateType}</p>
+
+            <p className="modal-desc">{selectedJob.description}</p>
+
+            {selectedJob.skills && (
+              <p>
+                <strong>Skills:</strong> {selectedJob.skills}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
