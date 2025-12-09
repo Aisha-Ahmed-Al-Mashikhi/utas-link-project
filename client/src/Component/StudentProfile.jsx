@@ -1,5 +1,4 @@
-// src/Components/StudentProfile.jsx
-
+// src/Component/StudentProfile.js
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,143 +6,157 @@ import {
   uploadCv,
   deleteCvThunk,
 } from "../Features/UserSlice";
-import "../Styles/UserProfile.css";
+import { useNavigate } from "react-router-dom";
+import "../Styles/StudentProfile.css";
+import * as ENV from "../config";
+import profileImg from "../Images/profile.png";
 
 const StudentProfile = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((s) => s.users);
+  const navigate = useNavigate();
 
-  const [cvFile, setCvFile] = useState(null);
-  const [toast, setToast] = useState(false);
+  const { user } = useSelector((state) => state.users);
+
+  // ⭐ Toast
+  const [toastMsg, setToastMsg] = useState("");
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 2000);
+  };
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
-    if (saved?.email) dispatch(fetchUser(saved.email));
-  }, [dispatch]);
+    if (!saved?.email) return navigate("/login");
 
-  const handleUpload = () => {
-    if (!cvFile) return alert("Please select a file first.");
+    dispatch(fetchUser(saved.email));
+  }, [dispatch, navigate]);
 
-    const formData = new FormData();
-    formData.append("cv", cvFile);
+  if (!user) return <p>Loading...</p>;
 
-    dispatch(uploadCv({ email: user.email, cv: formData }))
+  // ⭐ Upload CV
+  const handleCvUpload = (e) => {
+    if (!e.target.files[0]) return;
+
+    dispatch(uploadCv({ file: e.target.files[0], email: user.email }))
       .unwrap()
-      .then(() => {
-        setToast(true);
-        setTimeout(() => setToast(false), 2000);
-      });
+      .then(() => showToast("CV uploaded successfully!"));
   };
 
+  // ⭐ Delete CV
   const handleDelete = () => {
-    dispatch(deleteCvThunk(user.email));
+    dispatch(deleteCvThunk(user.email))
+      .unwrap()
+      .then(() => showToast("CV deleted successfully!"));
   };
 
   return (
     <div className="profile-page">
 
-      {/* LEFT COLUMN — PROFILE CARD */}
+      {/* ⭐ Toast message */}
+      {toastMsg && <div className="toast-success">{toastMsg}</div>}
+
+      {/* LEFT — Profile Card */}
       <div className="left-column">
-        <div className="profile-card-modern">
+        <div className="profile-card-modern glass-card">
           <img
-            src="/default-avatar.png"
-            alt="profile"
+            src={user.profileImage || profileImg}
             className="profile-avatar"
+            alt="profile"
           />
 
           <div className="profile-info">
-            <h2>{user?.fullName || "Student"}</h2>
-            <p>{user?.email}</p>
+            <h2>{user.name}</h2>
+            <p>{user.email}</p>
           </div>
 
-          <button className="edit-profile-btn">
-            Edit Profile
-          </button>
+          <button className="edit-profile-btn">Edit Profile</button>
         </div>
       </div>
 
-      {/* RIGHT COLUMN */}
+      {/* RIGHT — Information + CV */}
       <div className="right-column">
 
-        {/* STUDENT INFO CARD */}
+        {/* Student Information */}
         <div className="glass-card info-card">
           <h3>Student Information</h3>
 
-          <p>
-            <strong>Name:</strong> {user?.fullName}
-          </p>
+          <p><strong>Major:</strong> {user.major}</p>
+          <p><strong>Age:</strong> {user.age}</p>
+          <p><strong>Role:</strong> {user.role}</p>
 
           <p>
-            <strong>Email:</strong> {user?.email}
-          </p>
-
-          <p>
-            <strong>Status:</strong>
+            <strong>Status:</strong>{" "}
             <span className="status-dot green"></span> Active
           </p>
         </div>
 
         {/* CV SECTION */}
-        <div className="glass-card cv-section">
-          <h3>Curriculum Vitae</h3>
+        <div className="glass-card info-card">
+          <h3>Curriculum Vitae (CV)</h3>
 
-          {user?.cvUrl ? (
-            <>
-              <p className="cv-success">CV Uploaded Successfully!</p>
+          {user.cvLink ? (
+            <div className="cv-section">
+              <p className="cv-success">CV Uploaded Successfully</p>
 
               <div className="cv-actions">
                 <a
-                  className="cv-btn view"
-                  href={user.cvUrl}
+                  href={`${ENV.SERVER_URL}${user.cvLink}`}
                   target="_blank"
                   rel="noreferrer"
+                  className="cv-btn view"
                 >
-                  View CV
+                  View
                 </a>
 
-                <label className="cv-btn replace">
-                  Replace
-                  <input
-                    type="file"
-                    hidden
-                    onChange={(e) => setCvFile(e.target.files[0])}
-                  />
-                </label>
+                {/* HIDDEN REPLACE INPUT */}
+                <input
+                  type="file"
+                  id="cvReplaceInput"
+                  accept=".pdf"
+                  hidden
+                  onChange={(e) =>
+                    dispatch(uploadCv({
+                      file: e.target.files[0],
+                      email: user.email
+                    }))
+                      .unwrap()
+                      .then(() => showToast("CV replaced successfully!"))
+                  }
+                />
 
-                <button className="cv-btn delete" onClick={handleDelete}>
+                <button
+                  className="cv-btn replace"
+                  onClick={() => document.getElementById("cvReplaceInput").click()}
+                >
+                  Replace
+                </button>
+
+                <button
+                  className="cv-btn delete"
+                  onClick={handleDelete}
+                >
                   Delete
                 </button>
               </div>
-
-              {cvFile && (
-                <button className="upload-cv-btn" onClick={handleUpload}>
-                  Upload New CV
-                </button>
-              )}
-            </>
+            </div>
           ) : (
             <>
-              <label className="upload-cv-btn">
-                Upload CV
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => setCvFile(e.target.files[0])}
-                />
-              </label>
+              <input
+                type="file"
+                id="cvUpload"
+                accept=".pdf"
+                hidden
+                onChange={handleCvUpload}
+              />
 
-              {cvFile && (
-                <button className="upload-cv-btn" onClick={handleUpload}>
-                  Submit
-                </button>
-              )}
+              <label htmlFor="cvUpload" className="upload-cv-btn">
+                Upload CV (PDF)
+              </label>
             </>
           )}
         </div>
       </div>
-
-      {/* SUCCESS TOAST */}
-      {toast && <div className="toast-success">CV Uploaded Successfully!</div>}
     </div>
   );
 };
