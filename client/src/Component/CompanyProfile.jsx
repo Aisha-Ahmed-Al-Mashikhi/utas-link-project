@@ -11,13 +11,25 @@ import "../Styles/UserProfile.css";
 import * as ENV from "../config";
 import { useNavigate } from "react-router-dom";
 
+const INDUSTRIES = [
+  "Technology",
+  "Hospitality / Coffee Shops",
+  "Retail / Store",
+  "Education",
+  "Logistics",
+  "Government",
+  "Other",
+];
+
+const LOCATIONS = ["Salalah", "Taqah", "Mirbat", "Mughsail", "Other"];
+
 const CompanyProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { company } = useSelector((state) => state.companies);
 
-  /* -------- STATES FOR EDIT MODAL -------- */
+  /* -------- EDIT MODAL STATES -------- */
   const [showEdit, setShowEdit] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -26,6 +38,8 @@ const CompanyProfile = () => {
     foundedDate: "",
   });
 
+  const [message, setMessage] = useState("");
+
   /* -------- FETCH COMPANY DATA -------- */
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
@@ -33,7 +47,7 @@ const CompanyProfile = () => {
     dispatch(fetchCompany(saved.email));
   }, [dispatch, navigate]);
 
-  /* -------- LOAD DATA INTO FORM WHEN COMPANY LOADED -------- */
+  /* -------- LOAD DATA INTO FORM -------- */
   useEffect(() => {
     if (company) {
       setFormData({
@@ -52,22 +66,31 @@ const CompanyProfile = () => {
     dispatch(uploadLicense({ email: company.email, file }));
   };
 
-  /* -------- LICENSE DELETE -------- */
+  /* -------- DELETE LICENSE -------- */
   const handleDeleteLicense = () => {
     if (!window.confirm("Delete license?")) return;
     dispatch(deleteLicense(company.email));
   };
 
-  /* -------- SAVE EDITED PROFILE -------- */
+  /* -------- SAVE UPDATED PROFILE -------- */
   const handleSave = () => {
-    dispatch(updateCompany({ email: company.email, data: formData }));
-    setShowEdit(false);
+    dispatch(updateCompany({ email: company.email, data: formData }))
+      .unwrap()
+      .then(() => {
+        setMessage("Profile updated successfully ✔");
+        setShowEdit(false);
+
+        setTimeout(() => setMessage(""), 2000);
+      });
   };
 
   if (!company) return <p>Loading...</p>;
 
   return (
     <div className="profile-page">
+
+      {/* SUCCESS MESSAGE */}
+      {message && <p className="success-msg">{message}</p>}
 
       {/* LEFT COLUMN */}
       <div className="left-column">
@@ -97,7 +120,7 @@ const CompanyProfile = () => {
       {/* RIGHT COLUMN */}
       <div className="right-column">
 
-        {/* COMPANY INFORMATION CARD */}
+        {/* COMPANY INFORMATION */}
         <div className="glass-card info-card">
           <h3>Company Information</h3>
           <p><strong>Industry:</strong> {company.industry}</p>
@@ -107,7 +130,7 @@ const CompanyProfile = () => {
           </p>
         </div>
 
-        {/* LICENSE CARD */}
+        {/* LICENSE */}
         <div className="glass-card info-card">
           <h3>Business License</h3>
 
@@ -166,6 +189,9 @@ const CompanyProfile = () => {
       {showEdit && (
         <div className="overlay">
           <div className="edit-modal">
+
+            <button className="modal-close" onClick={() => setShowEdit(false)}>✕</button>
+
             <h2>Edit Company Profile</h2>
 
             <label>Company Name</label>
@@ -177,20 +203,30 @@ const CompanyProfile = () => {
             />
 
             <label>Industry</label>
-            <input
+            <select
               value={formData.industry}
               onChange={(e) =>
                 setFormData({ ...formData, industry: e.target.value })
               }
-            />
+            >
+              <option value="">Select industry</option>
+              {INDUSTRIES.map((i) => (
+                <option key={i}>{i}</option>
+              ))}
+            </select>
 
             <label>Location</label>
-            <input
+            <select
               value={formData.location}
               onChange={(e) =>
                 setFormData({ ...formData, location: e.target.value })
               }
-            />
+            >
+              <option value="">Select location</option>
+              {LOCATIONS.map((l) => (
+                <option key={l}>{l}</option>
+              ))}
+            </select>
 
             <label>Founded Date</label>
             <input
@@ -210,6 +246,7 @@ const CompanyProfile = () => {
                 Save
               </button>
             </div>
+
           </div>
         </div>
       )}
