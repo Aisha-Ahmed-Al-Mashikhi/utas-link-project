@@ -61,7 +61,7 @@ const Header = () => {
               <Link to="/post-job"> Post Job</Link>
               
               {/* ✅ My Applicants moved to Header */}
-              <Link to="/company-jobs">Applicants</Link>
+              <Link to="/company-jobs">My Jobs</Link>
 
             </>
           )}
