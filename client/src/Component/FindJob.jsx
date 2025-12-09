@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx — Final Version (Only Modal Styled)
+// FindJob.jsx — FINAL VERSION (Teaching Assistant style modal)
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -33,7 +33,6 @@ const FindJob = () => {
     if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
   }, [dispatch]);
 
-  // SEARCH
   const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -43,7 +42,6 @@ const FindJob = () => {
     );
   });
 
-  // PAGINATION
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -54,7 +52,6 @@ const FindJob = () => {
     if (pageNum >= 1 && pageNum <= totalPages) setCurrentPage(pageNum);
   };
 
-  // APPLY JOB
   const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
@@ -101,14 +98,13 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* Job Cards */}
+      {/* Job List */}
       <div className="job-list">
         {currentJobs.length === 0 ? (
           <p>No jobs found.</p>
         ) : (
           currentJobs.map((job) => (
             <div key={job._id} className="job-card">
-
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
                 <span className="rate">
@@ -116,14 +112,17 @@ const FindJob = () => {
                 </span>
               </div>
 
-              <p className="job-location">📍 {job.location || "Not specified"}</p>
+              <p className="job-location">📍 {job.location}</p>
 
               <p className="job-date">
                 📅 {job.postedAt?.slice(0, 10)} — ⏰ {job.postedAt?.slice(11, 16)}
               </p>
 
-              <div className="job-actions-between">
-                <button className="btn-details" onClick={() => setSelectedJob(job)}>
+              <div className="job-actions">
+                <button
+                  className="btn-details"
+                  onClick={() => setSelectedJob(job)}
+                >
                   View details
                 </button>
 
@@ -139,7 +138,10 @@ const FindJob = () => {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
+          <button
+            onClick={() => changePage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
             ◀ Prev
           </button>
 
@@ -162,39 +164,48 @@ const FindJob = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal — Teaching Assistant Style */}
       {selectedJob && (
         <div className="modal-overlay">
-          <div className="modal-card modal-wide">
+          <div className="modal-card-ta">
 
-            <button className="close-btn" onClick={() => setSelectedJob(null)}>
+            {/* Close Button */}
+            <button className="close-btn-ta" onClick={() => setSelectedJob(null)}>
               ✖
             </button>
 
-            <h2 className="modal-title">{selectedJob.jobTitle}</h2>
-
-            <div className="modal-pill">💰 {selectedJob.rate} OMR · {selectedJob.rateType}</div>
-
-            <div className="modal-row">
-              📍 {selectedJob.location}
-              <span className="modal-divider">•</span>
-              📅 {selectedJob.postedAt?.slice(0, 10)} — ⏰ {selectedJob.postedAt?.slice(11, 16)}
+            {/* Title & Price */}
+            <div className="modal-header-ta">
+              <h2>{selectedJob.jobTitle}</h2>
+              <span className="modal-rate">
+                {selectedJob.rate} OMR · {selectedJob.rateType}
+              </span>
             </div>
 
-            <h3 className="modal-section-title">Description</h3>
-            <div className="modal-desc-container">
-              {selectedJob.description}
+            {/* Location & Date Row */}
+            <div className="modal-info-row">
+              <p>📍 {selectedJob.location}</p>
+              <p>📅 {selectedJob.postedAt?.slice(0, 10)}</p>
+              <p>⏰ {selectedJob.postedAt?.slice(11, 16)}</p>
             </div>
 
-            <h3 className="modal-section-title">Skills</h3>
-            <div className="skills-wrapper">
-              {selectedJob.skills?.split(",").map((tag, idx) => (
-                <span key={idx} className="skill-badge">{tag.trim()}</span>
+            {/* Description */}
+            <p className="modal-section-title">Description</p>
+            <p className="modal-desc-ta">{selectedJob.description}</p>
+
+            {/* Skills */}
+            <p className="modal-section-title">Skills</p>
+            <div className="skills-row">
+              {selectedJob.skills?.split(",").map((skill, i) => (
+                <span key={i} className="skill-tag">
+                  {skill.trim()}
+                </span>
               ))}
             </div>
 
+            {/* Apply */}
             <button
-              className="modal-apply-btn"
+              className="modal-apply-btn-ta"
               onClick={() => handleApply(selectedJob)}
             >
               Apply Now
