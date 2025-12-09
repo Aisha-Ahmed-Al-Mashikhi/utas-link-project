@@ -81,6 +81,25 @@ app.post("/registerUser", async (req, res) => {
   }
 });
 /*───────────────────────────────────────────────
+ ░░ UPDATE STUDENT PROFILE
+───────────────────────────────────────────────*/
+app.put("/updateStudent/:email", async (req, res) => {
+  try {
+    const updated = await UserModel.findOneAndUpdate(
+      { email: req.params.email },
+      req.body,
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: "Student not found" });
+
+    res.send(updated);
+  } catch {
+    res.status(500).json({ error: "Error updating student" });
+  }
+});
+
+/*───────────────────────────────────────────────
  ░░ UPDATE COMPANY PROFILE
 ───────────────────────────────────────────────*/
 app.put("/updateCompany/:email", async (req, res) => {
