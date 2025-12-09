@@ -183,13 +183,15 @@
 .findjob-btn:hover {
   background: #007c6c;
 }
-/* GRID 2x2 */
-.applications-grid {
+/* GRID 3 per row */
+.applications-grid-three {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  padding: 20px 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 25px;
+  width: 100%;
 }
+
 
 /* Pagination */
 .apps-pagination {
