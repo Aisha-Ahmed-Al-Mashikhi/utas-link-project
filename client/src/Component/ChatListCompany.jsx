@@ -34,7 +34,10 @@ const ChatListCompany = () => {
       </h1>
 
       {applicants.length === 0 ? (
-        <p>No active chats yet.</p>
+        <div className="empty-chats">
+  No active chats yet.
+</div>
+
       ) : (
         <>
           <div className="chatlist-grid fixed-grid">
