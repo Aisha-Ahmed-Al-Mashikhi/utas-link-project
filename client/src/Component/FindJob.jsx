@@ -106,10 +106,16 @@ const FindJob = () => {
           currentJobs.map((job) => (
             <div key={job._id} className="job-card">
               <div className="job-header">
-                <h3>{job.jobTitle}</h3>
-                <span className="rate">
-                  {job.rate} OMR · {job.rateType}
-                </span>
+  <h3>{job.jobTitle}</h3>
+
+  {/* NEW — company name */}
+  <p className="company-name">{job.organization}</p>
+
+  <span className="rate">
+    {job.rate} OMR · {job.rateType}
+  </span>
+</div>
+
               </div>
 
               <p className="job-location">📍 {job.location}</p>
