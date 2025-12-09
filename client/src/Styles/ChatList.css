@@ -82,3 +82,48 @@
 .chat-btn:hover {
   background-color: #007c6c;
 }
+/* 3 columns fixed */
+.fixed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+/* Pagination */
+.chat-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+  gap: 10px;
+}
+
+.chat-pagination button {
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 2px solid #009688;
+  border-radius: 10px;
+  color: #009688;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 55px;
+  transition: 0.2s ease;
+}
+
+.chat-pagination button:hover {
+  background: #e0f5f3;
+  transform: translateY(-2px);
+}
+
+.chat-pagination button:disabled {
+  background: #f3f3f3;
+  border-color: #cccccc;
+  color: #9a9a9a;
+  cursor: not-allowed;
+}
+
+.chat-pagination .active-page {
+  background: #009688;
+  color: white;
+  border-color: #007f72;
+}
+
