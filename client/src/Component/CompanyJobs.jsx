@@ -15,7 +15,9 @@ const CompanyJobs = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
 
-  // ========================= PAGINATION =========================
+  // =========================
+  // PAGINATION
+  // =========================
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 4;
 
@@ -29,8 +31,6 @@ const CompanyJobs = () => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
-
-  // ===============================================================
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -57,22 +57,20 @@ const CompanyJobs = () => {
 
   return (
     <div className="companyjobs-page">
-      <h1 className="companyjobs-title">
-        My <span className="accent">Jobs</span>
-      </h1>
+      <div className="companyjobs-wrapper">
+        <h1 className="companyjobs-title">
+          My <span className="accent">Jobs</span>
+        </h1>
 
-      {companyJobs.length === 0 ? (
-        <p className="no-jobs">No jobs posted yet.</p>
-      ) : (
-        <>
+        {companyJobs.length === 0 ? (
+          <p className="no-jobs">No jobs posted yet.</p>
+        ) : (
           <div className="jobs-grid">
             {currentJobs.map((job) => (
               <div className="job-card" key={job._id}>
                 <h3>{job.jobTitle}</h3>
 
-                <p className="job-location">
-                  📍 {job.location || "Not specified"}
-                </p>
+                <p className="job-location">📍 {job.location || "Not specified"}</p>
 
                 <p className="postedAt">
                   📅 Posted:{" "}
@@ -102,19 +100,15 @@ const CompanyJobs = () => {
                   <button className="edit-btn" onClick={() => openEdit(job)}>
                     Edit
                   </button>
-
                   <button
                     className="delete-btn"
                     onClick={() => handleDelete(job._id)}
                   >
                     Delete
                   </button>
-
                   <button
                     className="applicants-btn"
-                    onClick={() =>
-                      navigate(`/applicants-job?jobId=${job._id}`)
-                    }
+                    onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
                   >
                     Applicants 👥
                   </button>
@@ -122,43 +116,41 @@ const CompanyJobs = () => {
               </div>
             ))}
           </div>
+        )}
 
-          {/* ====================== PAGINATION ====================== */}
-          {totalPages > 1 && (
-            <div className="pagination">
+        {/* PAGINATION */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button
+              className="page-btn"
+              disabled={currentPage === 1}
+              onClick={() => goToPage(currentPage - 1)}
+            >
+              ← Previous
+            </button>
+
+            {[...Array(totalPages)].map((_, i) => (
               <button
-                className="page-btn"
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
+                key={i}
+                className={`page-number ${currentPage === i + 1 ? "active" : ""}`}
+                onClick={() => goToPage(i + 1)}
               >
-                ← Previous
+                {i + 1}
               </button>
+            ))}
 
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  className={`page-number ${
-                    currentPage === i + 1 ? "active" : ""
-                  }`}
-                  onClick={() => goToPage(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))}
+            <button
+              className="page-btn"
+              disabled={currentPage === totalPages}
+              onClick={() => goToPage(currentPage + 1)}
+            >
+              Next →
+            </button>
+          </div>
+        )}
+      </div>
 
-              <button
-                className="page-btn"
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next →
-              </button>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* ============== EDIT MODAL ============== */}
+      {/* =================== EDIT MODAL =================== */}
       {showModal && (
         <div className="edit-overlay">
           <div className="edit-modal">
@@ -183,7 +175,7 @@ const CompanyJobs = () => {
                 setEditedJob({ ...editedJob, category: e.target.value })
               }
             >
-              <option value="">Select</option>
+              <option>Select</option>
               <option>Design / Marketing</option>
               <option>Technology / IT</option>
               <option>Business / Finance</option>
@@ -235,13 +227,13 @@ const CompanyJobs = () => {
                 setEditedJob({ ...editedJob, rateType: e.target.value })
               }
             >
-              <option value="">Select</option>
+              <option>Select</option>
               <option>Per Hour</option>
               <option>Per Task</option>
               <option>Per Day</option>
             </select>
 
-            <label>Skills Required</label>
+            <label>Skills</label>
             <input
               value={editedJob.skills}
               onChange={(e) =>
@@ -257,7 +249,7 @@ const CompanyJobs = () => {
               }
             />
 
-            <label>Payout Terms</label>
+            <label>Payout</label>
             <input
               value={editedJob.payout}
               onChange={(e) =>
@@ -277,10 +269,7 @@ const CompanyJobs = () => {
               <button className="save-btn" onClick={saveEdit}>
                 Save
               </button>
-              <button
-                className="cancel-btn"
-                onClick={() => setShowModal(false)}
-              >
+              <button className="cancel-btn" onClick={() => setShowModal(false)}>
                 Cancel
               </button>
             </div>
