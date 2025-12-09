@@ -17,7 +17,7 @@ const CompanyJobs = () => {
 
   // ========================= PAGINATION =========================
   const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 6;
+  const jobsPerPage = 4;
 
   const totalPages = Math.ceil(companyJobs.length / jobsPerPage);
 
