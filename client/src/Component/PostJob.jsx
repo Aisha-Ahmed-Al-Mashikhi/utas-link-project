@@ -124,7 +124,7 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector – FIXED */}
+            {/* Sector — CLEAN + FIXED */}
             <div className="col-half">
               <label>Sector</label>
 
@@ -134,38 +134,25 @@ const PostJob = () => {
                     key={s}
                     className={`sector-box ${sector === s ? "selected" : ""}`}
                   >
-                    {/* Sector */}
-<div className="col-half">
-  <label>Sector</label>
+                    <input
+                      type="radio"
+                      value={s}
+                      checked={sector === s}
+                      onChange={(e) => setSector(e.target.value)} 
+                    />
+                    <span>{s}</span>
+                  </label>
+                ))}
+              </div>
 
-  <div className="sector-grid">
-    {SECTORS.map((s) => (
-      <label
-        key={s}
-        className={`sector-box ${sector === s ? "selected" : ""}`}
-      >
-        <input
-          type="radio"
-          value={s}
-          checked={sector === s}
-          onChange={(e) => setSector(e.target.value)} // UI state
-        />
-        <span>{s}</span>
-      </label>
-    ))}
-  </div>
+              {/* Hidden RHF sync fix */}
+              <input type="hidden" {...register("sector")} value={sector} />
 
-  {/* 🔥 Fix: Send value to React Hook Form */}
-  <input type="hidden" {...register("sector")} value={sector} />
-
-  <p className="error">{errors.sector?.message}</p>
-</div>
-
+              <p className="error">{errors.sector?.message}</p>
             </div>
-
           </div>
 
-          {/* Rate + RateType */}
+          {/* Rate + Rate Type */}
           <div className="row-flex">
             <div className="col-half">
               <label>Rate (OMR)</label>
