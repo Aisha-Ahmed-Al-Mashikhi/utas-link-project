@@ -151,3 +151,49 @@
 .reject-btn:hover {
   background: #e57373;
 }
+/* 3×2 fixed grid */
+.fixed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 25px;
+}
+
+/* Pagination */
+.app-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+  gap: 10px;
+}
+
+.app-pagination button {
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 2px solid #009688;
+  border-radius: 10px;
+  color: #009688;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 55px;
+  transition: 0.2s ease;
+}
+
+.app-pagination button:hover {
+  background: #e0f5f3;
+  transform: translateY(-2px);
+}
+
+.app-pagination button:disabled {
+  background: #f3f3f3;
+  border-color: #cccccc;
+  color: #9a9a9a;
+  cursor: not-allowed;
+}
+
+.app-pagination .active-page {
+  background: #009688;
+  color: white;
+  border-color: #007f72;
+}
+
