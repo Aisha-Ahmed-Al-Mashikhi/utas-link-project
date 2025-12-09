@@ -14,8 +14,10 @@ const CompanyJobs = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
+  const [viewJob, setViewJob] = useState(null); // NEW: view modal
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 4;
 
   useEffect(() => {
@@ -34,11 +36,14 @@ const CompanyJobs = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Delete this job?")) dispatch(deleteJob(id));
+    if (window.confirm("Delete this job?")) {
+      dispatch(deleteJob(id));
+    }
   };
 
   if (isLoading) return <p>Loading...</p>;
 
+  // Pagination Logic
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = companyJobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -53,8 +58,8 @@ const CompanyJobs = () => {
         </h1>
 
         <p className="subtitle">
-          Manage all your posted opportunities in one place.<br />
-          Edit job details, track applicants, and keep listings updated.
+          Manage your posted opportunities in one place.<br />
+          Review details, track applicants, and update your listings easily.
         </p>
 
         {companyJobs.length === 0 ? (
@@ -62,48 +67,37 @@ const CompanyJobs = () => {
         ) : (
           <>
             <div className="jobs-grid">
+
               {currentJobs.map((job) => (
                 <div className="job-card" key={job._id}>
-                  <h3>{job.jobTitle}</h3>
 
-                  <p className="job-location">📍 {job.location || "Not specified"}</p>
+                  <h3 className="job-title">{job.jobTitle}</h3>
 
-                  <p className="postedAt">
-                    📅 Posted:{" "}
-                    {new Date(job.postedAt).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                  <p className="job-rate">
+                    💰 {job.rate} OMR ({job.rateType})
                   </p>
 
-                  <div className="job-details-group">
-                    <p><strong>Category:</strong> {job.category}</p>
-                    <p><strong>Sector:</strong> {job.sector}</p>
-                  </div>
-
-                  <p className="desc">{job.description}</p>
-
-                  <p className="skills"><strong>Skills:</strong> {job.skills}</p>
-
-                  <p className="payout">
-                    <strong>Payout Terms:</strong> {job.payout || "Not specified"}
+                  <p className="job-time">
+                    ⏱ Posted: {new Date(job.postedAt).toLocaleDateString("en-GB")}
                   </p>
 
-                  <div className="job-actions">
-                    <button className="edit-btn" onClick={() => openEdit(job)}>Edit</button>
-                    <button className="delete-btn" onClick={() => handleDelete(job._id)}>Delete</button>
-                    <button
-                      className="applicants-btn"
-                      onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
-                    >
-                      Applicants 👥
-                    </button>
-                  </div>
+                  <p className="job-location">
+                    📍 {job.location || "Not specified"}
+                  </p>
+
+                  <button
+                    className="view-btn"
+                    onClick={() => setViewJob(job)}
+                  >
+                    View Details
+                  </button>
+
                 </div>
               ))}
+
             </div>
 
+            {/* PAGINATION */}
             <div className="pagination">
               <button
                 className="page-btn"
@@ -134,6 +128,44 @@ const CompanyJobs = () => {
           </>
         )}
 
+        {/* ====================== VIEW MODAL ====================== */}
+        {viewJob && (
+          <div className="view-overlay">
+            <div className="view-modal">
+
+              <button className="close-view" onClick={() => setViewJob(null)}>
+                ✕
+              </button>
+
+              <h2 className="view-title">{viewJob.jobTitle}</h2>
+
+              <p><strong>Category:</strong> {viewJob.category}</p>
+              <p><strong>Sector:</strong> {viewJob.sector}</p>
+              <p><strong>Rate:</strong> {viewJob.rate} OMR ({viewJob.rateType})</p>
+              <p><strong>Location:</strong> {viewJob.location}</p>
+
+              <p><strong>Description:</strong></p>
+              <p className="desc-box">{viewJob.description}</p>
+
+              <p><strong>Skills:</strong> {viewJob.skills}</p>
+              <p><strong>Payout Terms:</strong> {viewJob.payout || "Not specified"}</p>
+
+              <div className="view-actions">
+                <button className="edit-btn" onClick={() => openEdit(viewJob)}>Edit</button>
+                <button className="delete-btn" onClick={() => handleDelete(viewJob._id)}>Delete</button>
+                <button
+                  className="applicants-btn"
+                  onClick={() => navigate(`/applicants-job?jobId=${viewJob._id}`)}
+                >
+                  Applicants 👥
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* ====================== EDIT MODAL ====================== */}
         {showModal && (
           <div className="edit-overlay">
             <div className="edit-modal">
@@ -164,31 +196,26 @@ const CompanyJobs = () => {
               </select>
 
               <label>Sector</label>
+              <div className="sector-edit-row">
 
-              <div className="sector-options">
-
-                <label className="sector-choice">
+                <label className="sector-edit-box">
                   <input
                     type="radio"
                     value="Private Company"
                     checked={editedJob.sector === "Private Company"}
-                    onChange={(e) =>
-                      setEditedJob({ ...editedJob, sector: e.target.value })
-                    }
+                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
                   />
-                  Private Company
+                  <span>Private Company</span>
                 </label>
 
-                <label className="sector-choice">
+                <label className="sector-edit-box">
                   <input
                     type="radio"
                     value="Government"
                     checked={editedJob.sector === "Government"}
-                    onChange={(e) =>
-                      setEditedJob({ ...editedJob, sector: e.target.value })
-                    }
+                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
                   />
-                  Government
+                  <span>Government</span>
                 </label>
 
               </div>
@@ -213,33 +240,25 @@ const CompanyJobs = () => {
               <label>Skills Required</label>
               <input
                 value={editedJob.skills}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, skills: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, skills: e.target.value })}
               />
 
               <label>Description</label>
               <textarea
                 value={editedJob.description}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, description: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, description: e.target.value })}
               />
 
               <label>Payout Terms</label>
               <input
                 value={editedJob.payout}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, payout: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, payout: e.target.value })}
               />
 
               <label>Location</label>
               <input
                 value={editedJob.location || ""}
-                onChange={(e) =>
-                  setEditedJob({ ...editedJob, location: e.target.value })
-                }
+                onChange={(e) => setEditedJob({ ...editedJob, location: e.target.value })}
               />
 
               <div className="modal-actions">
