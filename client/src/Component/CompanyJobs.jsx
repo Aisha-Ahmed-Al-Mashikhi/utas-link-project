@@ -14,9 +14,8 @@ const CompanyJobs = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [editedJob, setEditedJob] = useState({});
-
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
+
   const jobsPerPage = 4;
 
   useEffect(() => {
@@ -35,14 +34,11 @@ const CompanyJobs = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Delete this job?")) {
-      dispatch(deleteJob(id));
-    }
+    if (window.confirm("Delete this job?")) dispatch(deleteJob(id));
   };
 
   if (isLoading) return <p>Loading...</p>;
 
-  // Pagination logic
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = companyJobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -51,14 +47,13 @@ const CompanyJobs = () => {
   return (
     <div className="companyjobs-page">
       <div className="companyjobs-wrapper">
-
+        
         <h1 className="companyjobs-title">
           My <span className="accent">Jobs</span>
         </h1>
 
         <p className="subtitle">
-          Manage your posted opportunities in one place.
-          <br />
+          Manage all your posted opportunities in one place.<br />
           Edit job details, track applicants, and keep listings updated.
         </p>
 
@@ -82,16 +77,14 @@ const CompanyJobs = () => {
                     })}
                   </p>
 
-                  <div className="tags">
-                    <span className="tag">{job.category}</span>
-                    <span className="tag">{job.sector}</span>
+                  <div className="job-details-group">
+                    <p><strong>Category:</strong> {job.category}</p>
+                    <p><strong>Sector:</strong> {job.sector}</p>
                   </div>
 
                   <p className="desc">{job.description}</p>
 
-                  <p className="skills">
-                    <strong>Skills:</strong> {job.skills}
-                  </p>
+                  <p className="skills"><strong>Skills:</strong> {job.skills}</p>
 
                   <p className="payout">
                     <strong>Payout Terms:</strong> {job.payout || "Not specified"}
@@ -100,7 +93,10 @@ const CompanyJobs = () => {
                   <div className="job-actions">
                     <button className="edit-btn" onClick={() => openEdit(job)}>Edit</button>
                     <button className="delete-btn" onClick={() => handleDelete(job._id)}>Delete</button>
-                    <button className="applicants-btn" onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}>
+                    <button
+                      className="applicants-btn"
+                      onClick={() => navigate(`/applicants-job?jobId=${job._id}`)}
+                    >
                       Applicants 👥
                     </button>
                   </div>
@@ -108,7 +104,6 @@ const CompanyJobs = () => {
               ))}
             </div>
 
-            {/* Pagination */}
             <div className="pagination">
               <button
                 className="page-btn"
@@ -139,7 +134,6 @@ const CompanyJobs = () => {
           </>
         )}
 
-        {/* Edit Modal */}
         {showModal && (
           <div className="edit-overlay">
             <div className="edit-modal">
@@ -170,26 +164,33 @@ const CompanyJobs = () => {
               </select>
 
               <label>Sector</label>
-              <div className="sector-edit-row">
-                <label className="sector-edit-box">
+
+              <div className="sector-options">
+
+                <label className="sector-choice">
                   <input
                     type="radio"
                     value="Private Company"
                     checked={editedJob.sector === "Private Company"}
-                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
+                    onChange={(e) =>
+                      setEditedJob({ ...editedJob, sector: e.target.value })
+                    }
                   />
-                  <span>Private Company</span>
+                  Private Company
                 </label>
 
-                <label className="sector-edit-box">
+                <label className="sector-choice">
                   <input
                     type="radio"
                     value="Government"
                     checked={editedJob.sector === "Government"}
-                    onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })}
+                    onChange={(e) =>
+                      setEditedJob({ ...editedJob, sector: e.target.value })
+                    }
                   />
-                  <span>Government</span>
+                  Government
                 </label>
+
               </div>
 
               <label>Rate (OMR)</label>
@@ -212,26 +213,33 @@ const CompanyJobs = () => {
               <label>Skills Required</label>
               <input
                 value={editedJob.skills}
-                onChange={(e) => setEditedJob({ ...editedJob, skills: e.target.value })}
+                onChange={(e) =>
+                  setEditedJob({ ...editedJob, skills: e.target.value })
+                }
               />
 
               <label>Description</label>
               <textarea
                 value={editedJob.description}
-                onChange={(e) => setEditedJob({ ...editedJob, description: e.target.value })}
+                onChange={(e) =>
+                  setEditedJob({ ...editedJob, description: e.target.value })
+                }
               />
 
               <label>Payout Terms</label>
               <input
                 value={editedJob.payout}
-                onChange={(e) => setEditedJob({ ...editedJob, payout: e.target.value })}
+                onChange={(e) =>
+                  setEditedJob({ ...editedJob, payout: e.target.value })
+                }
               />
 
               <label>Location</label>
               <input
                 value={editedJob.location || ""}
-                readOnly
-                className="readonly-input"
+                onChange={(e) =>
+                  setEditedJob({ ...editedJob, location: e.target.value })
+                }
               />
 
               <div className="modal-actions">
