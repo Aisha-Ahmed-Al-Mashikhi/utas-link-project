@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx — Final Version + Modal With Tags
+// FindJob.jsx — Same Page Design, Only Modal Updated
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -29,11 +29,11 @@ const FindJob = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
+    const logged = JSON.parse(localStorage.getItem("loggedUser"));
+    if (logged?.email) dispatch(fetchUser(logged.email));
   }, [dispatch]);
 
-  // ---------------- FILTER ----------------
+  // Filter
   const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -43,37 +43,37 @@ const FindJob = () => {
     );
   });
 
-  // ---------------- PAGINATION ----------------
-  const indexLast = currentPage * jobsPerPage;
-  const indexFirst = indexLast - jobsPerPage;
-  const currentJobs = filteredJobs.slice(indexFirst, indexLast);
+  // Pagination
+  const last = currentPage * jobsPerPage;
+  const first = last - jobsPerPage;
+  const currentJobs = filteredJobs.slice(first, last);
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
-  const changePage = (p) => {
-    if (p >= 1 && p <= totalPages) setCurrentPage(p);
+  const changePage = (num) => {
+    if (num >= 1 && num <= totalPages) setCurrentPage(num);
   };
 
-  // ---------------- APPLY ----------------
-  const handleApply = async (job) => {
-    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  // Apply
+  const handleApply = (job) => {
+    const logged = JSON.parse(localStorage.getItem("loggedUser"));
 
     if (!user?.cvLink) {
-      alert("Please upload your CV before applying.");
+      alert("Please upload your CV first.");
       return navigate("/student-profile");
     }
 
     const data = {
       jobId: job._id,
       jobTitle: job.jobTitle,
-      organization: job.organization || "Unknown Company",
-      applicantEmail: loggedUser.email,
-      applicantName: loggedUser.name,
+      organization: job.organization,
+      applicantEmail: logged.email,
+      applicantName: logged.name,
       cvLink: user.cvLink,
     };
 
     dispatch(applyForJob(data))
       .unwrap()
-      .then(() => alert("Job applied successfully!"))
+      .then(() => alert("Applied successfully"))
       .catch(() => alert("You already applied."));
   };
 
@@ -83,12 +83,12 @@ const FindJob = () => {
         Find <span className="accent">Job</span>
       </h1>
 
-      {/* ---------------- SEARCH BAR ---------------- */}
+      {/* Search */}
       <div className="search-container">
         <div className="search-wrapper">
           <input
             type="text"
-            placeholder="Search skills, companies"
+            placeholder="Search skills, companies…"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -100,60 +100,41 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* ---------------- JOB LIST ---------------- */}
+      {/* JOB LIST — SAME DESIGN EXACTLY */}
       <div className="job-list">
-        {currentJobs.length === 0 ? (
-          <p>No jobs found.</p>
-        ) : (
-          currentJobs.map((job) => (
-            <div key={job._id} className="job-card">
-
-              <div className="job-header">
-                <h3>{job.jobTitle}</h3>
-                <span className="rate">
-                  {job.rate} OMR · {job.rateType}
-                </span>
-              </div>
-
-              <p className="job-location">📍 {job.location}</p>
-
-              <p className="job-date">
-                📅 {job.postedAt?.slice(0, 10)}
-              </p>
-
-              {/* TAGS */}
-              <div className="job-tags">
-                {job.category && <span className="tag">{job.category}</span>}
-                {job.sector && <span className="tag">{job.sector}</span>}
-              </div>
-
-              {/* DESCRIPTION SNIPPET */}
-              <p className="job-snippet">
-                {job.description?.slice(0, 120)}...
-              </p>
-
-              {/* SKILLS */}
-              <p className="job-skills">
-                <strong>Skills:</strong> {job.skills}
-              </p>
-
-              <div className="job-actions-right">
-                <button className="btn-apply" onClick={() => handleApply(job)}>
-                  Apply ➜
-                </button>
-                <button className="btn-details" onClick={() => setSelectedJob(job)}>
-                  View details
-                </button>
-              </div>
+        {currentJobs.map((job) => (
+          <div className="job-card" key={job._id}>
+            <div className="job-header">
+              <h3>{job.jobTitle}</h3>
+              <span className="rate">{job.rate} OMR · {job.rateType}</span>
             </div>
-          ))
-        )}
+
+            <p className="job-location">📍 {job.location}</p>
+
+            <p className="job-date">
+              📅 {job.postedAt?.slice(0, 10)} — ⏰ {job.postedAt?.slice(11, 16)}
+            </p>
+
+            <div className="job-actions-between">
+              <button
+                className="btn-details"
+                onClick={() => setSelectedJob(job)}
+              >
+                View details
+              </button>
+
+              <button className="btn-apply" onClick={() => handleApply(job)}>
+                Apply ➜
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* ---------------- PAGINATION ---------------- */}
+      {/* Pagination — SAME */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
+          <button disabled={currentPage === 1} onClick={() => changePage(currentPage - 1)}>
             ◀ Prev
           </button>
 
@@ -167,33 +148,41 @@ const FindJob = () => {
             </button>
           ))}
 
-          <button
-            onClick={() => changePage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
+          <button disabled={currentPage === totalPages} onClick={() => changePage(currentPage + 1)}>
             Next ▶
           </button>
         </div>
       )}
 
-      {/* ---------------- MODAL ---------------- */}
+      {/* ===========================================================
+          MODAL — Teaching Assistant DESIGN ONLY HERE
+          =========================================================== */}
       {selectedJob && (
         <div className="modal-overlay">
-          <div className="modal-card">
+          <div className="modal-card teaching-style">
 
+            {/* Close Button */}
             <button className="close-btn" onClick={() => setSelectedJob(null)}>
               ✖
             </button>
 
+            {/* TITLE */}
             <h2 className="modal-title">{selectedJob.jobTitle}</h2>
 
             {/* PRICE BOX */}
             <div className="price-box">
-              {selectedJob.rate} OMR · {selectedJob.rateType}
+              {selectedJob.rate} OMR • {selectedJob.rateType}
             </div>
 
-            <div className="modal-box">📍 {selectedJob.location}</div>
-            <div className="modal-box">📅 {selectedJob.postedAt?.slice(0, 10)}</div>
+            {/* LOCATION */}
+            <div className="modal-box">
+              📍 {selectedJob.location}
+            </div>
+
+            {/* DATE */}
+            <div className="modal-box">
+              📅 {selectedJob.postedAt?.slice(0, 10)}
+            </div>
 
             {/* TAGS */}
             <div className="modal-tags">
@@ -201,17 +190,15 @@ const FindJob = () => {
               {selectedJob.sector && <span className="tag">{selectedJob.sector}</span>}
             </div>
 
+            {/* DESCRIPTION */}
             <p className="modal-section-title">Description</p>
             <p className="modal-desc">{selectedJob.description}</p>
 
-            <div className="modal-box">
-              <strong>Skills:</strong> {selectedJob.skills}
-            </div>
+            {/* SKILLS */}
+            <p className="modal-box"><strong>Skills:</strong> {selectedJob.skills}</p>
 
-            <button
-              className="modal-apply-btn"
-              onClick={() => handleApply(selectedJob)}
-            >
+            {/* APPLY */}
+            <button className="modal-apply-btn" onClick={() => handleApply(selectedJob)}>
               Apply Now
             </button>
           </div>
