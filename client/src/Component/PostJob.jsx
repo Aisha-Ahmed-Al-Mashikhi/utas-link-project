@@ -24,6 +24,7 @@ const PostJob = () => {
     register,
     handleSubmit,
     reset,
+    setValue,          // ⭐ مهم لإصلاح المشكلة
     formState: { errors },
   } = useForm({
     resolver: yupResolver(postJobSchema),
@@ -125,7 +126,7 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector */}
+            {/* Sector – FIXED 100% */}
             <div className="col-half">
               <label>Sector</label>
 
@@ -140,14 +141,16 @@ const PostJob = () => {
                       value={s}
                       {...register("sector")}
                       checked={sector === s}
-                      onChange={(e) => setSector(e.target.value)}
+                      onChange={(e) => {
+                        setSector(e.target.value);
+                        setValue("sector", e.target.value);  // ⭐ الحل الحقيقي
+                      }}
                     />
                     <span>{s}</span>
                   </label>
                 ))}
               </div>
 
-              {/* ← ما غيرت شيء هنا */}
               <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
