@@ -50,10 +50,6 @@ const Header = () => {
             <>
               <Link to="/">Home</Link>
               <Link to="/find-job">Find Job</Link>
-
-              {/* ❌ Create Post removed from header */}
-              {/* <Link to="/create-post">Create Post</Link> */}
-
               <Link to="/student-applications">My Applications</Link>
             </>
           )}
@@ -62,14 +58,11 @@ const Header = () => {
             <>
               <Link to="/">Home</Link>
 
-              <Link to="/post-job" onClick={() => setOpen(false)}>
-                <FiPlusCircle className="icon" /> Post Job
-              </Link>
+              <Link to="/post-job"> Post Job</Link>
               
               {/* ✅ My Applicants moved to Header */}
               <Link to="/company-jobs">Applicants</Link>
 
-              {/* ❌ Post Job removed from header */}
             </>
           )}
         </div>
@@ -159,7 +152,9 @@ const Header = () => {
                 <FiUser className="icon" /> Company Profile
               </Link>
 
-             <Link to="/create-post">Create Post</Link>
+             <Link to="/create-post" onClick={() => setOpen(false)}>
+                <FiPlusCircle className="icon" /> Create Post
+              </Link>
 
               <Link to="/company-chats" onClick={() => setOpen(false)}>
                 <FiMessageCircle className="icon" /> Chats
