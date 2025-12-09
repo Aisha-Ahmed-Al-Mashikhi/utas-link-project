@@ -57,6 +57,14 @@
 .job-card:hover {
   transform: translateY(-3px);
 }
+/* Job Action Buttons Container */
+.job-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px; 
+  margin-top: 12px;
+}
 
 /* Buttons — no borders */
 .edit-btn,
