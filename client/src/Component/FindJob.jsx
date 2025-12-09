@@ -168,8 +168,6 @@ const FindJob = () => {
       {selectedJob && (
         <div className="modal-overlay">
           <div className="modal-card">
-
-            {/* Close Button */}
             <button className="close-btn" onClick={() => setSelectedJob(null)}>
               ✖
             </button>
@@ -189,7 +187,7 @@ const FindJob = () => {
             </div>
 
             <p className="modal-desc-title">Description</p>
-            <p className="modal-desc">{selectedJob.description}</p>
+            <div className="modal-desc-box">{selectedJob.description}</div>
 
             {selectedJob.skills && (
               <div className="modal-box">
