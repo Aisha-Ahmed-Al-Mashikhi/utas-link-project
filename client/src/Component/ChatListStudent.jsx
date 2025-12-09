@@ -37,7 +37,10 @@ const ChatListStudent = () => {
       </h1>
 
       {applications.length === 0 ? (
-        <p>No chats available.</p>
+        <div className="empty-chats">
+  No active chats yet.
+</div>
+
       ) : (
         <>
           {/* FIXED 3×2 GRID */}
