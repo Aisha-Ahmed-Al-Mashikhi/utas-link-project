@@ -38,11 +38,17 @@ const CompanyJobs = () => {
     if (window.confirm("Delete this job?")) dispatch(deleteJob(id));
   };
 
+  const openApplicants = (jobId) => {
+    window.location.href = `/company-applicants/${jobId}`;
+  };
+
   return (
     <div className="companyjobs-page">
       <div className="companyjobs-wrapper">
 
-        <h1 className="companyjobs-title">My <span className="accent">Jobs</span></h1>
+        <h1 className="companyjobs-title">
+          My <span className="accent">Jobs</span>
+        </h1>
         <p className="subtitle">
           Manage your posted opportunities effortlessly.
           <br />Keep track of applicants and job details in one place.
@@ -60,7 +66,13 @@ const CompanyJobs = () => {
                 <span className="tag">{job.sector}</span>
               </div>
 
-              <p className="price">{job.rate} OMR • {job.rateType}</p>
+              <p className="price">
+                {job.rate} OMR • {job.rateType}
+              </p>
+
+              <p className="post-time">
+                Posted: {new Date(job.createdAt).toLocaleDateString()}
+              </p>
 
               <button className="view-btn" onClick={() => setViewJob(job)}>
                 View
@@ -101,9 +113,20 @@ const CompanyJobs = () => {
               <p><strong>Skills:</strong> {viewJob.skills}</p>
               <p><strong>Description:</strong> {viewJob.description}</p>
 
+              <p><strong>Posted At:</strong> {new Date(viewJob.createdAt).toLocaleString()}</p>
+
               <div className="modal-actions">
-                <button className="save-btn" onClick={() => { openEdit(viewJob); setViewJob(null); }}>Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(viewJob._id)}>Delete</button>
+                <button className="applicants-btn" onClick={() => openApplicants(viewJob._id)}>
+                  View Applicants
+                </button>
+
+                <button className="edit-btn" onClick={() => { openEdit(viewJob); setViewJob(null); }}>
+                  Edit
+                </button>
+
+                <button className="delete-btn" onClick={() => handleDelete(viewJob._id)}>
+                  Delete
+                </button>
               </div>
             </div>
           </div>
