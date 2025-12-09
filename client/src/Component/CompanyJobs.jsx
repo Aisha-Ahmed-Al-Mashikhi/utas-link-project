@@ -1,11 +1,16 @@
+// src/Components/CompanyJobs.js
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCompanyJobs, deleteJob, updateJob } from "../Features/JobSlice";
 import "../Styles/CompanyJobs.css";
+import { useNavigate } from "react-router-dom";
 
 const CompanyJobs = () => {
   const dispatch = useDispatch();
-  const { companyJobs, isLoading } = useSelector((s) => s.jobs);
+  const navigate = useNavigate();
+
+  const { companyJobs, isLoading } = useSelector((state) => state.jobs);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [viewJob, setViewJob] = useState(null);
@@ -38,17 +43,11 @@ const CompanyJobs = () => {
     if (window.confirm("Delete this job?")) dispatch(deleteJob(id));
   };
 
-  const openApplicants = (jobId) => {
-    window.location.href = `/company-applicants/${jobId}`;
-  };
-
   return (
     <div className="companyjobs-page">
       <div className="companyjobs-wrapper">
 
-        <h1 className="companyjobs-title">
-          My <span className="accent">Jobs</span>
-        </h1>
+        <h1 className="companyjobs-title">My <span className="accent">Jobs</span></h1>
         <p className="subtitle">
           Manage your posted opportunities effortlessly.
           <br />Keep track of applicants and job details in one place.
@@ -59,6 +58,7 @@ const CompanyJobs = () => {
           {currentJobs.map((job) => (
             <div className="job-card" key={job._id}>
               <h3>{job.jobTitle}</h3>
+
               <p className="job-location">📍 {job.location}</p>
 
               <div className="tag-row">
@@ -66,12 +66,11 @@ const CompanyJobs = () => {
                 <span className="tag">{job.sector}</span>
               </div>
 
-              <p className="price">
-                {job.rate} OMR • {job.rateType}
-              </p>
+              <p className="price">{job.rate} OMR • {job.rateType}</p>
 
+              {/* POSTED TIME */}
               <p className="post-time">
-                Posted: {new Date(job.createdAt).toLocaleDateString()}
+                Posted: {new Date(job.createdAt).toLocaleString()}
               </p>
 
               <button className="view-btn" onClick={() => setViewJob(job)}>
@@ -113,21 +112,27 @@ const CompanyJobs = () => {
               <p><strong>Skills:</strong> {viewJob.skills}</p>
               <p><strong>Description:</strong> {viewJob.description}</p>
 
-              <p><strong>Posted At:</strong> {new Date(viewJob.createdAt).toLocaleString()}</p>
+              {/* POSTED TIME */}
+              <p><strong>Posted:</strong> {new Date(viewJob.createdAt).toLocaleString()}</p>
 
               <div className="modal-actions">
-                <button className="applicants-btn" onClick={() => openApplicants(viewJob._id)}>
-                  View Applicants
-                </button>
-
                 <button className="edit-btn" onClick={() => { openEdit(viewJob); setViewJob(null); }}>
                   Edit
+                </button>
+
+                {/* NEW — VIEW APPLICANTS */}
+                <button
+                  className="applicants-btn"
+                  onClick={() => navigate(`/applicants-job/${viewJob._id}`)}
+                >
+                  Applicants
                 </button>
 
                 <button className="delete-btn" onClick={() => handleDelete(viewJob._id)}>
                   Delete
                 </button>
               </div>
+
             </div>
           </div>
         )}
@@ -149,13 +154,15 @@ const CompanyJobs = () => {
               <label>Sector</label>
               <div className="sector-row">
                 <label className="radio-option">
-                  <input type="radio" value="Private Company" checked={editedJob.sector === "Private Company"}
+                  <input type="radio" value="Private Company"
+                    checked={editedJob.sector === "Private Company"}
                     onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })} />
                   Private Company
                 </label>
 
                 <label className="radio-option">
-                  <input type="radio" value="Government" checked={editedJob.sector === "Government"}
+                  <input type="radio" value="Government"
+                    checked={editedJob.sector === "Government"}
                     onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })} />
                   Government
                 </label>
