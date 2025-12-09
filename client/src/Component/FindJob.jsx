@@ -1,5 +1,5 @@
 // =====================================================
-// FindJob.jsx (Final Version with Teaching Assistant Style Modal)
+// FindJob.jsx — Final Version + Modal With Tags
 // =====================================================
 
 import React, { useEffect, useState } from "react";
@@ -33,25 +33,27 @@ const FindJob = () => {
     if (loggedUser?.email) dispatch(fetchUser(loggedUser.email));
   }, [dispatch]);
 
+  // ---------------- FILTER ----------------
   const filteredJobs = jobList.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
       job.jobTitle.toLowerCase().includes(term) ||
       (job.organization || "").toLowerCase().includes(term) ||
-      (job.skills || "").toString().toLowerCase().includes(term)
+      (job.skills || "").toLowerCase().includes(term)
     );
   });
 
-  const indexOfLastJob = currentPage * jobsPerPage;
-  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
-
+  // ---------------- PAGINATION ----------------
+  const indexLast = currentPage * jobsPerPage;
+  const indexFirst = indexLast - jobsPerPage;
+  const currentJobs = filteredJobs.slice(indexFirst, indexLast);
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
-  const changePage = (pageNum) => {
-    if (pageNum >= 1 && pageNum <= totalPages) setCurrentPage(pageNum);
+  const changePage = (p) => {
+    if (p >= 1 && p <= totalPages) setCurrentPage(p);
   };
 
+  // ---------------- APPLY ----------------
   const handleApply = async (job) => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
@@ -60,7 +62,7 @@ const FindJob = () => {
       return navigate("/student-profile");
     }
 
-    const appData = {
+    const data = {
       jobId: job._id,
       jobTitle: job.jobTitle,
       organization: job.organization || "Unknown Company",
@@ -69,7 +71,7 @@ const FindJob = () => {
       cvLink: user.cvLink,
     };
 
-    dispatch(applyForJob(appData))
+    dispatch(applyForJob(data))
       .unwrap()
       .then(() => alert("Job applied successfully!"))
       .catch(() => alert("You already applied."));
@@ -81,7 +83,7 @@ const FindJob = () => {
         Find <span className="accent">Job</span>
       </h1>
 
-      {/* Search Bar */}
+      {/* ---------------- SEARCH BAR ---------------- */}
       <div className="search-container">
         <div className="search-wrapper">
           <input
@@ -98,13 +100,14 @@ const FindJob = () => {
         <button className="search-btn">Search</button>
       </div>
 
-      {/* Job List */}
+      {/* ---------------- JOB LIST ---------------- */}
       <div className="job-list">
         {currentJobs.length === 0 ? (
           <p>No jobs found.</p>
         ) : (
           currentJobs.map((job) => (
             <div key={job._id} className="job-card">
+
               <div className="job-header">
                 <h3>{job.jobTitle}</h3>
                 <span className="rate">
@@ -112,22 +115,34 @@ const FindJob = () => {
                 </span>
               </div>
 
-              <p className="job-location">📍 {job.location || "Not specified"}</p>
+              <p className="job-location">📍 {job.location}</p>
 
               <p className="job-date">
-                📅 {job.postedAt?.slice(0, 10)} — ⏰ {job.postedAt?.slice(11, 16)}
+                📅 {job.postedAt?.slice(0, 10)}
               </p>
 
-              <div className="job-actions-between">
-                <button
-                  className="btn-details"
-                  onClick={() => setSelectedJob(job)}
-                >
-                  View details
-                </button>
+              {/* TAGS */}
+              <div className="job-tags">
+                {job.category && <span className="tag">{job.category}</span>}
+                {job.sector && <span className="tag">{job.sector}</span>}
+              </div>
 
+              {/* DESCRIPTION SNIPPET */}
+              <p className="job-snippet">
+                {job.description?.slice(0, 120)}...
+              </p>
+
+              {/* SKILLS */}
+              <p className="job-skills">
+                <strong>Skills:</strong> {job.skills}
+              </p>
+
+              <div className="job-actions-right">
                 <button className="btn-apply" onClick={() => handleApply(job)}>
                   Apply ➜
+                </button>
+                <button className="btn-details" onClick={() => setSelectedJob(job)}>
+                  View details
                 </button>
               </div>
             </div>
@@ -135,23 +150,20 @@ const FindJob = () => {
         )}
       </div>
 
-      {/* Pagination */}
+      {/* ---------------- PAGINATION ---------------- */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button
-            onClick={() => changePage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
+          <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
             ◀ Prev
           </button>
 
-          {[...Array(totalPages)].map((_, index) => (
+          {[...Array(totalPages)].map((_, i) => (
             <button
-              key={index}
-              className={currentPage === index + 1 ? "active-page" : ""}
-              onClick={() => changePage(index + 1)}
+              key={i}
+              className={currentPage === i + 1 ? "active-page" : ""}
+              onClick={() => changePage(i + 1)}
             >
-              {index + 1}
+              {i + 1}
             </button>
           ))}
 
@@ -164,36 +176,37 @@ const FindJob = () => {
         </div>
       )}
 
-      {/* Modal View */}
+      {/* ---------------- MODAL ---------------- */}
       {selectedJob && (
         <div className="modal-overlay">
-          <div className="modal-card job-modal-card">
-            
-            <button className="modal-close" onClick={() => setSelectedJob(null)}>
+          <div className="modal-card">
+
+            <button className="close-btn" onClick={() => setSelectedJob(null)}>
               ✖
             </button>
 
-            <div className="modal-header">
-              <h2>{selectedJob.jobTitle}</h2>
-              <span className="modal-rate">
-                {selectedJob.rate} OMR · {selectedJob.rateType}
-              </span>
+            <h2 className="modal-title">{selectedJob.jobTitle}</h2>
+
+            {/* PRICE BOX */}
+            <div className="price-box">
+              {selectedJob.rate} OMR · {selectedJob.rateType}
             </div>
 
-            <p className="modal-location">📍 {selectedJob.location}</p>
+            <div className="modal-box">📍 {selectedJob.location}</div>
+            <div className="modal-box">📅 {selectedJob.postedAt?.slice(0, 10)}</div>
 
-            <p className="modal-date">
-              📅 {selectedJob.postedAt?.slice(0, 10)} — ⏰ {selectedJob.postedAt?.slice(11, 16)}
-            </p>
+            {/* TAGS */}
+            <div className="modal-tags">
+              {selectedJob.category && <span className="tag">{selectedJob.category}</span>}
+              {selectedJob.sector && <span className="tag">{selectedJob.sector}</span>}
+            </div>
 
             <p className="modal-section-title">Description</p>
-            <p className="modal-description">{selectedJob.description}</p>
+            <p className="modal-desc">{selectedJob.description}</p>
 
-            {selectedJob.skills && (
-              <p className="modal-skills">
-                <strong>Skills: </strong>{selectedJob.skills}
-              </p>
-            )}
+            <div className="modal-box">
+              <strong>Skills:</strong> {selectedJob.skills}
+            </div>
 
             <button
               className="modal-apply-btn"
@@ -204,7 +217,6 @@ const FindJob = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
