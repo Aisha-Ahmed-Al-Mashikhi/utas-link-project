@@ -14,6 +14,7 @@
   border-radius: 22px;
   max-width: 1200px;
   width: 100%;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.06);
 }
 
 /* Title */
@@ -50,6 +51,7 @@
   transform: translateY(-4px);
 }
 
+/* Tags */
 .tag-row {
   margin: 10px 0;
 }
@@ -100,7 +102,7 @@
   color: white;
 }
 
-/* MODAL OVERLAY */
+/* MODAL BACKGROUND */
 .overlay {
   position: fixed;
   top: 0; left: 0;
@@ -109,20 +111,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 99999;
 }
 
-/* VIEW MODAL */
+/* VIEW + EDIT MODAL */
 .view-modal,
 .edit-modal {
   background: white;
-  padding: 30px;
-  border-radius: 18px;
-  width: 90%;
+  padding: 32px;
+  border-radius: 20px;
+  width: 95%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  box-shadow: 0px 6px 25px rgba(0,0,0,0.15);
 }
 
 /* Close */
@@ -138,45 +141,83 @@
   cursor: pointer;
 }
 
-/* Sector */
+/* Inputs */
+.edit-modal label {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.edit-modal input,
+.edit-modal select,
+.edit-modal textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #cfcfcf;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.edit-modal input:focus,
+.edit-modal select:focus,
+.edit-modal textarea:focus {
+  border-color: #009688;
+  outline: none;
+}
+
+.edit-modal textarea {
+  min-height: 120px;
+}
+
+/* Radio (sector) */
 .sector-row {
   display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
+  gap: 12px;
 }
 
 .radio-option {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border: 1.5px solid #ccc;
-  border-radius: 10px;
-  width: 50%;
+  gap: 10px;
   cursor: pointer;
+}
+
+.radio-option:hover {
+  border-color: #009688;
 }
 
 .radio-option input {
   accent-color: #009688;
 }
 
-/* Buttons */
+/* Modal buttons */
 .modal-actions {
-  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 20px;
 }
 
-.save-btn,
-.edit-btn,
-.delete-btn {
-  padding: 10px 20px;
+.save-btn {
+  background: #009688;
+  color: white;
+  padding: 10px 22px;
   border-radius: 10px;
   border: none;
-  cursor: pointer;
+  font-weight: 600;
 }
 
-.save-btn { background: #009688; color: #fff; }
-.edit-btn { background: #ffc107; }
-.delete-btn { background: #ff6b6b; color: #fff; }
+.cancel-btn {
+  background: #e6e6e6;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+}
