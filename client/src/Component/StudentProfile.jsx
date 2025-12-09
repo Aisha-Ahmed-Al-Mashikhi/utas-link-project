@@ -5,7 +5,7 @@ import {
   fetchUser,
   uploadCv,
   deleteCvThunk,
-  updateStudentProfile,
+  updateStudent,
 } from "../Features/UserSlice";
 import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
