@@ -1,10 +1,11 @@
+// src/Component/StudentProfile.js
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUser,
   uploadCv,
   deleteCvThunk,
-  updateStudent,
+  updateStudentProfile,
 } from "../Features/UserSlice";
 import { useNavigate } from "react-router-dom";
 import "../Styles/UserProfile.css";
@@ -12,28 +13,34 @@ import * as ENV from "../config";
 
 import profileImg from "../Images/profile.png";
 
+const MAJORS = [
+  "",
+  "Information Technology",
+  "Business Administration",
+  "Engineering",
+  "Mass Communication",
+];
+
 const StudentProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.users);
 
-  const { user, isSuccess } = useSelector((state) => state.users);
-
-  // -------- Modal state --------
   const [showEdit, setShowEdit] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     major: "",
     age: "",
   });
 
-  // -------- Fetch user --------
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loggedUser"));
     if (!saved?.email) return navigate("/login");
+
     dispatch(fetchUser(saved.email));
   }, [dispatch, navigate]);
 
-  // -------- Load user into form --------
   useEffect(() => {
     if (user) {
       setFormData({
@@ -44,23 +51,14 @@ const StudentProfile = () => {
     }
   }, [user]);
 
-  // -------- CV upload --------
   const handleCvUpload = (e) => {
     if (!e.target.files[0]) return;
     dispatch(uploadCv({ file: e.target.files[0], email: user.email }));
   };
 
-  // -------- Save updated profile --------
   const handleSave = () => {
-    dispatch(updateStudent({ email: user.email, data: formData }));
+    dispatch(updateStudentProfile({ email: user.email, data: formData }));
     setShowEdit(false);
-
-    // toast
-    const t = document.createElement("div");
-    t.className = "toast success";
-    t.innerText = "Profile updated successfully!";
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 1800);
   };
 
   if (!user) return <p>Loading...</p>;
@@ -74,6 +72,7 @@ const StudentProfile = () => {
           <img
             src={user.profileImage || profileImg}
             className="profile-avatar"
+            alt="profile"
           />
 
           <div className="profile-info">
@@ -90,19 +89,19 @@ const StudentProfile = () => {
       {/* RIGHT SIDE */}
       <div className="right-column">
 
+        {/* Academic Info */}
         <div className="glass-card info-card">
           <h3>Academic Information</h3>
 
           <p><strong>Major:</strong> {user.major}</p>
           <p><strong>Age:</strong> {user.age}</p>
-
           <p>
             <strong>Status:</strong>{" "}
             <span className="status-dot green"></span> Active
           </p>
         </div>
 
-        {/* CV */}
+        {/* CV Card */}
         <div className="glass-card info-card">
           <h3>Curriculum Vitae (CV)</h3>
 
@@ -112,7 +111,7 @@ const StudentProfile = () => {
 
               <div className="cv-actions">
                 <a
-                  href={`${user.cvLink}`}
+                  href={`${ENV.SERVER_URL}${user.cvLink}`}
                   target="_blank"
                   className="cv-btn view"
                 >
@@ -159,7 +158,6 @@ const StudentProfile = () => {
             </>
           )}
         </div>
-
       </div>
 
       {/* -------- EDIT MODAL -------- */}
@@ -168,24 +166,38 @@ const StudentProfile = () => {
           <div className="edit-modal">
             <h2>Edit Profile</h2>
 
+            {/* FULL NAME */}
             <label>Full Name</label>
             <input
+              type="text"
+              placeholder="Your name"
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
             />
 
+            {/* MAJOR (Dropdown like register page) */}
             <label>Major</label>
-            <input
+            <select
               value={formData.major}
               onChange={(e) =>
                 setFormData({ ...formData, major: e.target.value })
               }
-            />
+            >
+              <option value="">Select your major</option>
+              {MAJORS.map((m, i) => (
+                <option key={i} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
 
+            {/* AGE number input */}
             <label>Age</label>
             <input
+              type="number"
+              placeholder="Your age"
               value={formData.age}
               onChange={(e) =>
                 setFormData({ ...formData, age: e.target.value })
