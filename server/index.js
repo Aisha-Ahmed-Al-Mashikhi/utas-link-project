@@ -371,29 +371,24 @@ app.put("/jobs/:id", async (req, res) => {
 ───────────────────────────────────────────────*/
 app.post("/apply", async (req, res) => {
   try {
-    // Check duplicate application
-    const exist = await ApplicationModel.findOne({
-      jobId: req.body.jobId,
-      applicantEmail: req.body.applicantEmail,
-    });
+    const user = await UserModel.findOne({ email: req.body.applicantEmail });
 
-    if (exist) return res.status(400).json({ error: "Already applied" });
+    if (!user) return res.status(404).json({ error: "Student not found" });
 
-    // Fetch job details
     const job = await JobModel.findById(req.body.jobId);
     if (!job) return res.status(404).json({ error: "Job not found" });
 
-    // Fetch company name for organization field
     const company = await CompanyModel.findOne({ email: job.postedBy });
 
-   const newApp = new ApplicationModel({
-  ...req.body,
-  organization: company?.companyName || "Unknown Company",
-  companyEmail: job.postedBy,   // ⭐ إضافة بريد الشركة
-  status: "Pending",
-  appliedAt: new Date(),
-});
-
+    const newApp = new ApplicationModel({
+      ...req.body,
+      applicantName: user.name,          // ⬅ ⭐ أضف اسم الطالب
+      applicantEmail: user.email,        // ⬅ موجود أصلًا
+      organization: company?.companyName || "Unknown Company",
+      companyEmail: job.postedBy,
+      status: "Pending",
+      appliedAt: new Date(),
+    });
 
     await newApp.save();
     res.send(newApp);
