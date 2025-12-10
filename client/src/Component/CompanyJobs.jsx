@@ -123,7 +123,7 @@ const CompanyJobs = () => {
                 {/* NEW — VIEW APPLICANTS */}
                 <button
                   className="applicants-btn"
-                  onClick={() => navigate(`/applicants-job/${viewJob._id}`)}
+                  onClick={() => navigate(`/company/applicants?jobId=${job._id}`) }
                 >
                   Applicants
                 </button>
