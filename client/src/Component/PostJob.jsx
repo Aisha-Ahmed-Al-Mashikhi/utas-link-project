@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 const PostJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { company } = useSelector((state) => state.companies);
 
   const [jobTitle, setJobTitle] = useState("");
   const [category, setCategory] = useState("");
