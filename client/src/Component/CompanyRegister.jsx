@@ -19,19 +19,20 @@ const INDUSTRIES = [
   "Government",
   "Other",
 ];
-
 const LOCATIONS = ["", "Salalah", "Taqah", "Mirbat", "Mughsail", "Other"];
 
 const CompanyRegister = () => {
+  // Used to trigger Redux actions (ex: registerUser, login, logout)
   const dispatch = useDispatch();
+  // Used to navigate programmatically to another page after an action (ex: redirect after registration)
   const navigate = useNavigate();
 
-  // Redux state
+  // Read registration status from Redux
   const { isLoading, isError, isSuccess } = useSelector(
     (state) => state.companies
   );
 
-  // Local states
+  // Local states for controlled components
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +40,7 @@ const CompanyRegister = () => {
   const [location, setLocation] = useState("");
   const [foundedDate, setFoundedDate] = useState("");
 
-  // React Hook Form
+  // React Hook Form setup
   const {
     register,
     handleSubmit,
@@ -47,25 +48,25 @@ const CompanyRegister = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(CompanyRegisterSchema),
+    mode: "onChange",
   });
 
   // Submit handler
   const onSubmit = (data) => {
     const finalData = {
       ...data,
-      role: "company",
+      role: "company", // Assign company role for backend
     };
     dispatch(registerCompany(finalData));
   };
 
-  // Handle register result
+  // Handle registration response
   useEffect(() => {
     if (isSuccess) {
+      alert("Company registered successfully!");
       reset();
-      navigate("/post-job"); // بعد التسجيل
-    }
-
-    if (isError) {
+      navigate("/company-profile"); // Redirect to company profile
+    } else if (isError) {
       alert("Registration failed. Please try again.");
     }
   }, [isSuccess, isError, navigate, reset]);
@@ -73,14 +74,14 @@ const CompanyRegister = () => {
   return (
     <div className="register-page">
       <div className="register-container">
-        {/* Form */}
+        {/* Left Side - Registration Form */}
         <div className="register-form">
           <h1 className="reg-title">
-            Create your <span className="accent">company account</span>
+            Create your <span className="accent">account</span>
           </h1>
           <p className="reg-sub">Please fill in your company details</p>
 
-          {/* Role switch */}
+          {/* Role Switch Buttons */}
           <div className="role-switch">
             <Link to="/student-register" className="role-btn">
               Student
@@ -95,6 +96,7 @@ const CompanyRegister = () => {
             <label>Company Name</label>
             <input
               type="text"
+              placeholder="Your company name"
               value={companyName}
               {...register("companyName", {
                 onChange: (e) => setCompanyName(e.target.value),
@@ -106,6 +108,7 @@ const CompanyRegister = () => {
             <label>Email</label>
             <input
               type="email"
+              placeholder="hr@company.com"
               value={email}
               {...register("email", {
                 onChange: (e) => setEmail(e.target.value),
@@ -117,6 +120,7 @@ const CompanyRegister = () => {
             <label>Password</label>
             <input
               type="password"
+              placeholder="********"
               value={password}
               {...register("password", {
                 onChange: (e) => setPassword(e.target.value),
@@ -134,8 +138,8 @@ const CompanyRegister = () => {
                     onChange: (e) => setIndustry(e.target.value),
                   })}
                 >
-                  {INDUSTRIES.map((i, idx) => (
-                    <option key={idx} value={i}>
+                  {INDUSTRIES.map((i, index) => (
+                    <option key={index} value={i}>
                       {i === "" ? "Select your industry" : i}
                     </option>
                   ))}
@@ -151,8 +155,8 @@ const CompanyRegister = () => {
                     onChange: (e) => setLocation(e.target.value),
                   })}
                 >
-                  {LOCATIONS.map((l, idx) => (
-                    <option key={idx} value={l}>
+                  {LOCATIONS.map((l, index) => (
+                    <option key={index} value={l}>
                       {l === "" ? "Select your location" : l}
                     </option>
                   ))}
@@ -172,21 +176,22 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.foundedDate?.message}</p>
 
+            {/* SUBMIT BUTTON */}
             <button type="submit" className="reg-btn" disabled={isLoading}>
               {isLoading ? "Registering..." : "Sign up"}
             </button>
 
+            {/* LOGIN LINK */}
             <p className="login-text">
-              Already have an account?
+              Already have an account?{" "}
               <Link to="/login" className="login-link">
-                {" "}
-                Log in now!
+                Log in now.
               </Link>
             </p>
           </form>
         </div>
 
-        {/* Image */}
+        {/* Right Side - Illustration */}
         <div className="register-image">
           <img src={companyImg} alt="Company registration" />
         </div>
