@@ -39,9 +39,15 @@ const CompanyJobs = () => {
     setShowModal(false);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Delete this job?")) dispatch(deleteJob(id));
-  };
+ const handleDelete = async (id) => {
+  if (!window.confirm("Delete this job?")) return;
+
+  await dispatch(deleteJob(id)).unwrap();
+
+  setViewJob(null);      // ✅ سكري المودال
+  setShowModal(false);  // ✅ احتياط
+};
+
 
   return (
     <div className="companyjobs-page">
