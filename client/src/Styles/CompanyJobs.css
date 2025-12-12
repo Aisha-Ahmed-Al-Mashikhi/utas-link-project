@@ -62,22 +62,20 @@
 
 .tag-row {
   display: flex;
-  flex-wrap: wrap;     /* ⭐ يسمح للتاقات إنها تنزل لو احتاجت */
-  gap: 8px;            /* ⭐ بدل margin-right */
+  flex-wrap: wrap;
+  gap: 8px;
   margin: 10px 0;
 }
 
 .tag {
-  display: inline-flex;  /* ⭐ يخلي المحتوى يتمدد */
-  width: auto;           /* ⭐ يمنع العرض الثابت */
-  white-space: nowrap;   /* ⭐ يمنع التاق من الانقسام على سطرين */
+  display: inline-flex;
+  white-space: nowrap;
   padding: 6px 12px;
   background: #e8faf7;
   border-radius: 8px;
   font-size: 13px;
   color: #009688;
 }
-
 
 .price {
   font-weight: 600;
@@ -90,7 +88,7 @@
   margin-bottom: 12px;
 }
 
-/* VIEW BUTTON (CARD) */
+/* VIEW BUTTON */
 .view-btn {
   background: #009688;
   color: white;
@@ -99,11 +97,10 @@
   border: none;
   font-size: 14px;
   cursor: pointer;
-  transition: 0.25s;
 }
 
 .view-btn:hover {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* PAGINATION */
@@ -130,10 +127,7 @@
 /* MODAL OVERLAY */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
@@ -142,19 +136,7 @@
 }
 
 /* VIEW MODAL */
-.view-modal {
-  background: #ffffff;
-  padding: 35px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
-}
-
-/* EDIT MODAL */
+.view-modal,
 .edit-modal {
   background: #ffffff;
   padding: 35px;
@@ -164,6 +146,7 @@
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
 }
 
 /* CLOSE BUTTON */
@@ -195,7 +178,7 @@
   resize: none;
 }
 
-/* SECTOR RADIO OPTIONS */
+/* SECTOR RADIO */
 .sector-row {
   display: flex;
   gap: 15px;
@@ -211,7 +194,6 @@
   border-radius: 12px;
   width: 50%;
   cursor: pointer;
-  font-size: 14px;
 }
 
 .radio-option input {
@@ -222,10 +204,43 @@
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 25px;
+  gap: 14px;
+  margin-top: 30px;
 }
 
+/* CANCEL */
+.cancel-btn {
+  background: #e0e0e0;
+  color: #333;
+  padding: 10px 26px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #d5d5d5;
+}
+
+/* SAVE */
+.save-btn {
+  background: white;
+  color: #009688;
+  padding: 10px 26px;
+  border-radius: 10px;
+  border: 2px solid #009688;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #009688;
+  color: white;
+}
+
+/* OTHER ACTIONS */
 .edit-btn {
   background: #009688;
   color: white;
@@ -233,7 +248,6 @@
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  font-weight: 600;
 }
 
 .delete-btn {
@@ -249,15 +263,6 @@
   background: #005f73;
   color: white;
   padding: 10px 22px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.cancel-btn {
-  background: #ccc;
-  padding: 10px 20px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
