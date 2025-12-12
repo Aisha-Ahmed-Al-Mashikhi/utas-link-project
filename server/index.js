@@ -445,15 +445,19 @@ app.delete("/applications/:applicationId", async (req, res) => {
 ───────────────────────────────────────────────*/
 app.get("/applications/job/:jobId", async (req, res) => {
   try {
+    const jobId = new mongoose.Types.ObjectId(req.params.jobId);
+
     const applicants = await ApplicationModel.find({
-      jobId: req.params.jobId,
+      jobId: jobId,
     }).sort({ appliedAt: -1 });
 
     res.send(applicants);
-  } catch {
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Failed loading applicants" });
   }
 });
+
 
 /*───────────────────────────────────────────────
  ░░ ALL APPLICATIONS FOR COMPANY
