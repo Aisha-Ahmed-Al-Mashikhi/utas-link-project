@@ -6,16 +6,18 @@ import Posts from "./Posts.jsx";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user, role } = useSelector((state) => state.users);
+const { user, role } = useSelector((state) => state.users);
+
 const handleStart = () => {
   if (!user) {
     navigate("/login");
-  } else if (user.role === "company") {
+  } else if (role === "company") {
     navigate("/post-job");
   } else {
     navigate("/find-job");
   }
 };
+
 
 
 
