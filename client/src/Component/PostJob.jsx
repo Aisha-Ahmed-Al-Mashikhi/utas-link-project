@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Styles/PostJob.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
-import { useDispatch, useSelector } from "react-redux"; // ✅ fixed
+import { useDispatch, useSelector } from "react-redux";
 import { addJob } from "../Features/JobSlice";
+import { fetchCompany } from "../Features/CompanySlice";
 import { useNavigate } from "react-router-dom";
 
 const PostJob = () => {
@@ -33,6 +34,14 @@ const PostJob = () => {
     resolver: yupResolver(postJobSchema),
     mode: "onChange",
   });
+
+  // ✅ FETCH COMPANY DATA ON PAGE LOAD
+  useEffect(() => {
+    const loggedCompany = JSON.parse(localStorage.getItem("loggedUser"));
+    if (loggedCompany?.email) {
+      dispatch(fetchCompany(loggedCompany.email));
+    }
+  }, [dispatch]);
 
   const CATEGORIES = [
     "Design / Marketing",
@@ -113,7 +122,6 @@ const PostJob = () => {
         <p className="page-sub">Add a new job listing for students</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Job Title */}
           <label>Job Title</label>
           <input
             type="text"
@@ -124,7 +132,6 @@ const PostJob = () => {
           />
           <p className="error">{errors.jobTitle?.message}</p>
 
-          {/* Category + Sector */}
           <div className="row-flex">
             <div className="col-half">
               <label>Category</label>
@@ -170,38 +177,30 @@ const PostJob = () => {
             </div>
           </div>
 
-          {/* Rate + RateType */}
-          <div className="row-flex">
-            <div className="col-half">
-              <label>Rate (OMR)</label>
-              <input
-                type="number"
-                value={rate}
-                {...register("rate", {
-                  onChange: (e) => setRate(e.target.value),
-                })}
-              />
-              <p className="error">{errors.rate?.message}</p>
-            </div>
+          <label>Rate (OMR)</label>
+          <input
+            type="number"
+            value={rate}
+            {...register("rate", {
+              onChange: (e) => setRate(e.target.value),
+            })}
+          />
+          <p className="error">{errors.rate?.message}</p>
 
-            <div className="col-half">
-              <label>Rate Type</label>
-              <select
-                value={rateType}
-                {...register("rateType", {
-                  onChange: (e) => setRateType(e.target.value),
-                })}
-              >
-                <option value="">Select type</option>
-                {RATE_TYPES.map((r) => (
-                  <option key={r}>{r}</option>
-                ))}
-              </select>
-              <p className="error">{errors.rateType?.message}</p>
-            </div>
-          </div>
+          <label>Rate Type</label>
+          <select
+            value={rateType}
+            {...register("rateType", {
+              onChange: (e) => setRateType(e.target.value),
+            })}
+          >
+            <option value="">Select type</option>
+            {RATE_TYPES.map((r) => (
+              <option key={r}>{r}</option>
+            ))}
+          </select>
+          <p className="error">{errors.rateType?.message}</p>
 
-          {/* Skills */}
           <label>Skills Required</label>
           <input
             type="text"
@@ -210,9 +209,7 @@ const PostJob = () => {
               onChange: (e) => setSkills(e.target.value),
             })}
           />
-          <p className="error">{errors.skills?.message}</p>
 
-          {/* Description */}
           <label>Description</label>
           <textarea
             value={description}
@@ -220,9 +217,7 @@ const PostJob = () => {
               onChange: (e) => setDescription(e.target.value),
             })}
           />
-          <p className="error">{errors.description?.message}</p>
 
-          {/* Payout */}
           <label>Payout (optional)</label>
           <input
             type="text"
@@ -232,7 +227,6 @@ const PostJob = () => {
             })}
           />
 
-          {/* Buttons */}
           <div className="actions">
             <button className="btn-primary" type="submit">
               Post Job
