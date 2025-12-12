@@ -9,7 +9,6 @@ const Home = () => {
   const { user } = useSelector((state) => state.users);
 
  const handleStart = () => {
-  const role = localStorage.getItem("role");
 
   if (!role) {
     navigate("/login");
