@@ -33,7 +33,9 @@ const StudentRegister = () => {
   const navigate = useNavigate();
 
   // Read registration status from Redux
-  const { isLoading, isError, isSuccess } = useSelector((state) => state.users);
+const { isLoading, isError, isSuccess, user } = useSelector(
+  (state) => state.users
+);
 
   // Local states (Controlled Components)
   const [name, setName] = useState("");
