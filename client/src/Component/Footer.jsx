@@ -28,7 +28,7 @@ const Footer = () => {
 
       {/* COPYRIGHT LINE — MUST BE INSIDE A DIV */}
       <div className="footer-copy">
-        © 2025 UTASLink — Developed by Aisha Al-Mashikhi. All rights reserved.
+        © 2025 UTASLink — Developed by Aisha Al-Mashikhi, Fatima Mohammed AlMashini. All rights reserved.
       </div>
     </footer>
   );
