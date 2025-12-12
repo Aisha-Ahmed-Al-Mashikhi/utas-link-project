@@ -5,8 +5,8 @@ import {
   fetchApplicants,
   updateApplicantStatus,
 } from "../Features/ApplicationSlice";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import * as ENV from "../config";
 import "../Styles/ApplicantsJob.css";
 
 const ApplicantsJob = () => {
@@ -14,22 +14,26 @@ const ApplicantsJob = () => {
   const navigate = useNavigate();
   const { jobId } = useParams();
 
-  const { applicants, isLoading } = useSelector((state) => state.applications);
+  const { applicants, isLoading } = useSelector(
+    (state) => state.applications
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 6; // 3 × 2
+  const cardsPerPage = 6; // 3 × 2 grid
 
+  /* ================= FETCH APPLICANTS ================= */
   useEffect(() => {
-  if (jobId) dispatch(fetchApplicants(jobId));
-}, [dispatch, jobId]);
+    if (jobId) dispatch(fetchApplicants(jobId));
+  }, [dispatch, jobId]);
 
+  /* ================= UPDATE STATUS ================= */
   const handleAction = (applicationId, status) => {
     dispatch(updateApplicantStatus({ applicationId, status }));
   };
 
   if (isLoading) return <p>Loading applicants...</p>;
 
-  // Pagination logic
+  /* ================= PAGINATION ================= */
   const indexLast = currentPage * cardsPerPage;
   const indexFirst = indexLast - cardsPerPage;
   const currentCards = applicants.slice(indexFirst, indexLast);
@@ -45,10 +49,12 @@ const ApplicantsJob = () => {
         <p className="empty">No applicants yet.</p>
       ) : (
         <>
-          {/* 3×2 GRID FIXED */}
+          {/* ================= GRID ================= */}
           <div className="applicants-grid fixed-grid">
             {currentCards.map((app) => (
               <div key={app._id} className="applicant-card glass-card">
+                
+                {/* PROFILE */}
                 <div className="profile-row">
                   <div className="icon-circle">👤</div>
                   <div>
@@ -57,6 +63,7 @@ const ApplicantsJob = () => {
                   </div>
                 </div>
 
+                {/* STATUS */}
                 <p className="status">
                   Status:
                   <span className={`status-tag ${app.status.toLowerCase()}`}>
@@ -64,7 +71,21 @@ const ApplicantsJob = () => {
                   </span>
                 </p>
 
+                {/* ================= ACTIONS ================= */}
                 <div className="action-row">
+
+                  {/* ⭐ VIEW CV */}
+                  {app.cvLink && (
+                    <a
+                      href={`${ENV.SERVER_URL}${app.cvLink}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cv-btn"
+                    >
+                      View CV 📄
+                    </a>
+                  )}
+
                   <button
                     className="chat-btn"
                     onClick={() => navigate(`/company-chat/${app._id}`)}
@@ -90,7 +111,7 @@ const ApplicantsJob = () => {
             ))}
           </div>
 
-          {/* PAGINATION */}
+          {/* ================= PAGINATION ================= */}
           <div className="app-pagination">
             <button
               onClick={() => setCurrentPage((p) => p - 1)}
