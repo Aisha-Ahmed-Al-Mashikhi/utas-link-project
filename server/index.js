@@ -668,7 +668,7 @@ app.delete("/deletePost/:id", async (req, res) => {
     res.status(500).json({ error: "Error deleting post" });
   }
 });
-#Referesh
+//Referesh
 app.use(express.static(path.join(process.cwd(), "client/build")));
 
 app.get("*", (req, res) => {
