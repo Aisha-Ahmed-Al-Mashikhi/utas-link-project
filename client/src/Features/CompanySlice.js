@@ -1,34 +1,41 @@
-// src/Features/CompanySlice.js
+// ===================== IMPORTS =====================
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
 
+// ===================== INITIAL STATE =====================
 const initialState = {
   company: {},
+
   isLoading: false,
   isSuccess: false,
   isError: false,
   message: "",
+
+  // 🔥 separated success flags
+  registerSuccess: false,
+  updateSuccess: false,
 };
 
-/* =============================
-    REGISTER COMPANY
-============================= */
+// ===================== REGISTER COMPANY =====================
 export const registerCompany = createAsyncThunk(
   "companies/registerCompany",
   async (companyData, thunkAPI) => {
     try {
-      const res = await axios.post(`${ENV.SERVER_URL}/registerCompany`, companyData);
+      const res = await axios.post(
+        `${ENV.SERVER_URL}/registerCompany`,
+        companyData
+      );
       return res.data.company;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Server error");
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Server error"
+      );
     }
   }
 );
 
-/* =============================
-    FETCH COMPANY
-============================= */
+// ===================== FETCH COMPANY =====================
 export const fetchCompany = createAsyncThunk(
   "companies/fetchCompany",
   async (email, thunkAPI) => {
@@ -36,29 +43,32 @@ export const fetchCompany = createAsyncThunk(
       const res = await axios.get(`${ENV.SERVER_URL}/company/${email}`);
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Fetch error");
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Fetch error"
+      );
     }
   }
 );
 
-/* =============================
-    UPDATE COMPANY PROFILE ✔
-============================= */
+// ===================== UPDATE COMPANY =====================
 export const updateCompany = createAsyncThunk(
   "companies/updateCompany",
   async ({ email, data }, thunkAPI) => {
     try {
-      const res = await axios.put(`${ENV.SERVER_URL}/updateCompany/${email}`, data);
+      const res = await axios.put(
+        `${ENV.SERVER_URL}/updateCompany/${email}`,
+        data
+      );
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Update error");
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Update error"
+      );
     }
   }
 );
 
-/* =============================
-    UPLOAD LICENSE (PDF)
-============================= */
+// ===================== UPLOAD LICENSE =====================
 export const uploadLicense = createAsyncThunk(
   "companies/uploadLicense",
   async ({ email, file }, thunkAPI) => {
@@ -73,14 +83,14 @@ export const uploadLicense = createAsyncThunk(
 
       return { ...res.data, email };
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "License upload failed");
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "License upload failed"
+      );
     }
   }
 );
 
-/* =============================
-    DELETE LICENSE
-============================= */
+// ===================== DELETE LICENSE =====================
 export const deleteLicense = createAsyncThunk(
   "companies/deleteLicense",
   async (email, thunkAPI) => {
@@ -88,14 +98,14 @@ export const deleteLicense = createAsyncThunk(
       const res = await axios.put(`${ENV.SERVER_URL}/deleteLicense`, { email });
       return { ...res.data, email };
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Failed to delete license");
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Failed to delete license"
+      );
     }
   }
 );
 
-/* =============================
-        SLICE
-============================= */
+// ===================== SLICE =====================
 const companySlice = createSlice({
   name: "companies",
   initialState,
@@ -105,12 +115,15 @@ const companySlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
+
+      state.registerSuccess = false;
+      state.updateSuccess = false;
     },
   },
 
   extraReducers: (builder) => {
     builder
-      /* REGISTER */
+      // ================= REGISTER =================
       .addCase(registerCompany.pending, (state) => {
         state.isLoading = true;
       })
@@ -118,6 +131,7 @@ const companySlice = createSlice({
         state.isLoading = false;
         state.company = action.payload;
         state.isSuccess = true;
+        state.registerSuccess = true; // 🔥
       })
       .addCase(registerCompany.rejected, (state, action) => {
         state.isLoading = false;
@@ -125,64 +139,29 @@ const companySlice = createSlice({
         state.message = action.payload;
       })
 
-      /* FETCH */
-      .addCase(fetchCompany.pending, (state) => {
-        state.isLoading = true;
-      })
+      // ================= FETCH =================
       .addCase(fetchCompany.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.company = action.payload;
       })
-      .addCase(fetchCompany.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
 
-      /* UPDATE COMPANY ✔ */
-      .addCase(updateCompany.pending, (state) => {
-        state.isLoading = true;
-      })
+      // ================= UPDATE =================
       .addCase(updateCompany.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.company = action.payload; // update UI
-        state.isSuccess = true;
-      })
-      .addCase(updateCompany.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
+        state.company = action.payload;
+        state.updateSuccess = true;
+        state.message = "Profile updated";
       })
 
-      /* UPLOAD LICENSE */
-      .addCase(uploadLicense.pending, (state) => {
-        state.isLoading = true;
-      })
+      // ================= UPLOAD LICENSE =================
       .addCase(uploadLicense.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.company = {
           ...state.company,
           businessLicense: action.payload.businessLicense,
         };
       })
-      .addCase(uploadLicense.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
 
-      /* DELETE LICENSE */
-      .addCase(deleteLicense.pending, (state) => {
-        state.isLoading = true;
-      })
+      // ================= DELETE LICENSE =================
       .addCase(deleteLicense.fulfilled, (state) => {
-        state.isLoading = false;
         state.company = { ...state.company, businessLicense: null };
-      })
-      .addCase(deleteLicense.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
       });
   },
 });
