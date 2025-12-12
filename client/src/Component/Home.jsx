@@ -6,20 +6,26 @@ import Posts from "./Posts.jsx";
 
 const Home = () => {
   const navigate = useNavigate();
-const { user, role } = useSelector((state) => state.users);
 
-const handleStart = () => {
-  if (!user) {
-    navigate("/login");
-  } else if (role === "company") {
-    navigate("/post-job");
-  } else {
-    navigate("/find-job");
-  }
-};
+  // Redux state
+  const { user, role } = useSelector((state) => state.users);
 
+  // LocalStorage fallback (important after refresh)
+  const storedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  const storedRole = localStorage.getItem("role");
 
+  const handleStart = () => {
+    const activeUser = user || storedUser;
+    const activeRole = role || storedRole;
 
+    if (!activeUser) {
+      navigate("/login");
+    } else if (activeRole === "company") {
+      navigate("/post-job");
+    } else {
+      navigate("/find-job");
+    }
+  };
 
   return (
     <div className="home">
@@ -39,7 +45,7 @@ const handleStart = () => {
         </p>
 
         <button className="hero-btn" onClick={handleStart}>
-          {user ? "Welcome" : "Get Start"}
+          {user || storedUser ? "Welcome" : "Get Start"}
         </button>
       </section>
 
@@ -49,6 +55,7 @@ const handleStart = () => {
         <Posts />
       </section>
 
+      {/* ------------ FEATURES SECTION ------------ */}
       <section className="features-section">
         <h2 className="features-title">Why Choose UTASLink?</h2>
 
@@ -56,25 +63,37 @@ const handleStart = () => {
           <div className="feature-card">
             <div className="feature-icon">💼</div>
             <h3>Verified Local Jobs</h3>
-            <p>All job opportunities come from trusted companies and ministries within Dhofar.</p>
+            <p>
+              All job opportunities come from trusted companies and ministries
+              within Dhofar.
+            </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">⏱️</div>
             <h3>Flexible Work Options</h3>
-            <p>Part-time, per-task, and hourly jobs designed for UTAS students’ schedules.</p>
+            <p>
+              Part-time, per-task, and hourly jobs designed for UTAS students’
+              schedules.
+            </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">📱</div>
             <h3>Fast Application Process</h3>
-            <p>Apply instantly and communicate directly with employers using the built-in chat.</p>
+            <p>
+              Apply instantly and communicate directly with employers using the
+              built-in chat.
+            </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">⭐</div>
             <h3>Student-Focused Platform</h3>
-            <p>Built exclusively for UTAS students to gain experience and earn income.</p>
+            <p>
+              Built exclusively for UTAS students to gain experience and earn
+              income.
+            </p>
           </div>
         </div>
       </section>
