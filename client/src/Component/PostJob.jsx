@@ -3,13 +3,15 @@ import "../Styles/PostJob.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { postJobSchema } from "../Validations/PostJobValidation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; // ✅ fixed
 import { addJob } from "../Features/JobSlice";
 import { useNavigate } from "react-router-dom";
 
 const PostJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // 🔥 get company from redux
   const { company } = useSelector((state) => state.companies);
 
   const [jobTitle, setJobTitle] = useState("");
@@ -25,7 +27,7 @@ const PostJob = () => {
     register,
     handleSubmit,
     reset,
-    setValue,   // ⭐ مهم لإخفاء الخطأ مباشرة
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(postJobSchema),
@@ -48,41 +50,47 @@ const PostJob = () => {
   const SECTORS = ["Private Company", "Government"];
   const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
 
+  // ================= SUBMIT =================
   const onSubmit = () => {
-  const loggedCompany = JSON.parse(localStorage.getItem("loggedUser"));
-  if (!loggedCompany) {
-    return alert("Please log in first.");
-  }
+    const loggedCompany = JSON.parse(localStorage.getItem("loggedUser"));
 
-  // 🔴 CHECK LICENSE FIRST
-  if (!company?.businessLicense) {
-    alert("You must upload your business license before posting a job.");
-    return;
-  }
+    if (!loggedCompany) {
+      alert("Please log in first.");
+      navigate("/login");
+      return;
+    }
 
-  dispatch(
-    addJob({
-      jobTitle,
-      category,
-      sector,
-      rate,
-      rateType,
-      skills,
-      description,
-      payout,
-      organization: loggedCompany.companyName,
-      postedBy: loggedCompany.email,
-    })
-  )
-    .unwrap()
-    .then(() => {
-      alert("Job posted successfully!");
-      navigate("/company-jobs");
-      handleClean();
-    })
-    .catch(() => alert("Failed to post job"));
-};
+    // 🔴 CHECK BUSINESS LICENSE
+    if (!company?.businessLicense) {
+      alert("You must upload your business license before posting a job.");
+      navigate("/company-profile");
+      return;
+    }
 
+    dispatch(
+      addJob({
+        jobTitle,
+        category,
+        sector,
+        rate,
+        rateType,
+        skills,
+        description,
+        payout,
+        organization: loggedCompany.companyName,
+        postedBy: loggedCompany.email,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        alert("Job posted successfully!");
+        navigate("/company-jobs");
+        handleClean();
+      })
+      .catch(() => alert("Failed to post job"));
+  };
+
+  // ================= CLEAN =================
   const handleClean = () => {
     reset();
     setJobTitle("");
@@ -118,7 +126,6 @@ const PostJob = () => {
 
           {/* Category + Sector */}
           <div className="row-flex">
-            {/* Category */}
             <div className="col-half">
               <label>Category</label>
               <select
@@ -135,10 +142,8 @@ const PostJob = () => {
               <p className="error">{errors.category?.message}</p>
             </div>
 
-            {/* Sector */}
             <div className="col-half">
               <label>Sector</label>
-
               <div className="sector-grid">
                 {SECTORS.map((s) => (
                   <label
@@ -152,14 +157,15 @@ const PostJob = () => {
                       checked={sector === s}
                       onChange={(e) => {
                         setSector(e.target.value);
-                        setValue("sector", e.target.value, { shouldValidate: true }); 
+                        setValue("sector", e.target.value, {
+                          shouldValidate: true,
+                        });
                       }}
                     />
                     <span>{s}</span>
                   </label>
                 ))}
               </div>
-
               <p className="error">{errors.sector?.message}</p>
             </div>
           </div>
