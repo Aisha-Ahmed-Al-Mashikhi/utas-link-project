@@ -1,24 +1,20 @@
-// React core + hooks
+// React core + hooks for managing component state and lifecycle
 import React, { useEffect, useState } from "react";
-
-// Redux hooks
+// Redux hooks: dispatch actions + read state from the Redux store
 import { useDispatch, useSelector } from "react-redux";
-
-// Redux thunk
+// Redux async thunk: handles student/company registration request
 import { registerUser } from "../Features/UserSlice";
-
-// Router
+// Router: navigate programmatically + link between pages
 import { useNavigate, Link } from "react-router-dom";
-
-// React Hook Form
+// React Hook Form: manages form inputs, validation, and submission
 import { useForm } from "react-hook-form";
+// Connects Yup validation schema to React Hook Form
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// Validation schema
+// Yup validation schema for validating all registration fields
 import { StudentRegisterSchema } from "../Validations/StudentRegisterValidation";
-
-// Styles & Image
+// Component-specific CSS styling
 import "../Styles/UserRegister.css";
+// Registration page side image (illustration)
 import registerImg from "../Images/login-side.png";
 
 // Predefined majors
@@ -31,22 +27,22 @@ const MAJORS = [
 ];
 
 const StudentRegister = () => {
+  // Used to trigger Redux actions (ex: registerUser, login, logout)
   const dispatch = useDispatch();
+  // Used to navigate programmatically to another page after an action (ex: redirect after registration)
   const navigate = useNavigate();
 
-  // Redux state
-  const { isLoading, isError, isSuccess } = useSelector(
-    (state) => state.users
-  );
+  // Read registration status from Redux
+  const { isLoading, isError, isSuccess } = useSelector((state) => state.users);
 
-  // Local states
+  // Local states (Controlled Components)
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [major, setMajor] = useState("");
 
-  // React Hook Form
+  // React Hook Form setup with Yup validation
   const {
     register,
     handleSubmit,
@@ -60,19 +56,18 @@ const StudentRegister = () => {
   const onSubmit = (data) => {
     const finalData = {
       ...data,
-      role: "student",
+      role: "student", // Assign student role for backend
     };
     dispatch(registerUser(finalData));
   };
 
-  // Handle register result
+  // Handle success or error response
   useEffect(() => {
     if (isSuccess) {
+      alert("Student registered successfully!");
       reset();
-      navigate("/find-job"); // أو أي صفحة تبغين بعد التسجيل
-    }
-
-    if (isError) {
+      navigate("/student-profile");
+    } else if (isError) {
       alert("Registration failed. Please try again.");
     }
   }, [isSuccess, isError, navigate, reset]);
@@ -80,14 +75,14 @@ const StudentRegister = () => {
   return (
     <div className="register-page">
       <div className="register-container">
-        {/* Form */}
+        {/* Left Side - Registration Form */}
         <div className="register-form">
           <h1 className="reg-title">
             Create your <span className="accent">account</span>
           </h1>
           <p className="reg-sub">Please fill in your details to continue</p>
 
-          {/* Role switch */}
+          {/* Role Switch Buttons */}
           <div className="role-switch">
             <Link to="/student-register" className="role-btn active">
               Student
@@ -98,12 +93,14 @@ const StudentRegister = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Name & Age */}
+            {/* NAME + AGE */}
             <div className="row-flex">
+              {/* FULL NAME */}
               <div className="col-half form-group">
                 <label>Full Name</label>
                 <input
                   type="text"
+                  placeholder="Your name"
                   value={name}
                   {...register("name", {
                     onChange: (e) => setName(e.target.value),
@@ -112,10 +109,12 @@ const StudentRegister = () => {
                 <p className="error">{errors.name?.message}</p>
               </div>
 
+              {/* AGE */}
               <div className="col-half form-group">
                 <label>Age</label>
                 <input
                   type="number"
+                  placeholder="Your age"
                   value={age}
                   {...register("age", {
                     onChange: (e) => setAge(e.target.value),
@@ -125,12 +124,14 @@ const StudentRegister = () => {
               </div>
             </div>
 
-            {/* Email & Password */}
+            {/* EMAIL + PASSWORD */}
             <div className="row-flex">
+              {/* EMAIL */}
               <div className="col-half form-group">
                 <label>Email</label>
                 <input
                   type="email"
+                  placeholder="you@example.com"
                   value={email}
                   {...register("email", {
                     onChange: (e) => setEmail(e.target.value),
@@ -139,10 +140,12 @@ const StudentRegister = () => {
                 <p className="error">{errors.email?.message}</p>
               </div>
 
+              {/* PASSWORD */}
               <div className="col-half form-group">
                 <label>Password</label>
                 <input
                   type="password"
+                  placeholder="********"
                   value={password}
                   {...register("password", {
                     onChange: (e) => setPassword(e.target.value),
@@ -152,7 +155,7 @@ const StudentRegister = () => {
               </div>
             </div>
 
-            {/* Major */}
+            {/* MAJOR */}
             <div className="form-group">
               <label>Major</label>
               <select
@@ -170,10 +173,12 @@ const StudentRegister = () => {
               <p className="error">{errors.major?.message}</p>
             </div>
 
+            {/* SUBMIT BUTTON */}
             <button type="submit" className="reg-btn" disabled={isLoading}>
               {isLoading ? "Registering..." : "Sign up"}
             </button>
 
+            {/* SWITCH TO LOGIN */}
             <p className="login-text">
               Already have an account?
               <Link to="/login" className="login-link">
@@ -184,7 +189,7 @@ const StudentRegister = () => {
           </form>
         </div>
 
-        {/* Image */}
+        {/* Right Side - Image */}
         <div className="register-image">
           <img src={registerImg} alt="Registration illustration" />
         </div>
