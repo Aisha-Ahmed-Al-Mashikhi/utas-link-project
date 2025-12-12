@@ -8,17 +8,21 @@ const Home = () => {
   const navigate = useNavigate();
   const { user, role } = useSelector((state) => state.users);
 
- const handleStart = () => {
-  const role = localStorage.getItem("role");
+ const { user, role } = useSelector((state) => state.users);
 
-  if (!role) {
+const handleStart = () => {
+  if (!user) {
     navigate("/login");
-  } else if (role === "company") {
+    return;
+  }
+
+  if (role === "company") {
     navigate("/post-job");
   } else {
     navigate("/find-job");
   }
 };
+
 
   return (
     <div className="home">
