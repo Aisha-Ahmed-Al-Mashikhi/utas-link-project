@@ -48,31 +48,39 @@ const PostJob = () => {
   const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
 
   const onSubmit = () => {
-    const company = JSON.parse(localStorage.getItem("loggedUser"));
-    if (!company) return alert("Please log in first.");
+  const loggedCompany = JSON.parse(localStorage.getItem("loggedUser"));
+  if (!loggedCompany) {
+    return alert("Please log in first.");
+  }
 
-    dispatch(
-      addJob({
-        jobTitle,
-        category,
-        sector,
-        rate,
-        rateType,
-        skills,
-        description,
-        payout,
-        organization: company.companyName,
-        postedBy: company.email,
-      })
-    )
-      .unwrap()
-      .then(() => {
-        alert("Job posted successfully!");
-        navigate("/company-jobs"); // ⭐ بعد النجاح
-        handleClean();
-      })
-      .catch(() => alert("Failed to post job"));
-  };
+  // 🔴 CHECK LICENSE FIRST
+  if (!company?.businessLicense) {
+    alert("You must upload your business license before posting a job.");
+    return;
+  }
+
+  dispatch(
+    addJob({
+      jobTitle,
+      category,
+      sector,
+      rate,
+      rateType,
+      skills,
+      description,
+      payout,
+      organization: loggedCompany.companyName,
+      postedBy: loggedCompany.email,
+    })
+  )
+    .unwrap()
+    .then(() => {
+      alert("Job posted successfully!");
+      navigate("/company-jobs");
+      handleClean();
+    })
+    .catch(() => alert("Failed to post job"));
+};
 
   const handleClean = () => {
     reset();
