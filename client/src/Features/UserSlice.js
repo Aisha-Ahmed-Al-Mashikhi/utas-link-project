@@ -12,6 +12,11 @@ const initialState = {
   isSuccess: false,
   isError: false,
   message: "",
+
+  // 🔥 separated success flags
+  registerSuccess: false,
+  loginSuccess: false,
+  updateSuccess: false,
 };
 
 // ===================== REGISTER USER =====================
@@ -22,17 +27,23 @@ export const registerUser = createAsyncThunk(
       const res = await axios.post(`${ENV.SERVER_URL}/registerUser`, data);
       return res.data.user;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || "Register failed");
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Register failed"
+      );
     }
   }
 );
+
 // ===================== UPDATE STUDENT PROFILE =====================
 export const updateStudent = createAsyncThunk(
   "users/updateStudent",
   async ({ email, data }, thunkAPI) => {
     try {
-      const res = await axios.put(`${ENV.SERVER_URL}/updateStudent/${email}`, data);
-      return res.data; // updated student
+      const res = await axios.put(
+        `${ENV.SERVER_URL}/updateStudent/${email}`,
+        data
+      );
+      return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue("Update failed");
     }
@@ -40,14 +51,19 @@ export const updateStudent = createAsyncThunk(
 );
 
 // ===================== LOGIN =====================
-export const login = createAsyncThunk("users/login", async (data, thunkAPI) => {
-  try {
-    const res = await axios.post(`${ENV.SERVER_URL}/login`, data);
-    return res.data;
-  } catch (err) {
-    return thunkAPI.rejectWithValue(err.response?.data || "Login failed");
+export const login = createAsyncThunk(
+  "users/login",
+  async (data, thunkAPI) => {
+    try {
+      const res = await axios.post(`${ENV.SERVER_URL}/login`, data);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Login failed"
+      );
+    }
   }
-});
+);
 
 // ===================== LOGOUT =====================
 export const logout = createAsyncThunk("users/logout", async () => {
@@ -82,7 +98,6 @@ export const uploadCv = createAsyncThunk(
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      // Return full URL to fix View button
       return `${ENV.SERVER_URL}${res.data.cvLink}`;
     } catch (err) {
       return thunkAPI.rejectWithValue("CV upload failed");
@@ -103,7 +118,6 @@ export const deleteCvThunk = createAsyncThunk(
   }
 );
 
-
 // ===================== SLICE =====================
 const userSlice = createSlice({
   name: "users",
@@ -114,18 +128,23 @@ const userSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
+
+      state.registerSuccess = false;
+      state.loginSuccess = false;
+      state.updateSuccess = false;
     },
   },
 
   extraReducers: (builder) => {
     builder
-      // REGISTER
+      // ================= REGISTER =================
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.registerSuccess = true;
         state.user = action.payload;
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -133,25 +152,30 @@ const userSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-.addCase(updateStudent.fulfilled, (state, action) => {
-  state.user = action.payload; // update UI live
-  state.isSuccess = true;
-  state.message = "Profile updated";
-})// UPDATE STUDENT
 
+      // ================= UPDATE STUDENT =================
+      .addCase(updateStudent.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.updateSuccess = true;
+        state.message = "Profile updated";
+      })
 
-      // LOGIN
+      // ================= LOGIN =================
       .addCase(login.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.loginSuccess = true;
 
         state.user = action.payload.user;
         state.role = action.payload.role;
 
-        localStorage.setItem("loggedUser", JSON.stringify(action.payload.user));
+        localStorage.setItem(
+          "loggedUser",
+          JSON.stringify(action.payload.user)
+        );
         localStorage.setItem("role", action.payload.role);
       })
       .addCase(login.rejected, (state, action) => {
@@ -160,29 +184,30 @@ const userSlice = createSlice({
         state.message = action.payload;
       })
 
-      // LOGOUT
+      // ================= LOGOUT =================
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.role = null;
       })
 
-      // FETCH USER
+      // ================= FETCH USER =================
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
 
-      // UPLOAD CV
+      // ================= UPLOAD CV =================
       .addCase(uploadCv.fulfilled, (state, action) => {
-  if (state.user) {
-    state.user.cvLink = action.payload;
-  }
-})
-
-
-      // DELETE CV
-      .addCase(deleteCvThunk.fulfilled, (state) => {
-        state.user.cvLink = null;
+        if (state.user) {
+          state.user.cvLink = action.payload;
+        }
       })
+
+      // ================= DELETE CV =================
+      .addCase(deleteCvThunk.fulfilled, (state) => {
+        if (state.user) {
+          state.user.cvLink = null;
+        }
+      });
   },
 });
 
