@@ -66,7 +66,7 @@ const CompanyRegister = () => {
       alert("Company registered successfully!");
       reset();
       dispatch(resetState());
-      navigate("/login");
+      navigate("/company-profile");
     }
   }, [registerSuccess, reset, navigate, dispatch]);
 
