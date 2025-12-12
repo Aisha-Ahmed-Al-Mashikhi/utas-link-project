@@ -217,40 +217,40 @@
   border-color: #009688;
 }
 
-/* RADIO — CIRCLE + SMALL DOT */
+/* RADIO — CIRCLE */
 .radio-option input[type="radio"] {
   appearance: none;
   -webkit-appearance: none;
 
   width: 18px;
   height: 18px;
-
   border-radius: 50%;
   border: 2px solid #009688;
   background: #fff;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   cursor: pointer;
-  position: relative;
+  position: relative; /* ⭐ مهم */
 }
 
-/* SMALL DOT */
-.radio-option input[type="radio"]::after {
+/* SMALL DOT (CENTERED PERFECTLY) */
+.radio-option input[type="radio"]::before {
   content: "";
-  width: 6px;            /* ⭐ النقطة */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 6px;
   height: 6px;
   border-radius: 50%;
   background: #009688;
-  opacity: 0;
+
+  transform: translate(-50%, -50%) scale(0);
   transition: 0.15s ease;
 }
 
-/* CHECKED */
-.radio-option input[type="radio"]:checked::after {
-  opacity: 1;
+/* SHOW DOT WHEN CHECKED */
+.radio-option input[type="radio"]:checked::before {
+  transform: translate(-50%, -50%) scale(1);
 }
 
 /* ACTIVE CARD */
