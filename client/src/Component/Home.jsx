@@ -13,15 +13,13 @@ const Home = () => {
 const handleStart = () => {
   if (!user) {
     navigate("/login");
-    return;
-  }
-
-  if (role === "company") {
+  } else if (user.role === "company") {
     navigate("/post-job");
   } else {
     navigate("/find-job");
   }
 };
+
 
 
   return (
