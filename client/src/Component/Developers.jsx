@@ -11,10 +11,10 @@ const Developers = () => {
       {/* Solo Developer Section */}
       <div className="dev-grid">
         <div className="dev-card">
-          <h3>Aisha Al-Mashikhi</h3>
+          <h3>Aisha Al-Mashikhi, Fatima Mohammed AlMashini</h3>
           <p className="role">Full-Stack Developer</p>
           <p className="desc">
-            This project was fully developed by Aisha Al-Mashikhi, covering all
+            This project was fully developed by Aisha Al-Mashikhi,Fatima Al-Mashini, covering all
             aspects including:
           </p>
 
