@@ -69,7 +69,7 @@ const StudentRegister = () => {
   useEffect(() => {
     if (isSuccess) {
       reset();
-      navigate("/login"); // أو أي صفحة تبغين بعد التسجيل
+      navigate("/find-job"); // أو أي صفحة تبغين بعد التسجيل
     }
 
     if (isError) {
