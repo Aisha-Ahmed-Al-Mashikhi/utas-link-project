@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // Redux hooks: dispatch actions + read state from the Redux store
 import { useDispatch, useSelector } from "react-redux";
 // Redux async thunk: handles student/company registration request
-import { registerUser } from "../Features/UserSlice";
+import { registerUser, resetState } from "../Features/UserSlice";
 // Router: navigate programmatically + link between pages
 import { useNavigate, Link } from "react-router-dom";
 // React Hook Form: manages form inputs, validation, and submission
@@ -62,15 +62,20 @@ const StudentRegister = () => {
   };
 
   // Handle success or error response
-  useEffect(() => {
-    if (isSuccess) {
-      alert("Student registered successfully!");
-      reset();
-      navigate("/student-profile");
-    } else if (isError) {
-      alert("Registration failed. Please try again.");
-    }
-  }, [isSuccess, isError, navigate, reset]);
+ useEffect(() => {
+  if (isSuccess) {
+    alert("Student registered successfully!");
+    dispatch(resetState());   // ✅ امسحي الحالة
+    reset();
+    navigate("/student-profile");
+  }
+
+  if (isError) {
+    alert("Registration failed. Please try again.");
+    dispatch(resetState());   // ✅ امسحي الحالة
+  }
+}, [isSuccess, isError, dispatch, navigate, reset]);
+
 
   return (
     <div className="register-page">
