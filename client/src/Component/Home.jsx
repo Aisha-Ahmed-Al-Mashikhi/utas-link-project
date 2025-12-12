@@ -7,9 +7,6 @@ import Posts from "./Posts.jsx";
 const Home = () => {
   const navigate = useNavigate();
   const { user, role } = useSelector((state) => state.users);
-
- const { user, role } = useSelector((state) => state.users);
-
 const handleStart = () => {
   if (!user) {
     navigate("/login");
