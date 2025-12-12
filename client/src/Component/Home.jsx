@@ -9,22 +9,16 @@ const Home = () => {
   const { user } = useSelector((state) => state.users);
 
  const handleStart = () => {
-  if (!user) {
+  const role = localStorage.getItem("role");
+
+  if (!role) {
     navigate("/login");
-    return;
-  }
-
-  // ✅ لو شركة
-  if (user.role === "company") {
+  } else if (role === "company") {
     navigate("/post-job");
-  }
-
-  // ✅ لو طالب
-  if (user.role === "student") {
+  } else {
     navigate("/find-job");
   }
 };
-
 
   return (
     <div className="home">
