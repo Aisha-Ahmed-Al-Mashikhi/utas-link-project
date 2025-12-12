@@ -372,23 +372,33 @@ app.put("/jobs/:id", async (req, res) => {
 app.post("/apply", async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.applicantEmail });
-
     if (!user) return res.status(404).json({ error: "Student not found" });
 
     const job = await JobModel.findById(req.body.jobId);
     if (!job) return res.status(404).json({ error: "Job not found" });
+
+    // ✅ NEW — check if already applied
+    const alreadyApplied = await ApplicationModel.findOne({
+      jobId: job._id,
+      applicantEmail: user.email,
+    });
+
+    if (alreadyApplied) {
+      return res.status(400).json({
+        error: "You already applied for this job",
+      });
+    }
 
     const company = await CompanyModel.findOne({ email: job.postedBy });
 
     const newApp = new ApplicationModel({
       ...req.body,
       jobId: job._id,
-      applicantName: user.name,          // ⬅ ⭐ أضف اسم الطالب
-      applicantEmail: user.email,        // ⬅ موجود أصلًا
+      applicantName: user.name,
+      applicantEmail: user.email,
       organization: company?.companyName || "Unknown Company",
       companyEmail: job.postedBy,
       status: "Pending",
-      appliedAt: new Date(),
     });
 
     await newApp.save();
