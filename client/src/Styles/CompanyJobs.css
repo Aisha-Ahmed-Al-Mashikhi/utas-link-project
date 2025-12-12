@@ -135,7 +135,7 @@
   z-index: 9999;
 }
 
-/* VIEW MODAL */
+/* VIEW + EDIT MODAL */
 .view-modal,
 .edit-modal {
   background: #ffffff;
@@ -149,30 +149,23 @@
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
 }
 
-/* CLOSE BUTTON — FIXED DESIGN */
+/* CLOSE BUTTON */
 .close-btn {
   position: absolute;
   top: 16px;
   right: 16px;
-
   width: 42px;
   height: 42px;
-
   background: #ffffff;
   border: none;
   border-radius: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-size: 22px;
-  font-weight: 400;
   color: #111;
-
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
   transition: 0.2s ease;
 }
 
@@ -197,7 +190,7 @@
   resize: none;
 }
 
-/* SECTOR CONTAINER */
+/* SECTOR */
 .sector-row {
   display: flex;
   gap: 16px;
@@ -210,55 +203,60 @@
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 14px 18px;
   border: 1.5px solid #d0d0d0;
   border-radius: 14px;
   cursor: pointer;
-
   font-size: 15px;
   font-weight: 500;
   color: #111;
-
   transition: 0.2s ease;
 }
 
-/* HOVER */
 .radio-option:hover {
   border-color: #009688;
 }
 
-/* HIDE DEFAULT RADIO */
+/* RADIO — PERFECT CIRCLE (FIXED) */
 .radio-option input[type="radio"] {
   appearance: none;
   -webkit-appearance: none;
+
   width: 18px;
   height: 18px;
-  border-radius: 50%;
-  border: 2px solid #999;
-  position: relative;
-  cursor: pointer;
-}
+  min-width: 18px;
+  min-height: 18px;
 
-/* CHECKED STATE */
-.radio-option input[type="radio"]:checked {
-  border-color: #009688;
+  border-radius: 50%;
+  border: 2px solid #009688;
+  background: #fff;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
 }
 
 /* INNER DOT */
-.radio-option input[type="radio"]:checked::after {
+.radio-option input[type="radio"]::after {
   content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
   width: 8px;
   height: 8px;
-  background: #009688;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
+  background: #009688;
+  transform: scale(0);
+  transition: 0.15s ease;
 }
 
-/* CARD ACTIVE WHEN CHECKED */
+/* CHECKED */
+.radio-option input[type="radio"]:checked::after {
+  transform: scale(1);
+}
+
+/* ACTIVE CARD */
 .radio-option:has(input[type="radio"]:checked) {
   border-color: #009688;
   background: #f1fbf9;
