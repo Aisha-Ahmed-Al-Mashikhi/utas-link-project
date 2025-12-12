@@ -71,12 +71,16 @@ const CompanyRegister = () => {
   }, [registerSuccess, reset, navigate, dispatch]);
 
   // ❌ error handling
-  useEffect(() => {
-    if (isError && message) {
-      alert(message);
-      dispatch(resetState());
-    }
-  }, [isError, message, dispatch]);
+ useEffect(() => {
+  if (isError && message) {
+    alert(
+      typeof message === "string"
+        ? message
+        : message.msg || "Registration failed"
+    );
+    dispatch(resetState());
+  }
+}, [isError, message, dispatch]);
 
   return (
     <div className="register-page">
