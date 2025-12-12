@@ -62,7 +62,7 @@ const CompanyRegister = () => {
   useEffect(() => {
     if (isSuccess) {
       reset();
-      navigate("/login"); // بعد التسجيل
+      navigate("/post-job"); // بعد التسجيل
     }
 
     if (isError) {
