@@ -8,13 +8,23 @@ const Home = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.users);
 
-  const handleStart = () => {
-    if (user) {
-      navigate("/find-job"); // إذا مسجل دخول
-    } else {
-      navigate("/login"); // إذا غير مسجل دخول
-    }
-  };
+ const handleStart = () => {
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+
+  // ✅ لو شركة
+  if (user.role === "company") {
+    navigate("/post-job");
+  }
+
+  // ✅ لو طالب
+  if (user.role === "student") {
+    navigate("/find-job");
+  }
+};
+
 
   return (
     <div className="home">
