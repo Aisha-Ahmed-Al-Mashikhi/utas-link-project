@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const CompanySchema = new mongoose.Schema(
   {
+    organization: String,
     companyName: String, // Company name
     email: String, // Company email
     password: String, // Encrypted password
