@@ -290,15 +290,17 @@ app.post("/jobs", async (req, res) => {
       rate: req.body.rate,
       rateType: req.body.rateType,
       payout: req.body.payout,
-      postedBy: req.body.postedBy,
-      postedAt: new Date(),
+
+      postedBy: req.body.postedBy,        // email
+      organization: req.body.organization, // ⭐ اسم الشركة
+
       location: req.body.location || "Not specified",
+      postedAt: new Date(),
     });
 
     await job.save();
     res.send(job);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ error: "Error saving job" });
   }
 });
