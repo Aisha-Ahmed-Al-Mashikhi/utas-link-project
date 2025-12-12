@@ -29,9 +29,9 @@ const CompanyRegister = () => {
   const navigate = useNavigate();
 
   // Read registration status from Redux
-  const { isLoading, isError, isSuccess } = useSelector(
-    (state) => state.companies
-  );
+ const { isLoading, isError, isSuccess, user } = useSelector(
+  (state) => state.users
+);
 
   // Local states for controlled components
   const [companyName, setCompanyName] = useState("");
