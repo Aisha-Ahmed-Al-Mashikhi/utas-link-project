@@ -35,7 +35,7 @@ const StudentRegister = () => {
   const navigate = useNavigate();
 
   // Redux state
-  const { isLoading, isError, isSuccess, user } = useSelector(
+  const { isLoading, isError, isSuccess } = useSelector(
     (state) => state.users
   );
 
@@ -66,20 +66,16 @@ const StudentRegister = () => {
   };
 
   // Handle register result
- useEffect(() => {
-  if (isSuccess) {
-    localStorage.setItem("role", "student");
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+      navigate("/login"); // أو أي صفحة تبغين بعد التسجيل
+    }
 
-    reset();
-    navigate("/student-profile");
-  }
-
-  if (isError) {
-    alert("Registration failed. Please try again.");
-  }
-}, [isSuccess, isError, navigate, reset]);
-
-
+    if (isError) {
+      alert("Registration failed. Please try again.");
+    }
+  }, [isSuccess, isError, navigate, reset]);
 
   return (
     <div className="register-page">
