@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerCompany } from "../Features/CompanySlice";
-import { resetState } from "../Features/UserSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,20 +19,19 @@ const INDUSTRIES = [
   "Government",
   "Other",
 ];
+
 const LOCATIONS = ["", "Salalah", "Taqah", "Mirbat", "Mughsail", "Other"];
 
 const CompanyRegister = () => {
-  // Used to trigger Redux actions (ex: registerUser, login, logout)
   const dispatch = useDispatch();
-  // Used to navigate programmatically to another page after an action (ex: redirect after registration)
   const navigate = useNavigate();
 
-  // Read registration status from Redux
- const { isLoading, isError, isSuccess, user } = useSelector(
-  (state) => state.users
-);
+  // Redux state
+  const { isLoading, isError, isSuccess } = useSelector(
+    (state) => state.companies
+  );
 
-  // Local states for controlled components
+  // Local states
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +39,7 @@ const CompanyRegister = () => {
   const [location, setLocation] = useState("");
   const [foundedDate, setFoundedDate] = useState("");
 
-  // React Hook Form setup
+  // React Hook Form
   const {
     register,
     handleSubmit,
@@ -49,45 +47,40 @@ const CompanyRegister = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(CompanyRegisterSchema),
-    mode: "onChange",
   });
 
   // Submit handler
   const onSubmit = (data) => {
     const finalData = {
       ...data,
-      role: "company", // Assign company role for backend
+      role: "company",
     };
     dispatch(registerCompany(finalData));
   };
 
-useEffect(() => {
-  if (isSuccess && company) {
-    localStorage.setItem("loggedUser", JSON.stringify(company));
-    localStorage.setItem("role", "company");
+  // Handle register result
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+      navigate("/login"); // بعد التسجيل
+    }
 
-    reset();
-    navigate("/company-profile");
-  }
-
-  if (isError) {
-    alert("Registration failed. Please try again.");
-  }
-}, [isSuccess, isError, company, navigate, reset]);
-
-
+    if (isError) {
+      alert("Registration failed. Please try again.");
+    }
+  }, [isSuccess, isError, navigate, reset]);
 
   return (
     <div className="register-page">
       <div className="register-container">
-        {/* Left Side - Registration Form */}
+        {/* Form */}
         <div className="register-form">
           <h1 className="reg-title">
-            Create your <span className="accent">account</span>
+            Create your <span className="accent">company account</span>
           </h1>
           <p className="reg-sub">Please fill in your company details</p>
 
-          {/* Role Switch Buttons */}
+          {/* Role switch */}
           <div className="role-switch">
             <Link to="/student-register" className="role-btn">
               Student
@@ -102,7 +95,6 @@ useEffect(() => {
             <label>Company Name</label>
             <input
               type="text"
-              placeholder="Your company name"
               value={companyName}
               {...register("companyName", {
                 onChange: (e) => setCompanyName(e.target.value),
@@ -114,7 +106,6 @@ useEffect(() => {
             <label>Email</label>
             <input
               type="email"
-              placeholder="hr@company.com"
               value={email}
               {...register("email", {
                 onChange: (e) => setEmail(e.target.value),
@@ -126,7 +117,6 @@ useEffect(() => {
             <label>Password</label>
             <input
               type="password"
-              placeholder="********"
               value={password}
               {...register("password", {
                 onChange: (e) => setPassword(e.target.value),
@@ -144,8 +134,8 @@ useEffect(() => {
                     onChange: (e) => setIndustry(e.target.value),
                   })}
                 >
-                  {INDUSTRIES.map((i, index) => (
-                    <option key={index} value={i}>
+                  {INDUSTRIES.map((i, idx) => (
+                    <option key={idx} value={i}>
                       {i === "" ? "Select your industry" : i}
                     </option>
                   ))}
@@ -161,8 +151,8 @@ useEffect(() => {
                     onChange: (e) => setLocation(e.target.value),
                   })}
                 >
-                  {LOCATIONS.map((l, index) => (
-                    <option key={index} value={l}>
+                  {LOCATIONS.map((l, idx) => (
+                    <option key={idx} value={l}>
                       {l === "" ? "Select your location" : l}
                     </option>
                   ))}
@@ -182,22 +172,21 @@ useEffect(() => {
             />
             <p className="error">{errors.foundedDate?.message}</p>
 
-            {/* SUBMIT BUTTON */}
             <button type="submit" className="reg-btn" disabled={isLoading}>
               {isLoading ? "Registering..." : "Sign up"}
             </button>
 
-            {/* LOGIN LINK */}
             <p className="login-text">
-              Already have an account?{" "}
+              Already have an account?
               <Link to="/login" className="login-link">
-                Log in now.
+                {" "}
+                Log in now!
               </Link>
             </p>
           </form>
         </div>
 
-        {/* Right Side - Illustration */}
+        {/* Image */}
         <div className="register-image">
           <img src={companyImg} alt="Company registration" />
         </div>
