@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerCompany } from "../Features/CompanySlice";
+import { registerCompany, resetState } from "../Features/CompanySlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,7 +8,6 @@ import { CompanyRegisterSchema } from "../Validations/CompanyRegisterValidation"
 import "../Styles/CompanyRegister.css";
 import companyImg from "../Images/company-man.png";
 
-// Predefined industries and locations
 const INDUSTRIES = [
   "",
   "Technology",
@@ -19,20 +18,17 @@ const INDUSTRIES = [
   "Government",
   "Other",
 ];
+
 const LOCATIONS = ["", "Salalah", "Taqah", "Mirbat", "Mughsail", "Other"];
 
 const CompanyRegister = () => {
-  // Used to trigger Redux actions (ex: registerUser, login, logout)
   const dispatch = useDispatch();
-  // Used to navigate programmatically to another page after an action (ex: redirect after registration)
   const navigate = useNavigate();
 
-  // Read registration status from Redux
-  const { isLoading, isError, isSuccess } = useSelector(
+  const { isLoading, registerSuccess, isError, message } = useSelector(
     (state) => state.companies
   );
 
-  // Local states for controlled components
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +36,6 @@ const CompanyRegister = () => {
   const [location, setLocation] = useState("");
   const [foundedDate, setFoundedDate] = useState("");
 
-  // React Hook Form setup
   const {
     register,
     handleSubmit,
@@ -51,37 +46,47 @@ const CompanyRegister = () => {
     mode: "onChange",
   });
 
-  // Submit handler
+  // 🔥 reset redux state when page opens
+  useEffect(() => {
+    dispatch(resetState());
+  }, [dispatch]);
+
   const onSubmit = (data) => {
-    const finalData = {
-      ...data,
-      role: "company", // Assign company role for backend
-    };
-    dispatch(registerCompany(finalData));
+    dispatch(
+      registerCompany({
+        ...data,
+        role: "company",
+      })
+    );
   };
 
-  // Handle registration response
+  // ✅ success only after submit
   useEffect(() => {
-    if (isSuccess) {
+    if (registerSuccess) {
       alert("Company registered successfully!");
       reset();
-      navigate("/company-profile"); // Redirect to company profile
-    } else if (isError) {
-      alert("Registration failed. Please try again.");
+      dispatch(resetState());
+      navigate("/login");
     }
-  }, [isSuccess, isError, navigate, reset]);
+  }, [registerSuccess, reset, navigate, dispatch]);
+
+  // ❌ error handling
+  useEffect(() => {
+    if (isError && message) {
+      alert(message);
+      dispatch(resetState());
+    }
+  }, [isError, message, dispatch]);
 
   return (
     <div className="register-page">
       <div className="register-container">
-        {/* Left Side - Registration Form */}
         <div className="register-form">
           <h1 className="reg-title">
             Create your <span className="accent">account</span>
           </h1>
           <p className="reg-sub">Please fill in your company details</p>
 
-          {/* Role Switch Buttons */}
           <div className="role-switch">
             <Link to="/student-register" className="role-btn">
               Student
@@ -92,11 +97,9 @@ const CompanyRegister = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* COMPANY NAME */}
             <label>Company Name</label>
             <input
               type="text"
-              placeholder="Your company name"
               value={companyName}
               {...register("companyName", {
                 onChange: (e) => setCompanyName(e.target.value),
@@ -104,11 +107,9 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.companyName?.message}</p>
 
-            {/* EMAIL */}
             <label>Email</label>
             <input
               type="email"
-              placeholder="hr@company.com"
               value={email}
               {...register("email", {
                 onChange: (e) => setEmail(e.target.value),
@@ -116,11 +117,9 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.email?.message}</p>
 
-            {/* PASSWORD */}
             <label>Password</label>
             <input
               type="password"
-              placeholder="********"
               value={password}
               {...register("password", {
                 onChange: (e) => setPassword(e.target.value),
@@ -128,7 +127,6 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.password?.message}</p>
 
-            {/* INDUSTRY & LOCATION */}
             <div className="row-flex">
               <div className="col-half">
                 <label>Industry Type</label>
@@ -138,8 +136,8 @@ const CompanyRegister = () => {
                     onChange: (e) => setIndustry(e.target.value),
                   })}
                 >
-                  {INDUSTRIES.map((i, index) => (
-                    <option key={index} value={i}>
+                  {INDUSTRIES.map((i, idx) => (
+                    <option key={idx} value={i}>
                       {i === "" ? "Select your industry" : i}
                     </option>
                   ))}
@@ -155,8 +153,8 @@ const CompanyRegister = () => {
                     onChange: (e) => setLocation(e.target.value),
                   })}
                 >
-                  {LOCATIONS.map((l, index) => (
-                    <option key={index} value={l}>
+                  {LOCATIONS.map((l, idx) => (
+                    <option key={idx} value={l}>
                       {l === "" ? "Select your location" : l}
                     </option>
                   ))}
@@ -165,7 +163,6 @@ const CompanyRegister = () => {
               </div>
             </div>
 
-            {/* FOUNDED DATE */}
             <label>Founded Date</label>
             <input
               type="date"
@@ -176,12 +173,10 @@ const CompanyRegister = () => {
             />
             <p className="error">{errors.foundedDate?.message}</p>
 
-            {/* SUBMIT BUTTON */}
             <button type="submit" className="reg-btn" disabled={isLoading}>
               {isLoading ? "Registering..." : "Sign up"}
             </button>
 
-            {/* LOGIN LINK */}
             <p className="login-text">
               Already have an account?{" "}
               <Link to="/login" className="login-link">
@@ -191,7 +186,6 @@ const CompanyRegister = () => {
           </form>
         </div>
 
-        {/* Right Side - Illustration */}
         <div className="register-image">
           <img src={companyImg} alt="Company registration" />
         </div>
