@@ -56,7 +56,7 @@ const PostJob = () => {
     "Other",
   ];
 
-  const SECTORS = ["Private Company", "Government"];
+  const SECTORS = ["Private", "Government"];
   const RATE_TYPES = ["Per Hour", "Per Task", "Per Day"];
 
   // ================= SUBMIT =================
