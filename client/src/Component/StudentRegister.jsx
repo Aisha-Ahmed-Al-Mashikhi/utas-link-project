@@ -66,19 +66,20 @@ const StudentRegister = () => {
   };
 
   // Handle register result
-  useEffect(() => {
-    if (isSuccess && user) {
-      localStorage.setItem("loggedUser", JSON.stringify(user));
-      localStorage.setItem("role", "student");
+ useEffect(() => {
+  if (isSuccess && user) {
+    localStorage.setItem("loggedUser", JSON.stringify(user));
+    localStorage.setItem("role", "student");
 
-      reset();
-      navigate("/student-profile");
-    }
+    reset();
+    navigate("/student-profile");
+  }
 
-    if (isError) {
-      alert("Registration failed. Please try again.");
-    }
-  }, [isSuccess, isError, user, navigate, reset]);
+  if (isError) {
+    alert("Registration failed. Please try again.");
+  }
+}, [isSuccess, isError, user, navigate, reset, dispatch]);
+
 
   return (
     <div className="register-page">
