@@ -61,19 +61,20 @@ const CompanyRegister = () => {
     dispatch(registerCompany(finalData));
   };
 
-  useEffect(() => {
-  if (isSuccess) {
-    alert("Company registered successfully!");
-    dispatch(resetState());
+useEffect(() => {
+  if (isSuccess && company) {
+    localStorage.setItem("loggedUser", JSON.stringify(company));
+    localStorage.setItem("role", "company");
+
     reset();
     navigate("/company-profile");
   }
 
   if (isError) {
     alert("Registration failed. Please try again.");
-    dispatch(resetState());
   }
-}, [isSuccess, isError, dispatch, navigate, reset]);
+}, [isSuccess, isError, company, navigate, reset]);
+
 
 
   return (
