@@ -5,15 +5,14 @@ import {
   fetchApplicants,
   updateApplicantStatus,
 } from "../Features/ApplicationSlice";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../Styles/ApplicantsJob.css";
 
 const ApplicantsJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [params] = useSearchParams();
-
-  const jobId = params.get("jobId");
+  const { jobId } = useParams();
 
   const { applicants, isLoading } = useSelector((state) => state.applications);
 
@@ -21,8 +20,8 @@ const ApplicantsJob = () => {
   const cardsPerPage = 6; // 3 × 2
 
   useEffect(() => {
-    if (jobId) dispatch(fetchApplicants(jobId));
-  }, [dispatch, jobId]);
+  if (jobId) dispatch(fetchApplicants(jobId));
+}, [dispatch, jobId]);
 
   const handleAction = (applicationId, status) => {
     dispatch(updateApplicantStatus({ applicationId, status }));
