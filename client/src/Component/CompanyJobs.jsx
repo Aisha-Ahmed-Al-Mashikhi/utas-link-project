@@ -160,8 +160,8 @@ const CompanyJobs = () => {
               <label>Sector</label>
               <div className="sector-row">
                 <label className="radio-option">
-                  <input type="radio" value="Private Company"
-                    checked={editedJob.sector === "Private Company"}
+                  <input type="radio" value="Privat"
+                    checked={editedJob.sector === "Private"}
                     onChange={(e) => setEditedJob({ ...editedJob, sector: e.target.value })} />
                   Private Company
                 </label>
