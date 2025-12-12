@@ -99,9 +99,17 @@
 /* ===============================
    BUTTONS
 ================================ */
-.view-btn,
-.edit-btn,
-.applicants-btn {
+.view-btn {
+  background: #009688;
+  color: white;
+  padding: 7px 16px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.edit-btn {
   background: #009688;
   color: white;
   padding: 10px 20px;
@@ -119,6 +127,38 @@
   cursor: pointer;
 }
 
+.applicants-btn {
+  background: #005f73;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===============================
+   PAGINATION
+================================ */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  gap: 6px;
+}
+
+.pagination-container button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.pagination-container button.active {
+  background: #009688;
+  color: white;
+}
+
 /* ===============================
    MODAL OVERLAY
 ================================ */
@@ -133,15 +173,34 @@
 }
 
 /* ===============================
-   EDIT MODAL
+   VIEW + EDIT MODAL
 ================================ */
+.view-modal,
 .edit-modal {
   background: #ffffff;
   padding: 35px;
   border-radius: 20px;
   width: 90%;
   max-width: 600px;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* ===============================
+   CLOSE BUTTON
+================================ */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
 }
 
 /* ===============================
@@ -154,60 +213,37 @@
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  font-size: 15px;
+}
+
+.edit-modal textarea {
+  height: 80px;
+  resize: none;
 }
 
 /* ===============================
-   ✅ FIX SECTOR RADIO (IMPORTANT)
+   SECTOR (ORIGINAL SIMPLE DESIGN)
 ================================ */
-
-/* container */
-.sector-row,
-.sector-grid {
+.sector-row {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 18px;
 }
 
-/* label becomes card */
-.sector-row label,
-.sector-grid label {
-  flex: 1;
-  border: 1.3px solid #ccc;
-  height: 48px;
-  border-radius: 8px;
-  cursor: pointer;
-
+.sector-row label {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 14px;
-
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
-  transition: 0.2s ease;
+  cursor: pointer;
 }
 
-/* hover */
-.sector-row label:hover,
-.sector-grid label:hover {
-  border-color: #009688;
-}
-
-/* active */
-.sector-row label:has(input:checked),
-.sector-grid label:has(input:checked) {
-  background: #e0f7f4;
-  border-color: #009688;
-}
-
-/* radio itself */
-.sector-row input[type="radio"],
-.sector-grid input[type="radio"] {
+.sector-row input[type="radio"] {
   width: 16px;
   height: 16px;
   accent-color: #009688;
-  margin: 0;
+  cursor: pointer;
 }
 
 /* ===============================
@@ -235,9 +271,4 @@
   border-radius: 10px;
   border: 2px solid #009688;
   font-weight: 600;
-}
-
-.save-btn:hover {
-  background: #009688;
-  color: white;
 }
