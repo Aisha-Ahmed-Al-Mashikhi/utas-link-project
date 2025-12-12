@@ -64,7 +64,7 @@ const StudentRegister = () => {
       alert("Student registered successfully!");
       reset();
       dispatch(resetState());
-      navigate("/login");
+      navigate("/student-profile");
     }
   }, [registerSuccess, reset, navigate, dispatch]);
 
