@@ -1,23 +1,15 @@
-// React core + hooks for managing component state and lifecycle
+// ===================== IMPORTS =====================
 import React, { useEffect, useState } from "react";
-// Redux hooks: dispatch actions + read state from the Redux store
 import { useDispatch, useSelector } from "react-redux";
-// Redux async thunk: handles student/company registration request
-import { registerUser } from "../Features/UserSlice";
-// Router: navigate programmatically + link between pages
+import { registerUser, resetState } from "../Features/UserSlice";
 import { useNavigate, Link } from "react-router-dom";
-// React Hook Form: manages form inputs, validation, and submission
 import { useForm } from "react-hook-form";
-// Connects Yup validation schema to React Hook Form
 import { yupResolver } from "@hookform/resolvers/yup";
-// Yup validation schema for validating all registration fields
 import { StudentRegisterSchema } from "../Validations/StudentRegisterValidation";
-// Component-specific CSS styling
 import "../Styles/UserRegister.css";
-// Registration page side image (illustration)
 import registerImg from "../Images/login-side.png";
 
-// Predefined majors
+// ===================== PREDEFINED MAJORS =====================
 const MAJORS = [
   "",
   "Information Technology",
@@ -27,22 +19,22 @@ const MAJORS = [
 ];
 
 const StudentRegister = () => {
-  // Used to trigger Redux actions (ex: registerUser, login, logout)
   const dispatch = useDispatch();
-  // Used to navigate programmatically to another page after an action (ex: redirect after registration)
   const navigate = useNavigate();
 
-  // Read registration status from Redux
-  const { isLoading, isError, isSuccess } = useSelector((state) => state.users);
+  // 🔥 only what we need
+  const { isLoading, registerSuccess, isError, message } = useSelector(
+    (state) => state.users
+  );
 
-  // Local states (Controlled Components)
+  // Controlled states
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [major, setMajor] = useState("");
 
-  // React Hook Form setup with Yup validation
+  // React Hook Form
   const {
     register,
     handleSubmit,
@@ -52,37 +44,49 @@ const StudentRegister = () => {
     resolver: yupResolver(StudentRegisterSchema),
   });
 
-  // Submit handler
+  // ===================== RESET STATE ON PAGE LOAD =====================
+  useEffect(() => {
+    dispatch(resetState());
+  }, [dispatch]);
+
+  // ===================== SUBMIT HANDLER =====================
   const onSubmit = (data) => {
     const finalData = {
       ...data,
-      role: "student", // Assign student role for backend
+      role: "student",
     };
     dispatch(registerUser(finalData));
   };
 
-  // Handle success or error response
+  // ===================== HANDLE REGISTER SUCCESS =====================
   useEffect(() => {
-    if (isSuccess) {
+    if (registerSuccess) {
       alert("Student registered successfully!");
       reset();
-      navigate("/student-profile");
-    } else if (isError) {
-      alert("Registration failed. Please try again.");
+      dispatch(resetState());
+      navigate("/login");
     }
-  }, [isSuccess, isError, navigate, reset]);
+  }, [registerSuccess, reset, navigate, dispatch]);
+
+  // ===================== HANDLE ERROR =====================
+  useEffect(() => {
+    if (isError && message) {
+      alert(message);
+      dispatch(resetState());
+    }
+  }, [isError, message, dispatch]);
 
   return (
     <div className="register-page">
       <div className="register-container">
-        {/* Left Side - Registration Form */}
+        {/* LEFT SIDE - FORM */}
         <div className="register-form">
           <h1 className="reg-title">
             Create your <span className="accent">account</span>
           </h1>
           <p className="reg-sub">Please fill in your details to continue</p>
 
-          {/* Role Switch Buttons */}
+          {/* ROLE SWITCH */}
           <div className="role-switch">
             <Link to="/student-register" className="role-btn active">
               Student
@@ -95,7 +99,6 @@ const StudentRegister = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* NAME + AGE */}
             <div className="row-flex">
-              {/* FULL NAME */}
               <div className="col-half form-group">
                 <label>Full Name</label>
                 <input
@@ -109,7 +112,6 @@ const StudentRegister = () => {
                 <p className="error">{errors.name?.message}</p>
               </div>
 
-              {/* AGE */}
               <div className="col-half form-group">
                 <label>Age</label>
                 <input
@@ -126,7 +128,6 @@ const StudentRegister = () => {
 
             {/* EMAIL + PASSWORD */}
             <div className="row-flex">
-              {/* EMAIL */}
               <div className="col-half form-group">
                 <label>Email</label>
                 <input
@@ -140,7 +141,6 @@ const StudentRegister = () => {
                 <p className="error">{errors.email?.message}</p>
               </div>
 
-              {/* PASSWORD */}
               <div className="col-half form-group">
                 <label>Password</label>
                 <input
@@ -173,12 +173,12 @@ const StudentRegister = () => {
               <p className="error">{errors.major?.message}</p>
             </div>
 
-            {/* SUBMIT BUTTON */}
+            {/* SUBMIT */}
             <button type="submit" className="reg-btn" disabled={isLoading}>
               {isLoading ? "Registering..." : "Sign up"}
             </button>
 
-            {/* SWITCH TO LOGIN */}
+            {/* LOGIN LINK */}
             <p className="login-text">
               Already have an account?
               <Link to="/login" className="login-link">
@@ -189,7 +189,7 @@ const StudentRegister = () => {
           </form>
         </div>
 
-        {/* Right Side - Image */}
+        {/* RIGHT SIDE IMAGE */}
         <div className="register-image">
           <img src={registerImg} alt="Registration illustration" />
         </div>
