@@ -1,4 +1,6 @@
-/* PAGE */
+/* ===============================
+   PAGE
+================================ */
 .companyjobs-page {
   background: #f5faf8;
   padding: 40px 20px;
@@ -6,7 +8,9 @@
   justify-content: center;
 }
 
-/* WRAPPER */
+/* ===============================
+   WRAPPER
+================================ */
 .companyjobs-wrapper {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(10px);
@@ -16,7 +20,9 @@
   width: 100%;
 }
 
-/* TITLE */
+/* ===============================
+   TITLES
+================================ */
 .companyjobs-title {
   font-size: 36px;
   font-weight: 800;
@@ -34,14 +40,18 @@
   color: #009688;
 }
 
-/* JOB GRID */
+/* ===============================
+   JOB GRID
+================================ */
 .jobs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
   gap: 20px;
 }
 
-/* JOB CARD */
+/* ===============================
+   JOB CARD
+================================ */
 .job-card {
   background: #ffffff;
   padding: 22px;
@@ -88,7 +98,9 @@
   margin-bottom: 12px;
 }
 
-/* VIEW BUTTON */
+/* ===============================
+   BUTTONS
+================================ */
 .view-btn {
   background: #009688;
   color: white;
@@ -103,203 +115,6 @@
   opacity: 0.85;
 }
 
-/* PAGINATION */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 25px;
-  gap: 6px;
-}
-
-.pagination-container button {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-}
-
-.pagination-container button.active {
-  background: #009688;
-  color: white;
-}
-
-/* MODAL OVERLAY */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-/* VIEW + EDIT MODAL */
-.view-modal,
-.edit-modal {
-  background: #ffffff;
-  padding: 35px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
-}
-
-/* CLOSE BUTTON */
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 42px;
-  height: 42px;
-  background: #ffffff;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  color: #111;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: 0.2s ease;
-}
-
-.close-btn:hover {
-  background: #f2f2f2;
-  transform: scale(1.05);
-}
-
-/* INPUTS */
-.edit-modal input,
-.edit-modal textarea {
-  width: 100%;
-  margin-bottom: 14px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-}
-
-.edit-modal textarea {
-  height: 80px;
-  resize: none;
-}
-
-/* SECTOR */
-.sector-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
-/* RADIO CARD */
-.radio-option {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  border: 1.5px solid #d0d0d0;
-  border-radius: 14px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  color: #111;
-  transition: 0.2s ease;
-}
-
-.radio-option:hover {
-  border-color: #009688;
-}
-
-/* RADIO — CIRCLE */
-.radio-option input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid #009688;
-  background: #fff;
-
-  cursor: pointer;
-  position: relative; /* ⭐ مهم */
-}
-
-/* SMALL DOT (CENTERED PERFECTLY) */
-.radio-option input[type="radio"]::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #009688;
-
-  transform: translate(-50%, -50%) scale(0);
-  transition: 0.15s ease;
-}
-
-/* SHOW DOT WHEN CHECKED */
-.radio-option input[type="radio"]:checked::before {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* ACTIVE CARD */
-.radio-option:has(input[type="radio"]:checked) {
-  border-color: #009688;
-  background: #f1fbf9;
-}
-
-/* MODAL ACTION BUTTONS */
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 14px;
-  margin-top: 30px;
-}
-
-/* CANCEL */
-.cancel-btn {
-  background: #e0e0e0;
-  color: #333;
-  padding: 10px 26px;
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.cancel-btn:hover {
-  background: #d5d5d5;
-}
-
-/* SAVE */
-.save-btn {
-  background: white;
-  color: #009688;
-  padding: 10px 26px;
-  border-radius: 10px;
-  border: 2px solid #009688;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.save-btn:hover {
-  background: #009688;
-  color: white;
-}
-
-/* OTHER ACTIONS */
 .edit-btn {
   background: #009688;
   color: white;
@@ -325,4 +140,184 @@
   border-radius: 10px;
   border: none;
   cursor: pointer;
+}
+
+/* ===============================
+   PAGINATION
+================================ */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  gap: 6px;
+}
+
+.pagination-container button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.pagination-container button.active {
+  background: #009688;
+  color: white;
+}
+
+/* ===============================
+   MODAL OVERLAY
+================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* ===============================
+   VIEW + EDIT MODAL
+================================ */
+.view-modal,
+.edit-modal {
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* ===============================
+   CLOSE BUTTON
+================================ */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #111;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #f2f2f2;
+  transform: scale(1.05);
+}
+
+/* ===============================
+   INPUTS
+================================ */
+.edit-modal input,
+.edit-modal textarea {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.edit-modal textarea {
+  height: 80px;
+  resize: none;
+}
+
+/* ===============================
+   SECTOR (MATCH POST JOB)
+================================ */
+.sector-grid {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.sector-grid label {
+  flex: 1;
+  border: 1.3px solid #ccc;
+  height: 48px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+
+  transition: 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sector-grid label:hover {
+  border-color: #009688;
+}
+
+.sector-grid label:has(input:checked) {
+  background: #e0f7f4;
+  border-color: #009688;
+}
+
+.sector-grid input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #009688;
+  cursor: pointer;
+}
+
+/* ===============================
+   MODAL ACTIONS
+================================ */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.cancel-btn {
+  background: #e0e0e0;
+  color: #333;
+  padding: 10px 26px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #d5d5d5;
+}
+
+.save-btn {
+  background: white;
+  color: #009688;
+  padding: 10px 26px;
+  border-radius: 10px;
+  border: 2px solid #009688;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #009688;
+  color: white;
 }
