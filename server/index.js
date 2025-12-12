@@ -382,6 +382,7 @@ app.post("/apply", async (req, res) => {
 
     const newApp = new ApplicationModel({
       ...req.body,
+      jobId: job._id,
       applicantName: user.name,          // ⬅ ⭐ أضف اسم الطالب
       applicantEmail: user.email,        // ⬅ موجود أصلًا
       organization: company?.companyName || "Unknown Company",
