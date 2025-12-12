@@ -67,8 +67,7 @@ const StudentRegister = () => {
 
   // Handle register result
  useEffect(() => {
-  if (isSuccess && user) {
-    localStorage.setItem("loggedUser", JSON.stringify(user));
+  if (isSuccess) {
     localStorage.setItem("role", "student");
 
     reset();
@@ -78,7 +77,8 @@ const StudentRegister = () => {
   if (isError) {
     alert("Registration failed. Please try again.");
   }
-}, [isSuccess, isError, user, navigate, reset, dispatch]);
+}, [isSuccess, isError, navigate, reset]);
+
 
 
   return (
