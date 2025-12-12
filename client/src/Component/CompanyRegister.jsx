@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerCompany } from "../Features/CompanySlice";
+import { resetState } from "../Features/UserSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -60,16 +61,20 @@ const CompanyRegister = () => {
     dispatch(registerCompany(finalData));
   };
 
-  // Handle registration response
   useEffect(() => {
-    if (isSuccess) {
-      alert("Company registered successfully!");
-      reset();
-      navigate("/company-profile"); // Redirect to company profile
-    } else if (isError) {
-      alert("Registration failed. Please try again.");
-    }
-  }, [isSuccess, isError, navigate, reset]);
+  if (isSuccess) {
+    alert("Company registered successfully!");
+    dispatch(resetState());
+    reset();
+    navigate("/company-profile");
+  }
+
+  if (isError) {
+    alert("Registration failed. Please try again.");
+    dispatch(resetState());
+  }
+}, [isSuccess, isError, dispatch, navigate, reset]);
+
 
   return (
     <div className="register-page">
