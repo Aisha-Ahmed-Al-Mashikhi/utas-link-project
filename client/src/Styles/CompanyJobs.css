@@ -78,8 +78,6 @@
 }
 
 .tag {
-  display: inline-flex;
-  white-space: nowrap;
   padding: 6px 12px;
   background: #e8faf7;
   border-radius: 8px;
@@ -101,21 +99,9 @@
 /* ===============================
    BUTTONS
 ================================ */
-.view-btn {
-  background: #009688;
-  color: white;
-  padding: 7px 16px;
-  border-radius: 10px;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.view-btn:hover {
-  opacity: 0.85;
-}
-
-.edit-btn {
+.view-btn,
+.edit-btn,
+.applicants-btn {
   background: #009688;
   color: white;
   padding: 10px 20px;
@@ -133,38 +119,6 @@
   cursor: pointer;
 }
 
-.applicants-btn {
-  background: #005f73;
-  color: white;
-  padding: 10px 22px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-/* ===============================
-   PAGINATION
-================================ */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 25px;
-  gap: 6px;
-}
-
-.pagination-container button {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-}
-
-.pagination-container button.active {
-  background: #009688;
-  color: white;
-}
-
 /* ===============================
    MODAL OVERLAY
 ================================ */
@@ -179,46 +133,15 @@
 }
 
 /* ===============================
-   VIEW + EDIT MODAL
+   EDIT MODAL
 ================================ */
-.view-modal,
 .edit-modal {
   background: #ffffff;
   padding: 35px;
   border-radius: 20px;
   width: 90%;
   max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
-}
-
-/* ===============================
-   CLOSE BUTTON
-================================ */
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 42px;
-  height: 42px;
-  background: #ffffff;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  color: #111;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: 0.2s ease;
-}
-
-.close-btn:hover {
-  background: #f2f2f2;
-  transform: scale(1.05);
 }
 
 /* ===============================
@@ -234,21 +157,20 @@
   font-size: 15px;
 }
 
-.edit-modal textarea {
-  height: 80px;
-  resize: none;
-}
-
 /* ===============================
-   SECTOR (MATCH POST JOB)
+   ✅ FIX SECTOR RADIO (IMPORTANT)
 ================================ */
+
+/* container */
+.sector-row,
 .sector-grid {
   display: flex;
   gap: 12px;
-  align-items: center;
   margin-bottom: 18px;
 }
 
+/* label becomes card */
+.sector-row label,
 .sector-grid label {
   flex: 1;
   border: 1.3px solid #ccc;
@@ -258,28 +180,34 @@
 
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 0 14px;
 
-  transition: 0.2s ease;
   font-size: 14px;
   font-weight: 500;
+  transition: 0.2s ease;
 }
 
+/* hover */
+.sector-row label:hover,
 .sector-grid label:hover {
   border-color: #009688;
 }
 
+/* active */
+.sector-row label:has(input:checked),
 .sector-grid label:has(input:checked) {
   background: #e0f7f4;
   border-color: #009688;
 }
 
+/* radio itself */
+.sector-row input[type="radio"],
 .sector-grid input[type="radio"] {
   width: 16px;
   height: 16px;
   accent-color: #009688;
-  cursor: pointer;
+  margin: 0;
 }
 
 /* ===============================
@@ -298,12 +226,6 @@
   padding: 10px 26px;
   border-radius: 10px;
   border: none;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.cancel-btn:hover {
-  background: #d5d5d5;
 }
 
 .save-btn {
@@ -312,9 +234,7 @@
   padding: 10px 26px;
   border-radius: 10px;
   border: 2px solid #009688;
-  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
 }
 
 .save-btn:hover {
