@@ -258,7 +258,7 @@
   }
 }
 
-/* ===== SAVE & CANCEL (SAME STYLE, DIFFERENT COLOR) ===== */
+/* ===== SAVE & CANCEL (BORDERED, SAME STYLE) ===== */
 
 .modal-actions {
   display: flex;
@@ -273,25 +273,25 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  border: none;
+  background: #fff;
 }
 
 /* Cancel */
 .cancel-btn {
-  background: #e5e5e5;
   color: #444;
+  border: 1px solid #d0d0d0;
 }
 
 .cancel-btn:hover {
-  background: #d9d9d9;
+  background: #f2f2f2;
 }
 
-/* Save (same shape – different color only) */
+/* Save */
 .save-btn {
-  background: #009688;
-  color: white;
+  color: #009688;
+  border: 1px solid #009688;
 }
 
 .save-btn:hover {
-  background: #007d6f;
+  background: #f2fbfa;
 }
