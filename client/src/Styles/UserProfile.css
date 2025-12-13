@@ -87,61 +87,72 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-15px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeOut {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-15px); }
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
 }
 
 /* ===================================================
-   SAVE & CANCEL — FORCED BORDER (FINAL)
+   SAVE & CANCEL — FIXED (MATCHES JSX .actions)
    =================================================== */
 
-.modal-actions {
+.actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 20px;
 }
 
-/* Base button — force everything */
-.modal-actions button {
-  padding: 8px 20px !important;
-  border-radius: 12px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  background: #ffffff !important;
-  outline: none !important;
-  box-shadow: none !important;
+.actions button {
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #ffffff;
+  outline: none;
+  box-shadow: none;
 }
 
 /* Cancel */
 .cancel-btn {
-  border: 1px solid #d0d0d0 !important;
-  color: #444 !important;
-  background: #e5e5e5 !important;
+  color: #444;
+  border: 1px solid #d0d0d0;
+  background: #e5e5e5;
 }
 
-/* Save — THIS WILL SHOW THE BORDER */
+/* Save */
 .save-btn {
-  border: 1px solid #009688 !important;
-  color: #009688 !important;
-  background: #ffffff !important;
+  color: #009688;
+  border: 1px solid #009688;
+  background: #ffffff;
 }
 
-/* Kill any press / focus / hover effect */
+/* No visual change on press / focus / hover */
 .save-btn:hover,
 .save-btn:active,
 .save-btn:focus,
 .cancel-btn:hover,
 .cancel-btn:active,
 .cancel-btn:focus {
-  background: inherit !important;
-  border-color: inherit !important;
-  box-shadow: none !important;
-  transform: none !important;
+  background: inherit;
+  border-color: inherit;
+  box-shadow: none;
+  transform: none;
 }
