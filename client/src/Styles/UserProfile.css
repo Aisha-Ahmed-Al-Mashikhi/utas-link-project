@@ -114,18 +114,17 @@
   font-size: 15px;
 }
 
-/* ===== MODAL ACTIONS (ONLY CHANGE HERE) ===== */
+/* ===== MODAL ACTIONS (ONLY CHANGE) ===== */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 14px;
-  margin-top: 25px;
+  gap: 12px;
+  margin-top: 20px;
 }
 
-/* SAME SIZE FOR BOTH BUTTONS */
+/* Same base for Save & Cancel */
 .modal-actions button {
-  min-width: 96px;
-  height: 38px;
+  padding: 8px 20px;
   border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
@@ -134,7 +133,7 @@
   transition: 0.25s ease;
 }
 
-/* Cancel – نفس القديم لكن متوازن */
+/* Cancel */
 .cancel-btn {
   background: #e5e5e5;
   color: #444;
@@ -144,17 +143,17 @@
   background: #d9d9d9;
 }
 
-/* Save – نفس القديم لكن بنفس المقاس */
+/* Save */
 .save-btn {
   background: #009688;
-  color: white;
+  color: #fff;
 }
 
 .save-btn:hover {
   background: #007d6f;
 }
 
-/* ===== TOAST SUCCESS (UNCHANGED – ORIGINAL) ===== */
+/* ===== TOAST SUCCESS (ORIGINAL – UNCHANGED) ===== */
 .toast-success {
   position: fixed;
   top: 25px;
