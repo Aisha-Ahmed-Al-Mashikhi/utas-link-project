@@ -257,3 +257,41 @@
     transform: translateY(-15px);
   }
 }
+
+/* ===== SAVE & CANCEL (SAME STYLE, DIFFERENT COLOR) ===== */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+/* Cancel */
+.cancel-btn {
+  background: #e5e5e5;
+  color: #444;
+}
+
+.cancel-btn:hover {
+  background: #d9d9d9;
+}
+
+/* Save (same shape – different color only) */
+.save-btn {
+  background: #009688;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #007d6f;
+}
