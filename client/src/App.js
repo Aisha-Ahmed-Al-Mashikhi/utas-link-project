@@ -40,9 +40,6 @@ import ApplicantsJob from "./Component/ApplicantsJob";
 // Import home landing page
 import Home from "./Component/Home";
 
-// Import about page
-import About from "./Component/About";
-
 // Import developers page
 import Developers from "./Component/Developers";
 
@@ -77,9 +74,6 @@ function App() {
       <Routes>
         {/* Home route */}
         <Route path="/" element={<Home />} />
-
-        {/* About route */}
-        <Route path="/about" element={<About />} />
 
         {/* Developers route */}
         <Route path="/developers" element={<Developers />} />
