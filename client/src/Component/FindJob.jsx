@@ -115,7 +115,10 @@ const FindJob = () => {
               </div>
 
               {/* ⭐ NEW — COMPANY NAME */}
-              <p className="company-name">🏢 {job.companyName || "Company"}</p>
+              <p className="company-name">
+  🏢 Company: {job.organization || job.companyName || "Not provided"}
+</p>
+
 
               <p className="job-location">📍 {job.location}</p>
 
