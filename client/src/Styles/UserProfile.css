@@ -3,8 +3,8 @@
   display: flex;
   gap: 25px;
   padding: 25px;
-  padding-bottom: 40px;
-  min-height: calc(100vh - 120px);
+  padding-bottom: 40px; /* 🔥 تقلل المسافة قبل الفوتر */
+  min-height: calc(100vh - 120px); /* 🔥 تمنع وجود مساحة فاضية */
   background: #f4f5f7;
   position: relative;
 }
@@ -106,53 +106,4 @@
     opacity: 0;
     transform: translateY(-15px);
   }
-}
-
-/* ===================================================
-   SAVE & CANCEL — FIXED (MATCHES JSX .actions)
-   =================================================== */
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.actions button {
-  padding: 8px 20px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  background: #ffffff;
-  outline: none;
-  box-shadow: none;
-}
-
-/* Cancel */
-.cancel-btn {
-  color: #444;
-  border: 1px solid #d0d0d0;
-  background: #e5e5e5;
-}
-
-/* Save */
-.save-btn {
-  color: #009688;
-  border: 1px solid #009688;
-  background: #ffffff;
-}
-
-/* No visual change on press / focus / hover */
-.save-btn:hover,
-.save-btn:active,
-.save-btn:focus,
-.cancel-btn:hover,
-.cancel-btn:active,
-.cancel-btn:focus {
-  background: inherit;
-  border-color: inherit;
-  box-shadow: none;
-  transform: none;
 }
