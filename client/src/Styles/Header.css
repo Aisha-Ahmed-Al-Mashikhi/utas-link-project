@@ -1,0 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 30px;
+  background: #fff;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-circle {
+  width: 45px;
+  height: 45px;
+  background: #009688;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.brand-main,
+.brand-accent {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.brand-accent {
+  color: #009688;
+}
+
+.header-links {
+  display: flex;
+  gap: 90px;
+}
+
+.header-links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 17px;
+  transition: 0.25s;
+}
+
+.header-links a:hover {
+  color: #009688;
+}
+
+/* MENU BUTTON */
+.menu-btn {
+  background: transparent;
+  border: none;
+  font-size: 36px;
+  cursor: pointer;
+  color: #009688;
+}
+
+/* FIXED OVERLAY FOR DRAWER ONLY */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 900;
+}
+
+/* DRAWER */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -330px;
+  width: 300px;
+  height: 100%;
+  background: #fff;
+  padding: 25px;
+  transition: 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.drawer-open {
+  right: 0;
+}
+
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 34px;
+  cursor: pointer;
+}
+
+/* WELCOME BOX */
+.welcome-box {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.welcome-name {
+  color: #009688;
+  font-weight: 600;
+}
+
+/* LINKS */
+.drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.drawer-links a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #111;
+  font-size: 17px;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.drawer-links a:hover {
+  color: #009688;
+}
+
+.icon {
+  font-size: 20px;
+  color: #777;
+}
+
+/* LOGOUT BUTTON */
+.drawer-logout {
+  margin-top: 25px;
+  padding: 10px 14px;
+  width: 150px;
+  background: linear-gradient(90deg, #007b7f, #55c3c7);
+  color: #fff;
+  border: none;
+  border-radius: 40px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.drawer-logout:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}

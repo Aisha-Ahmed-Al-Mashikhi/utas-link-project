@@ -1,0 +1,376 @@
+/* ===============================
+   PAGE
+================================ */
+
+/* Applicants page container */
+.applicants-page {
+  /* Page padding */
+  padding: 40px;
+  /* Max width */
+  max-width: 1200px;
+  /* Center page */
+  margin: auto;
+  /* Main font */
+  font-family: "Poppins", sans-serif;
+}
+
+/* Page title */
+.app-title {
+  /* Title size */
+  font-size: 32px;
+  /* Bold title */
+  font-weight: 800;
+  /* Space below title */
+  margin-bottom: 10px;
+  /* Center text */
+  text-align: center;
+}
+
+/* Accent color */
+.accent {
+  /* Teal color */
+  color: #009688;
+}
+
+/* Empty state text */
+.empty {
+  /* Text size */
+  font-size: 18px;
+  /* Top spacing */
+  margin-top: 40px;
+  /* Gray color */
+  color: #777;
+  /* Center text */
+  text-align: center;
+}
+
+/* ===============================
+   GRID
+================================ */
+
+/* Applicants grid */
+.applicants-grid {
+  /* Use grid */
+  display: grid;
+  /* Responsive columns */
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  /* Space between cards */
+  gap: 25px;
+  /* Top spacing */
+  margin-top: 20px;
+}
+
+/* 3×2 fixed grid */
+.fixed-grid {
+  /* Use grid */
+  display: grid;
+  /* 3 equal columns */
+  grid-template-columns: repeat(3, 1fr);
+  /* Grid gap */
+  gap: 24px;
+  /* Top margin */
+  margin-top: 25px;
+}
+
+/* ===============================
+   CARD
+================================ */
+
+/* Card container */
+.glass-card {
+  /* White background */
+  background: #ffffff;
+  /* Inner padding */
+  padding: 22px;
+  /* Rounded corners */
+  border-radius: 16px;
+  /* Light border */
+  border: 1px solid #e4e4e4;
+  /* Shadow */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  /* Smooth transition */
+  transition: 0.25s ease;
+}
+
+/* Card hover effect */
+.glass-card:hover {
+  /* Lift card */
+  transform: translateY(-5px);
+  /* Stronger shadow */
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* ===============================
+   PROFILE
+================================ */
+
+/* Profile row */
+.profile-row {
+  /* Flex layout */
+  display: flex;
+  /* Align center */
+  align-items: center;
+  /* Space between items */
+  gap: 14px;
+  /* Bottom margin */
+  margin-bottom: 12px;
+}
+
+/* Profile icon */
+.icon-circle {
+  /* Width */
+  width: 50px;
+  /* Height */
+  height: 50px;
+  /* Background color */
+  background: #009688;
+  /* Text color */
+  color: white;
+  /* Circle shape */
+  border-radius: 50%;
+  /* Flex center */
+  display: flex;
+  /* Center horizontally */
+  justify-content: center;
+  /* Center vertically */
+  align-items: center;
+  /* Icon size */
+  font-size: 22px;
+}
+
+/* Applicant name */
+.applicant-name {
+  /* Remove margin */
+  margin: 0;
+  /* Text size */
+  font-size: 20px;
+  /* Bold name */
+  font-weight: 700;
+}
+
+/* Applicant email */
+.email {
+  /* Gray text */
+  color: #666;
+  /* Vertical spacing */
+  margin: 3px 0;
+}
+
+/* ===============================
+   STATUS
+================================ */
+
+/* Status text */
+.status {
+  /* Vertical margin */
+  margin: 14px 0;
+  /* Text size */
+  font-size: 15px;
+  /* Text color */
+  color: #444;
+}
+
+/* Status badge */
+.status-tag {
+  /* Inner padding */
+  padding: 6px 14px;
+  /* Rounded badge */
+  border-radius: 8px;
+  /* Bold text */
+  font-weight: 600;
+  /* Space from label */
+  margin-left: 6px;
+}
+
+/* Accepted status */
+.status-tag.accepted {
+  /* Green background */
+  background: #c8f7c5;
+  /* Green text */
+  color: #0b9444;
+}
+
+/* Rejected status */
+.status-tag.rejected {
+  /* Red background */
+  background: #ffd3d3;
+  /* Dark red text */
+  color: #b71c1c;
+}
+
+/* Pending status */
+.status-tag.pending {
+  /* Yellow background */
+  background: #fff8e1;
+  /* Brown text */
+  color: #8d6e63;
+}
+
+/* ===============================
+   ACTION BUTTONS (FIXED SPACING)
+================================ */
+
+/* Buttons container */
+.action-row {
+  /* Flex layout */
+  display: flex;
+  /* Wrap buttons */
+  flex-wrap: wrap;
+  /* Space between buttons */
+  gap: 14px;
+  /* Top margin */
+  margin-top: 20px;
+}
+
+/* COMMON BUTTON STYLE */
+.chat-btn,
+.accept-btn,
+.reject-btn,
+.cv-btn {
+  /* Button padding */
+  padding: 8px 14px;
+  /* Rounded corners */
+  border-radius: 12px;
+  /* Remove border */
+  border: none;
+  /* Bold text */
+  font-weight: 600;
+  /* Pointer cursor */
+  cursor: pointer;
+  /* Smooth transition */
+  transition: 0.25s;
+  /* Minimum width */
+  min-width: 95px;
+  /* Center text */
+  text-align: center;
+}
+
+/* CHAT */
+.chat-btn {
+  /* Teal background */
+  background: #009688;
+  /* White text */
+  color: white;
+}
+
+/* Chat hover */
+.chat-btn:hover {
+  /* Darker teal */
+  background: #007c6c;
+}
+
+/* ACCEPT */
+.accept-btn {
+  /* Light green */
+  background: #a5d6a7;
+  /* Dark green text */
+  color: #1b5e20;
+}
+
+/* Accept hover */
+.accept-btn:hover {
+  /* Medium green */
+  background: #81c784;
+}
+
+/* REJECT */
+.reject-btn {
+  /* Light red */
+  background: #ef9a9a;
+  /* Dark red text */
+  color: #b71c1c;
+}
+
+/* Reject hover */
+.reject-btn:hover {
+  /* Stronger red */
+  background: #e57373;
+}
+
+/* VIEW CV */
+.cv-btn {
+  /* Light background */
+  background: #f1fdfb;
+  /* Teal text */
+  color: #009688;
+  /* Teal border */
+  border: 2px solid #009688;
+  /* Remove underline */
+  text-decoration: none;
+}
+
+/* CV hover */
+.cv-btn:hover {
+  /* Teal background */
+  background: #009688;
+  /* White text */
+  color: white;
+}
+
+/* ===============================
+   PAGINATION
+================================ */
+
+/* Pagination container */
+.app-pagination {
+  /* Flex layout */
+  display: flex;
+  /* Center buttons */
+  justify-content: center;
+  /* Top margin */
+  margin-top: 35px;
+  /* Space between buttons */
+  gap: 10px;
+}
+
+/* Pagination button */
+.app-pagination button {
+  /* Button padding */
+  padding: 10px 16px;
+  /* White background */
+  background: #ffffff;
+  /* Teal border */
+  border: 2px solid #009688;
+  /* Rounded corners */
+  border-radius: 10px;
+  /* Text color */
+  color: #009688;
+  /* Bold text */
+  font-weight: 700;
+  /* Pointer cursor */
+  cursor: pointer;
+  /* Minimum width */
+  min-width: 55px;
+  /* Transition */
+  transition: 0.2s ease;
+}
+
+/* Pagination hover */
+.app-pagination button:hover {
+  /* Light teal background */
+  background: #e0f5f3;
+  /* Lift button */
+  transform: translateY(-2px);
+}
+
+/* Disabled pagination */
+.app-pagination button:disabled {
+  /* Gray background */
+  background: #f3f3f3;
+  /* Gray border */
+  border-color: #cccccc;
+  /* Gray text */
+  color: #9a9a9a;
+  /* Disabled cursor */
+  cursor: not-allowed;
+}
+
+/* Active page */
+.app-pagination .active-page {
+  /* Teal background */
+  background: #009688;
+  /* White text */
+  color: white;
+  /* Darker border */
+  border-color: #007f72;
+}

@@ -1,0 +1,144 @@
+.chatlist-page {
+  padding: 40px 80px;
+  font-family: "Quicksand", sans-serif;
+}
+
+.chatlist-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.accent {
+  color: #009688;
+}
+
+/* Grid layout */
+.chatlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 25px;
+}
+
+/* Chat Card */
+.chat-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 6px 35px rgba(0,0,0,0.08);
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+.chat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+}
+
+/* Left side */
+.chat-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.chat-icon {
+  font-size: 35px;
+  padding: 10px;
+  background: #00968820;
+  border-radius: 14px;
+}
+
+/* Job title */
+.chat-job {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* Company */
+.chat-company {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Open chat button */
+.chat-btn {
+  background-color: #009688;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.chat-btn:hover {
+  background-color: #007c6c;
+}
+/* 3 columns fixed */
+.fixed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+/* Pagination */
+.chat-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+  gap: 10px;
+}
+
+.chat-pagination button {
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 2px solid #009688;
+  border-radius: 10px;
+  color: #009688;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 55px;
+  transition: 0.2s ease;
+}
+
+.chat-pagination button:hover {
+  background: #e0f5f3;
+  transform: translateY(-2px);
+}
+
+.chat-pagination button:disabled {
+  background: #f3f3f3;
+  border-color: #cccccc;
+  color: #9a9a9a;
+  cursor: not-allowed;
+}
+
+.chat-pagination .active-page {
+  background: #009688;
+  color: white;
+  border-color: #007f72;
+}
+
+/* EMPTY MESSAGE – CENTERED */
+.empty-chats {
+  text-align: center;
+  width: 100%;
+  margin: 80px auto;
+  font-size: 20px;
+  font-weight: 700;
+  color: #444;
+  background: white;
+  padding: 40px;
+  max-width: 480px;
+  border-radius: 22px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+}
