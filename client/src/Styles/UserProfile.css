@@ -114,46 +114,7 @@
   font-size: 15px;
 }
 
-/* ===== MODAL ACTIONS (ONLY CHANGE) ===== */
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-/* Same base for Save & Cancel */
-.modal-actions button {
-  padding: 8px 20px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: 0.25s ease;
-}
-
-/* Cancel */
-.cancel-btn {
-  background: #e5e5e5;
-  color: #444;
-}
-
-.cancel-btn:hover {
-  background: #d9d9d9;
-}
-
-/* Save */
-.save-btn {
-  background: #009688;
-  color: #fff;
-}
-
-.save-btn:hover {
-  background: #007d6f;
-}
-
-/* ===== TOAST SUCCESS (ORIGINAL – UNCHANGED) ===== */
+/* ===== TOAST SUCCESS ===== */
 .toast-success {
   position: fixed;
   top: 25px;
@@ -189,4 +150,45 @@
     opacity: 0;
     transform: translateY(-15px);
   }
+}
+
+/* ===================================================
+   ONLY CHANGE: SAVE & CANCEL BUTTONS
+   =================================================== */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* same size & style */
+.modal-actions button {
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+/* Cancel */
+.cancel-btn {
+  background: #e5e5e5;
+  color: #444;
+}
+
+.cancel-btn:hover {
+  background: #d9d9d9;
+}
+
+/* Save */
+.save-btn {
+  background: #009688;
+  color: #fff;
+}
+
+.save-btn:hover {
+  background: #007d6f;
 }
