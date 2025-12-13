@@ -258,4 +258,9 @@
 
 .save-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 150, 136, 0.45)
+  box-shadow: 0 10px 25px rgba(0, 150, 136, 0.45);
+}
+
+.save-btn:active {
+  transform: scale(0.96);
+}
