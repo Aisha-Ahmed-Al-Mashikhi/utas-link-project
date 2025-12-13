@@ -225,42 +225,43 @@
   margin-top: 25px;
 }
 
-/* Cancel Button */
-.cancel-btn {
-  background: #e5e5e5;
-  color: #555;
-  padding: 10px 22px;
-  border: none;
+/* Common button style */
+.modal-actions button {
+  min-width: 100px;
+  height: 42px;
   border-radius: 14px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.25s;
+  border: none;
+  transition: all 0.25s ease;
+}
+
+/* Cancel Button */
+.cancel-btn {
+  background: #f0f0f0;
+  color: #555;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .cancel-btn:hover {
-  background: #d6d6d6;
+  background: #e4e4e4;
+  transform: translateY(-1px);
 }
 
 /* Save Button */
 .save-btn {
   background: linear-gradient(135deg, #009688, #00bfa5);
   color: #fff;
-  padding: 10px 26px;
-  border: none;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s ease;
   box-shadow: 0 6px 18px rgba(0, 150, 136, 0.35);
 }
 
 .save-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 10px 25px rgba(0, 150, 136, 0.45);
 }
 
-.save-btn:active {
-  transform: scale(0.96);
+.save-btn:active,
+.cancel-btn:active {
+  transform: scale(0.97);
 }
