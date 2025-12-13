@@ -3,8 +3,8 @@
   display: flex;
   gap: 25px;
   padding: 25px;
-  padding-bottom: 40px; /* 🔥 تقلل المسافة قبل الفوتر */
-  min-height: calc(100vh - 120px); /* 🔥 تمنع وجود مساحة فاضية */
+  padding-bottom: 40px;
+  min-height: calc(100vh - 120px);
   background: #f4f5f7;
   position: relative;
 }
@@ -159,17 +159,9 @@
   color: white;
 }
 
-.cv-btn.view:hover {
-  opacity: 0.85;
-}
-
 .cv-btn.replace {
   background: #7d9dff;
   color: white;
-}
-
-.cv-btn.replace:hover {
-  opacity: 0.85;
 }
 
 .cv-btn.delete {
@@ -177,7 +169,7 @@
   color: white;
 }
 
-.cv-btn.delete:hover {
+.cv-btn:hover {
   opacity: 0.85;
 }
 
@@ -218,8 +210,88 @@
   transform: translateY(-2px);
 }
 
-.edit-profile-btn:active {
-  transform: scale(0.97);
+/* ========================
+   OVERLAY
+======================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* ========================
+   EDIT MODAL
+======================== */
+.edit-modal {
+  width: 420px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 26px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.edit-modal h2 {
+  margin-bottom: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.edit-modal label {
+  margin: 12px 0 6px;
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.edit-modal input,
+.edit-modal select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* ========================
+   ACTION BUTTONS
+======================== */
+.actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Cancel */
+.cancel-btn {
+  background: #e0e0e0;
+  color: #333;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ⭐ Save with border */
+.save-btn {
+  background: transparent;
+  color: #009688;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: 2px solid #009688;   /* الحواف */
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.save-btn:hover {
+  background: #009688;
+  color: #fff;
 }
 
 /* ===== Toast ===== */
@@ -234,28 +306,5 @@
   border-radius: 12px;
   font-weight: 600;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.3s ease, fadeOut 0.4s ease 1.8s forwards;
   z-index: 9999;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
 }
