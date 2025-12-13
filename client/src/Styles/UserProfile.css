@@ -151,7 +151,6 @@
   font-size: 14px;
   border: none;
   font-weight: 600;
-  transition: 0.25s;
 }
 
 .cv-btn.view {
@@ -169,10 +168,6 @@
   color: white;
 }
 
-.cv-btn:hover {
-  opacity: 0.85;
-}
-
 /* ===== Upload CV ===== */
 .upload-cv-btn {
   background: #009688;
@@ -186,10 +181,6 @@
   font-size: 15px;
 }
 
-.upload-cv-btn:hover {
-  opacity: 0.85;
-}
-
 /* ===== Edit Profile Button ===== */
 .edit-profile-btn {
   margin-top: 15px;
@@ -201,13 +192,6 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.25s ease;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.edit-profile-btn:hover {
-  background: #007d6f;
-  transform: translateY(-2px);
 }
 
 /* ========================
@@ -266,7 +250,7 @@
   gap: 12px;
 }
 
-/* Cancel */
+/* Cancel Button */
 .cancel-btn {
   background: #e0e0e0;
   color: #333;
@@ -277,21 +261,15 @@
   cursor: pointer;
 }
 
-/* ⭐ Save with border */
+/* Save Button (Outlined – ثابت) */
 .save-btn {
   background: transparent;
   color: #009688;
   padding: 8px 18px;
   border-radius: 10px;
-  border: 2px solid #009688;   /* الحواف */
+  border: 2px solid #009688;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.25s;
-}
-
-.save-btn:hover {
-  background: #009688;
-  color: #fff;
 }
 
 /* ===== Toast ===== */
