@@ -64,7 +64,10 @@ const CompanyJobs = () => {
           {currentJobs.map((job) => (
             <div className="job-card" key={job._id}>
               <h3>{job.jobTitle}</h3>
-
+                {/* ✅ COMPANY NAME */}
+      <p className="company-name">
+        🏢 Company: {job.organization}
+      </p>
               <p className="job-location">📍 {job.location}</p>
 
               <div className="tag-row">
