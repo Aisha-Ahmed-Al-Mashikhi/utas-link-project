@@ -21,15 +21,15 @@ const Developers = () => {
         {/* Developer card */}
         <div className="dev-card">
           {/* Developer names */}
-          <h3>Aisha Al-Mashikhi, Fatima Al-Mashini</h3>
+          <h3>Aisha Al-Mashikhi, Fatima Al-Maashani</h3>
 
           {/* Developer role */}
-          <p className="role">Full-Stack Developer</p>
+          <p className="role">Full-Stack Developers</p>
 
           {/* Description text */}
           <p className="desc">
             This project was fully developed by Aisha Al-Mashikhi,Fatima
-            Al-Mashini, covering all aspects including:
+            Al-Maashani, covering all aspects including:
           </p>
 
           {/* Skills list */}
