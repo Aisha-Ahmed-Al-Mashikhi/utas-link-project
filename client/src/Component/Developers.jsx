@@ -13,7 +13,7 @@ const Developers = () => {
       <h1 className="dev-title">
         {/* Static title text */}
         Project {/* Highlighted text */}
-        <span>Developer</span>
+        <span>Developers</span>
       </h1>
 
       {/* Developer section container */}
