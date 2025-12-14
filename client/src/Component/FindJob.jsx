@@ -122,7 +122,7 @@ const FindJob = () => {
           {/* Search input */}
           <input
             type="text"
-            placeholder="Search skills, companies"
+            placeholder="Search skills"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
