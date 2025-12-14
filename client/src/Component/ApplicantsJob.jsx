@@ -89,7 +89,7 @@ const ApplicantsJob = () => {
                       rel="noopener noreferrer"
                       className="cv-btn"
                     >
-                      View CV
+                      CV
                     </a>
                   )}
 
