@@ -54,7 +54,7 @@ const Developers = () => {
           <p className="desc">
             The system features job posting, applications, messaging, file
             uploads, and a social posting module — all designed and implemented
-            by a single developer.
+            by a both developers.
           </p>
         </div>
       </div>
