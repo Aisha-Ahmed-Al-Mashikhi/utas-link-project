@@ -124,7 +124,7 @@
 }
 
 /* ===============================
-   ACTION BUTTONS (CLEAN)
+   ACTION BUTTONS (FIXED & UNIFIED)
 ================================ */
 .action-row {
   display: grid;
@@ -133,9 +133,23 @@
   margin-top: 20px;
 }
 
+/* COMMON BUTTON STYLE */
 .chat-btn,
 .accept-btn,
 .reject-btn,
+.cv-btn {
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
 
 /* CHAT */
 .chat-btn {
@@ -167,21 +181,10 @@
   background: #f7bcbc;
 }
 
-/* VIEW CV – MATCH OTHER BUTTONS */
+/* VIEW CV */
 .cv-btn {
-  background: #e6f4f1;     
+  background: #e6f4f1;
   color: #00796b;
-  border: none;           
-  text-decoration: none;
-  height: 40px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .cv-btn:hover {
