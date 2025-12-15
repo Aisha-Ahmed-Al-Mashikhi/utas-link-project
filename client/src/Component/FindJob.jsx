@@ -250,6 +250,10 @@ const FindJob = () => {
               <p>
                 <strong>Email:</strong> {selectedJob.postedBy || "Not provided"}
               </p>
+              <p>
+    <strong>Sector:</strong>{" "}
+    {selectedJob.sector || "Not specified"}
+  </p>
             </div>
 
             {/* Location and date */}
