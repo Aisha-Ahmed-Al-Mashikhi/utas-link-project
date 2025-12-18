@@ -1,0 +1,222 @@
+/* -------------------- PAGE LAYOUT -------------------- */
+.applications-page {
+  background-color: #f9fcfb;
+  padding: 40px 40px;
+  min-height: 90vh;
+  font-family: "Quicksand", sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.applications-title {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.accent {
+  color: #009688;
+}
+
+.applications-sub {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+/* ---------------- GRID (3 CARDS PER ROW) ---------------- */
+.applications-grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-top: 25px;
+  width: 100%;
+  max-width: 1300px;
+}
+
+/* -------------------- CARD -------------------- */
+.application-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 35px rgba(0, 0, 0, 0.08);
+  transition: 0.2s;
+}
+
+.application-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+.small-card {
+  width: 100%;
+}
+
+/* -------------------- INFO -------------------- */
+.app-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.app-icon {
+  font-size: 36px;
+  color: #009688;
+}
+
+/* -------------------- TEXT -------------------- */
+.job-title {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.company,
+.details {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.deleted-warning {
+  color: #d9534f;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* -------------------- STATUS -------------------- */
+.status-badge {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-badge.pending {
+  background: #fff1c4;
+  color: #8d6e23;
+}
+
+.status-badge.accepted {
+  background: #c8f7c5;
+  color: #0b9444;
+}
+
+.status-badge.rejected {
+  background: #ffd2d2;
+  color: #b11a1a;
+}
+
+/* -------------------- BUTTONS -------------------- */
+.app-actions-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.app-actions-row button,
+.app-actions-row .status-badge {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 0;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.chat-btn {
+  background-color: #009688;
+  color: white;
+  border: none;
+}
+
+.chat-btn:hover {
+  background-color: #007c6c;
+}
+
+.withdraw-btn {
+  background: #e57373;
+  color: white;
+  border: none;
+}
+
+.withdraw-btn:hover {
+  background: #d32f2f;
+}
+
+/* -------------------- EMPTY STATE -------------------- */
+.empty-state {
+  background: #fff;
+  padding: 60px 45px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8e8e8;
+
+  max-width: 650px;
+  width: 100%;
+  margin: 60px auto;
+}
+
+.empty-state p {
+  color: #444;
+  margin-bottom: 18px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.findjob-btn {
+  background: #009688;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+/* -------------------- PAGINATION -------------------- */
+.apps-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+.apps-pagination button {
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 2px solid #009688;
+  border-radius: 10px;
+  color: #009688;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 55px;
+  transition: 0.2s ease;
+}
+
+.apps-pagination button:hover {
+  background: #e0f5f3;
+  transform: translateY(-2px);
+}
+
+.apps-pagination button:disabled {
+  background: #f3f3f3;
+  border-color: #cccccc;
+  color: #9a9a9a;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.apps-pagination .active-page {
+  background: #009688;
+  color: white;
+  border-color: #007f72;
+}
