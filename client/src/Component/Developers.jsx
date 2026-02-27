@@ -3,7 +3,7 @@ import React from "react";
 // Import developers page styles
 import "../Styles/Developers.css";
 
-// Define Developers component
+// Define Developer component
 const Developers = () => {
   // Return JSX
   return (
@@ -21,15 +21,14 @@ const Developers = () => {
         {/* Developer card */}
         <div className="dev-card">
           {/* Developer names */}
-          <h3>Aisha Al-Mashikhi, Fatima Al-Maashani</h3>
+          <h3>Aisha Al-Mashikhi</h3>
 
           {/* Developer role */}
-          <p className="role">Full-Stack Developers</p>
+          <p className="role">Full-Stack Developer</p>
 
           {/* Description text */}
           <p className="desc">
-            This project was fully developed by Aisha Al-Mashikhi,Fatima
-            Al-Maashani, covering all aspects including:
+            This project was fully developed by Aisha Al-Mashikhi covering all aspects including:
           </p>
 
           {/* Skills list */}
