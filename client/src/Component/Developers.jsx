@@ -21,7 +21,7 @@ const Developers = () => {
         {/* Developer card */}
         <div className="dev-card">
           {/* Developer name */}
-          <h3>Aisha Al-Mashikhi</h3>
+          <h3>Aisha Al-Mashaikhi</h3>
 
           {/* Developer role */}
           <p className="role">Full-Stack Developer</p>
