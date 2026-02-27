@@ -13,14 +13,14 @@ const Developers = () => {
       <h1 className="dev-title">
         {/* Static title text */}
         Project {/* Highlighted text */}
-        <span>Developers</span>
+        <span>Developer</span>
       </h1>
 
       {/* Developer section container */}
       <div className="dev-grid">
         {/* Developer card */}
         <div className="dev-card">
-          {/* Developer names */}
+          {/* Developer name */}
           <h3>Aisha Al-Mashikhi</h3>
 
           {/* Developer role */}
