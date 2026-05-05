@@ -660,12 +660,21 @@ app.delete("/deletePost/:id", async (req, res) => {
   }
 });
 //Referesh
-app.use(express.static(path.join(process.cwd(), "client/build")));
+// app.use(express.static(path.join(process.cwd(), "client/build")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "client/build", "index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(process.cwd(), "client/build", "index.html"));
+// });
 
+const buildPath = path.join(process.cwd(), "client/build");
+
+if (fs.existsSync(buildPath)) {
+  app.use(express.static(buildPath));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(buildPath, "index.html"));
+  });
+}
 /*───────────────────────────────────────────────
  ░░ START SERVER
 ───────────────────────────────────────────────*/
