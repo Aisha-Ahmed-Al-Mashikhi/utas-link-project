@@ -1,30 +1,37 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* 📱 Mobile Responsive Styles */
+@media (max-width: 768px) {
+
+  /* Make layout vertical on small screens */
+  .container {
+    flex-direction: column !important;
+    padding: 10px;
+  }
+
+  /* Make form take full width */
+  .form-container {
+    width: 100% !important;
+    padding: 15px !important;
+  }
+
+  /* Hide image section on mobile */
+  .image-section {
+    display: none !important;
+  }
+
+  /* Inputs full width and readable */
+  input, select, textarea {
+    width: 100% !important;
+    font-size: 16px;
+  }
+
+  /* Buttons full width */
+  button {
+    width: 100%;
+    padding: 12px;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-/* ✅ يخلي الصفحة كلها تملأ الشاشة وتتحكم بالفوتر */
-html,
-body {
-  height: 100%;
-}
-
-/* ✅ الحاوية الرئيسية للتطبيق */
-#root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* تضمن إن الصفحة دوم بطول النافذة */
-}
-
-/* ✅ منطقة المحتوى — الفوتر ينزل تحتها تلقائي */
-.main-content {
-  flex: 1; /* تدفع الفوتر للأسفل لو المحتوى قليل */
+/* Ensure consistent sizing */
+* {
+  box-sizing: border-box;
 }
