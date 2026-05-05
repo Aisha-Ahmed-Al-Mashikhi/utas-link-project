@@ -33,3 +33,19 @@
     padding: 10px;
   }
 }
+/* 📱 Fix overflow issue */
+body {
+  overflow-x: hidden;
+}
+
+/* Main card/container fix */
+@media (max-width: 768px) {
+  .card,
+  .container,
+  .form-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 15px !important;
+  }
+}
