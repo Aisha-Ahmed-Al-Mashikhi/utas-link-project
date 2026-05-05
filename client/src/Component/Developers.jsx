@@ -13,7 +13,7 @@ const Developers = () => {
       <h1 className="dev-title">
         {/* Static title text */}
         Project {/* Highlighted text */}
-        <span>Developer</span>
+        <span>Developers</span>
       </h1>
 
       {/* Developer section container */}
@@ -21,14 +21,14 @@ const Developers = () => {
         {/* Developer card */}
         <div className="dev-card">
           {/* Developer name */}
-          <h3>Aisha Al-Mashaikhi</h3>
+          <h3>Aisha Al-Mashaikhi and Fatema Almaashani</h3>
 
           {/* Developer role */}
-          <p className="role">Full-Stack Developer</p>
+          <p className="role">Full-Stack Developers</p>
 
           {/* Description text */}
           <p className="desc">
-            This project was fully developed by Aisha Al-Mashikhi covering all aspects including:
+            This project was fully developed by Aisha Al-Mashaikhi and Fatema Almaashani covering all aspects including:
           </p>
 
           {/* Skills list */}
