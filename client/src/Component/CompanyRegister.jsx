@@ -146,6 +146,7 @@ const CompanyRegister = () => {
             <label>Company Name</label>
             <input
               type="text"
+              placeholder="Enter Company Name"
               value={companyName}
               {...register("companyName", {
                 onChange: (e) => setCompanyName(e.target.value),
@@ -157,6 +158,7 @@ const CompanyRegister = () => {
             <label>Email</label>
             <input
               type="email"
+              placeholder="company@example.come"
               value={email}
               {...register("email", {
                 onChange: (e) => setEmail(e.target.value),
@@ -168,6 +170,7 @@ const CompanyRegister = () => {
             <label>Password</label>
             <input
               type="password"
+              placeholder="********"
               value={password}
               {...register("password", {
                 onChange: (e) => setPassword(e.target.value),
