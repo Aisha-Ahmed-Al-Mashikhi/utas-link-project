@@ -1,24 +1,23 @@
-/* 📱 Mobile Responsive Styles */
+/* 📱 Force mobile responsive layout */
 @media (max-width: 768px) {
 
-  /* Make layout vertical on small screens */
-  .container {
-    flex-direction: column !important;
-    padding: 10px;
+  /* Hide any side images */
+  img {
+    max-width: 100%;
+    height: auto;
   }
 
-  /* Make form take full width */
-  .form-container {
+  /* Stack everything vertically */
+  div {
+    max-width: 100% !important;
+  }
+
+  /* Fix forms */
+  form {
     width: 100% !important;
-    padding: 15px !important;
   }
 
-  /* Hide image section on mobile */
-  .image-section {
-    display: none !important;
-  }
-
-  /* Inputs full width and readable */
+  /* Inputs full width */
   input, select, textarea {
     width: 100% !important;
     font-size: 16px;
@@ -26,12 +25,11 @@
 
   /* Buttons full width */
   button {
-    width: 100%;
-    padding: 12px;
+    width: 100% !important;
   }
-}
 
-/* Ensure consistent sizing */
-* {
-  box-sizing: border-box;
+  /* Remove side padding issues */
+  body {
+    padding: 10px;
+  }
 }
